@@ -6,6 +6,7 @@ namespace Warp01
     {
         #region Members
         public WarpScript m_Destination;
+        public Transform m_ShuttleTransform;
         public Renderer m_ParticleRenderer;
 
         [HideInInspector]
@@ -39,6 +40,7 @@ namespace Warp01
             }
         }
 
+        #region Trigger events
         public void OnTriggerEnter(Collider enteringCollider)
         {
             if (enteringCollider.tag == "Player")
@@ -72,6 +74,7 @@ namespace Warp01
                 ChangeParticleMaterial(m_OriginalParticleMat);
             }
         }
+        #endregion Trigger events
         #endregion Unity events
 
         public void ChangeParticleMaterial(Material newMat)
@@ -98,7 +101,8 @@ namespace Warp01
                 return;
             }
 
-            m_PlayerStartPosition.transform.position = m_Destination.transform.position;
+            m_PlayerStartPosition.transform.position = m_Destination.m_ShuttleTransform.position;
+            m_PlayerStartPosition.transform.rotation = m_Destination.m_ShuttleTransform.rotation;
         }
     }
 }
