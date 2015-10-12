@@ -9,7 +9,7 @@ public class ShuttleGizmos : MonoBehaviour
     {
         get
         {
-            return transform.up * -1.5f;
+            return Vector3.up * -1.5f;
         }
     }
     public readonly Vector3 m_FloorSizeGizmo = new Vector3(6.0f, float.Epsilon, 3.0f);
@@ -17,7 +17,7 @@ public class ShuttleGizmos : MonoBehaviour
     {
         get
         {
-            return transform.forward * 1.5f;
+            return Vector3.forward * 1.5f;
         }
     }
     public readonly Vector3 m_FrontSizeGizmo = new Vector3(6.0f, 3.0f, float.Epsilon);
@@ -25,7 +25,7 @@ public class ShuttleGizmos : MonoBehaviour
     {
         get
         {
-            return -transform.right * 3.0f;
+            return -Vector3.right * 3.0f;
         }
     }
     public readonly Vector3 m_LeftSizeGizmo = new Vector3(float.Epsilon, 3.0f, 3.0f);
@@ -33,7 +33,7 @@ public class ShuttleGizmos : MonoBehaviour
     {
         get
         {
-            return transform.right * 3.0f;
+            return Vector3.right * 3.0f;
         }
     }
     public readonly Vector3 m_RightSizeGizmo = new Vector3(float.Epsilon, 3.0f, 3.0f);
