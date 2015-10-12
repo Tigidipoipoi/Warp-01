@@ -36,7 +36,7 @@ public class ShuttleGizmos : MonoBehaviour
             return transform.right * 3.0f;
         }
     }
-    public readonly Vector3 m_RightSizeGizmo = new Vector3();
+    public readonly Vector3 m_RightSizeGizmo = new Vector3(float.Epsilon, 3.0f, 3.0f);
     #endregion Members
 
     public void OnDrawGizmos()
