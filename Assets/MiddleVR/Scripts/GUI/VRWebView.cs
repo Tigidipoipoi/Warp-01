@@ -3,9 +3,17 @@
  * (c) MiddleVR
  */
 
-// UNITY_PRO_LICENSE exists starting from Unity 4.5
-// For Unity 4.2 and 4.3 we always assume it's a Pro edition
-#if !(UNITY_PRO_LICENSE || UNITY_4_2 || UNITY_4_3)
+// Rendering plugin test
+// ---------------------
+//
+// VRWebView can be used without MiddleVR_UnityRendering.dll but it will
+// be much slower.
+// - Unity 4 can only use rendering plugins with a professionnal license.
+//   However, the UNITY_PRO_LICENSE preprocessor condition only exists
+//   starting from Unity 4.5 so for Unity 4.2 and 4.3 we always assume
+//   it's a Professional edition.
+// - Starting with Unity 5 plugins are not limited anymore.
+#if (UNITY_4_5 || UNITY_4_6) && !UNITY_PRO_LICENSE
 #define VRWEBVIEW_UNITY_FREE
 #endif
 
@@ -15,6 +23,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
 
+[AddComponentMenu("MiddleVR/GUI/Web View")]
 public class VRWebView : MonoBehaviour {
 
     // Public attributes
@@ -22,6 +31,12 @@ public class VRWebView : MonoBehaviour {
     public int m_Height = 768;
     public string m_URL = "http://www.middlevr.com/";
     public float m_Zoom = 1.0f;
+
+    // If true and there is no collider on the object,
+    // automatically create a trigger box collider.
+    // This is useful since Unity 5.0 because it does not support
+    // non-convex trigger mesh colliders anymore.
+    public bool m_AutomaticTriggerCollider = true;
 
     // View management
     private vrWebView m_WebView = null;
@@ -38,10 +53,17 @@ public class VRWebView : MonoBehaviour {
     private bool m_WandRayWasVisible = true;
     private static byte ALPHA_LIMIT = 50;
 
+    // Automatic collider
+    private Vector3[] m_RaycastMeshVertices;
+    private Vector2[] m_RaycastMeshUV;
+    private int[] m_RaycastMeshTriangles;
+
 #if VRWEBVIEW_UNITY_FREE
     // Unity Free texture management
     private Color32[] m_Pixels;
     private GCHandle m_PixelsHandle;
+#else
+    IntPtr m_NativeTexturePtr = IntPtr.Zero;
 #endif
 
     public vrImage image
@@ -89,6 +111,43 @@ public class VRWebView : MonoBehaviour {
     {
         byte alpha = image.GetAlphaAtPoint((int)(iTextureCoord.x * m_Width), (int)(iTextureCoord.y * m_Height));
         return alpha < ALPHA_LIMIT;
+    }
+
+    protected void Awake()
+    {
+        if( GetComponent<GUITexture>() == null )
+        {
+            MeshFilter meshFilter = GetComponent<MeshFilter>();
+            if( meshFilter == null )
+            {
+                enabled = false;
+                Debug.Log("VRWebView must be attached to a GameObject with a MeshFilter component.");
+                return;
+            }
+
+            Mesh mesh = meshFilter.sharedMesh;
+            if( mesh == null )
+            {
+                enabled = false;
+                Debug.Log("VRWebView must be attached to a GameObject with a valid Mesh.");
+                return;
+            }
+
+            m_RaycastMeshVertices = mesh.vertices;
+            m_RaycastMeshUV = mesh.uv;
+            m_RaycastMeshTriangles = mesh.triangles;
+
+            if( m_AutomaticTriggerCollider )
+            {
+                Collider collider = GetComponent<Collider>();
+
+                if (collider == null)
+                {
+                    BoxCollider boxCollider = gameObject.AddComponent<BoxCollider>();
+                    _UpdateBoxCollider(boxCollider);
+                }
+            }
+        }
     }
 
     protected void Start ()
@@ -158,6 +217,10 @@ public class VRWebView : MonoBehaviour {
         m_Texture.SetPixels32(colors);
         m_Texture.Apply(false, false);
 
+#if !VRWEBVIEW_UNITY_FREE
+        m_NativeTexturePtr = m_Texture.GetNativeTexturePtr();
+#endif
+
         // Attach texture
         if (gameObject != null && gameObject.GetComponent<GUITexture>() == null && gameObject.GetComponent<Renderer>() != null)
         {
@@ -192,8 +255,14 @@ public class VRWebView : MonoBehaviour {
     }
 
 #if !VRWEBVIEW_UNITY_FREE
+    // Hex code for "MVR1"
+    const int MVR_RENDEREVENT_COPYBUFFERSTOTEXTURES = 0x4D565231;
+
     [DllImport("MiddleVR_UnityRendering")]
-    private static extern void MiddleVR_CopyBufferToUnityNativeTexture(IntPtr iBuffer, IntPtr iNativeTexturePtr, uint iWidth, uint iHeight);
+    private static extern void MiddleVR_AsyncCopyBufferToTexture(IntPtr iBuffer, IntPtr iNativeTexturePtr, uint iWidth, uint iHeight);
+
+    [DllImport("MiddleVR_UnityRendering")]
+    private static extern void MiddleVR_CancelCopyBufferToTexture(IntPtr iNativeTexturePtr);
 #endif
 
     protected void Update ()
@@ -206,10 +275,12 @@ public class VRWebView : MonoBehaviour {
                 Vector2 mouseHit = new Vector2(0, 0);
                 bool hasMouseHit = false;
 
-                if (gameObject.GetComponent<GUITexture>() != null)
+                GUITexture guiTexture = gameObject.GetComponent<GUITexture>();
+
+                if (guiTexture != null)
                 {
                     // GUITexture mouse input
-                    Rect r = gameObject.GetComponent<GUITexture>().GetScreenRect();
+                    Rect r = guiTexture.GetScreenRect();
                 
                     if( Input.mousePosition.x >= r.x && Input.mousePosition.x < (r.x + r.width) &&
                         Input.mousePosition.y >= r.y && Input.mousePosition.y < (r.y + r.height) )
@@ -275,6 +346,9 @@ public class VRWebView : MonoBehaviour {
                     m_PixelsHandle.Free();
                     m_Pixels = m_Texture.GetPixels32 (0);
                     m_PixelsHandle = GCHandle.Alloc(m_Pixels, GCHandleType.Pinned);
+#else
+                    MiddleVR_CancelCopyBufferToTexture(m_NativeTexturePtr);
+                    m_NativeTexturePtr = m_Texture.GetNativeTexturePtr();
 #endif
                 }
 
@@ -285,32 +359,34 @@ public class VRWebView : MonoBehaviour {
                     m_Texture.SetPixels32(m_Pixels, 0);
                     m_Texture.Apply(false, false);
 #else
-                    MiddleVR_CopyBufferToUnityNativeTexture(m_Image.GetReadBuffer(), m_Texture.GetNativeTexturePtr(), format.GetWidth(), format.GetHeight());
+                    MiddleVR_AsyncCopyBufferToTexture(m_Image.GetReadBuffer(), m_NativeTexturePtr, format.GetWidth(), format.GetHeight());
+                    GL.IssuePluginEvent(MVR_RENDEREVENT_COPYBUFFERSTOTEXTURES);
 #endif
                 }
             }
         }
     }
 
-    protected void OnDestroy ()
+    private void OnDestroy ()
     {
 #if VRWEBVIEW_UNITY_FREE
         m_PixelsHandle.Free();
+#else
+        MiddleVR_CancelCopyBufferToTexture( m_NativeTexturePtr );
 #endif
+        MiddleVR.DisposeObject(ref m_Image);
+        MiddleVR.DisposeObject(ref m_WebView);
     }
 
     private Vector2 GetClosestMouseHit()
     {
         foreach( Camera camera in m_Cameras )
         {
-            RaycastHit[] hits = Physics.RaycastAll( camera.ScreenPointToRay(Input.mousePosition));
-
-            foreach (RaycastHit hit in hits)
+            Ray ray = camera.ScreenPointToRay(Input.mousePosition);
+            VRRaycastHit hit = RaycastMesh(ray.origin, ray.direction);
+            if( hit != null )
             {
-                if (hit.collider.gameObject == gameObject)
-                {
-                    return hit.textureCoord;
-                }
+                return hit.textureCoord;
             }
         }
 
@@ -348,6 +424,159 @@ public class VRWebView : MonoBehaviour {
         }
         
         return url;
+    }
+
+
+    public VRRaycastHit RaycastMesh(Vector3 rayOrigin, Vector3 rayDirection)
+    {
+        for (int i = 0; i < m_RaycastMeshTriangles.Length; i += 3)
+        {
+            int i0 = m_RaycastMeshTriangles[i];
+            int i1 = m_RaycastMeshTriangles[i + 1];
+            int i2 = m_RaycastMeshTriangles[i + 2];
+
+            VRRaycastHit raycastHit = _RaycastTriangle(i0, i1, i2, rayOrigin, rayDirection);
+
+            if (raycastHit != null)
+            {
+                return raycastHit;
+            }
+        }
+
+        return null;
+    }
+
+    private VRRaycastHit _RaycastTriangle(int i0, int i1, int i2, Vector3 rayOrigin, Vector3 rayDirection)
+    {
+        Vector3 p0 = transform.TransformPoint(m_RaycastMeshVertices[i0]);
+        Vector3 p1 = transform.TransformPoint(m_RaycastMeshVertices[i1]);
+        Vector3 p2 = transform.TransformPoint(m_RaycastMeshVertices[i2]);
+
+        // Möller–Trumbore intersection algorithm
+        // http://en.wikipedia.org/wiki/M%C3%B6ller%E2%80%93Trumbore_intersection_algorithm
+
+        // edge 1
+        Vector3 E1 = p1 - p0;
+
+        // edge 2
+        Vector3 E2 = p2 - p0;
+
+        // edge 3 - only for testing degenerate triangles
+        Vector3 E3 = p2 - p0;
+        if( E1.sqrMagnitude < 0.00001f || E2.sqrMagnitude < 0.00001f || E3.sqrMagnitude < 0.00001f )
+        {
+            // Skip degenerate triangle
+            return null;
+        }
+
+        //Begin calculating determinant - also used to calculate u parameter
+        Vector3 P = Vector3.Cross(rayDirection, E2);
+        float det = Vector3.Dot(E1, P);
+        if (det > -0.00001f && det < 0.00001f)
+        {
+            //if determinant is near zero, ray lies in plane of triangle
+            return null;
+        }
+
+        float inv_det = 1.0f / det;
+        //Calculate distance from V1 to ray origin
+        Vector3 T = rayOrigin - p0;
+        //Calculate u parameter and test bound
+        float u = Vector3.Dot(T, P) * inv_det;
+        if (u < 0.0f || u > 1.0f)
+        {
+            //The intersection lies outside of the triangle
+            return null;
+        }
+
+        //Prepare to test v parameter
+        Vector3 Q = Vector3.Cross(T, E1);
+        //Calculate V parameter and test bound
+        float v = Vector3.Dot(rayDirection, Q) * inv_det;
+        if (v < 0.0f || u + v > 1.0f)
+        {
+            //The intersection lies outside of the triangle
+            return null;
+        }
+
+        float t = Vector3.Dot(E2, Q) * inv_det;
+
+        if (t <= 0.00001f)
+        {
+            // Intersection is before origin
+            return null;
+        }
+
+        // We have an intersection, now compute uv
+
+        Vector3 hitPoint = rayOrigin + (rayDirection * t);
+
+        Vector3 w = hitPoint - p0;
+
+        Vector3 vCrossW = Vector3.Cross(E2, w);
+        Vector3 vCrossU = Vector3.Cross(E2, E1);
+
+        if (Vector3.Dot(vCrossW, vCrossU) < 0.0f)
+        {
+            return null;
+        }
+
+        Vector3 uCrossW = Vector3.Cross(E1, w);
+        Vector3 uCrossV = Vector3.Cross(E1, E2);
+
+        if (Vector3.Dot(uCrossW, uCrossV) < 0.0f)
+        {
+            return null;
+        }
+
+        float denom = uCrossV.magnitude;
+        float b1 = vCrossW.magnitude / denom;
+        float b2 = uCrossW.magnitude / denom;
+
+        if ((b1 <= 1.0f) && (b2 <= 1.0f) && (b1 + b2 <= 1.0f))
+        {
+            float b0 = 1.0f - b1 - b2;
+            Vector2 uv0 = m_RaycastMeshUV[i0];
+            Vector2 uv1 = m_RaycastMeshUV[i1];
+            Vector2 uv2 = m_RaycastMeshUV[i2];
+            Vector2 uv = new Vector2(b0 * uv0.x + b1 * uv1.x + b2 * uv2.x, b0 * uv0.y + b1 * uv1.y + b2 * uv2.y);
+
+            VRRaycastHit raycastHit = new VRRaycastHit();
+            raycastHit.collider = GetComponent<Collider>();
+            raycastHit.distance = t;
+            raycastHit.normal = vCrossU.normalized;
+            raycastHit.point = hitPoint;
+            raycastHit.textureCoord = uv;
+            return raycastHit;
+        }
+        else
+        {
+            return null;
+        }
+    }
+
+    private void _UpdateBoxCollider(BoxCollider boxCollider)
+    {
+        if (boxCollider != null)
+        {
+            Vector3 lowerBoxLimits = new Vector3(float.MaxValue, float.MaxValue, float.MaxValue);
+            Vector3 upperBoxLimits = new Vector3(float.MinValue, float.MinValue, float.MinValue);
+
+            for (int i = 0; i < m_RaycastMeshVertices.Length; ++i)
+            {
+                Vector3 vertex = m_RaycastMeshVertices[i];
+                lowerBoxLimits.x = Mathf.Min(lowerBoxLimits.x, vertex.x);
+                lowerBoxLimits.y = Mathf.Min(lowerBoxLimits.y, vertex.y);
+                lowerBoxLimits.z = Mathf.Min(lowerBoxLimits.z, vertex.z);
+                upperBoxLimits.x = Mathf.Max(upperBoxLimits.x, vertex.x);
+                upperBoxLimits.y = Mathf.Max(upperBoxLimits.y, vertex.y);
+                upperBoxLimits.z = Mathf.Max(upperBoxLimits.z, vertex.z);
+            }
+
+            boxCollider.center = (upperBoxLimits + lowerBoxLimits) / 2.0f;
+            boxCollider.size = upperBoxLimits - lowerBoxLimits;
+            boxCollider.isTrigger = true;
+        }
     }
 
     protected void OnMVRWandEnter(VRSelection iSelection)
@@ -420,5 +649,32 @@ public class VRWebView : MonoBehaviour {
                 SetVirtualMousePosition(mouseCursor);
             }
         }
+    }
+}
+
+public class VRRaycastHit
+{
+    public Collider collider;
+    public float distance;
+    public Vector3 normal;
+    public Vector3 point;
+    public Vector2 textureCoord;
+
+    public VRRaycastHit()
+    {
+        collider = null;
+        distance = 0.0f;
+        normal = new Vector3();
+        point = new Vector3();
+        textureCoord = new Vector2();
+    }
+
+    public VRRaycastHit(RaycastHit raycastHit)
+    {
+        collider = raycastHit.collider;
+        distance = raycastHit.distance;
+        normal = raycastHit.normal;
+        point = raycastHit.point;
+        textureCoord = raycastHit.textureCoord;
     }
 }

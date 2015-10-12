@@ -1,18 +1,18 @@
 /* VRInteractionManipulationReturnObjects
  * MiddleVR
- * (c) i'm in VR
+ * (c) MiddleVR
  *
  * Note: Made to be attached to the Wand
  */
 
 using UnityEngine;
-using System.Collections;
+using System.Collections.Generic;
 using MiddleVR_Unity3D;
 
+[AddComponentMenu("")]
 public class VRInteractionManipulationReturnObjects : MonoBehaviour {
 
     public float ObjectReturnSpeed = 1.4f; // Meters per second
-
 
     private struct ReturningObject
     {
@@ -26,10 +26,10 @@ public class VRInteractionManipulationReturnObjects : MonoBehaviour {
         public bool WasCollidable;
     }
 
-    ArrayList m_ReturningObjects = new ArrayList();
+    private List<ReturningObject> m_ReturningObjects = new List<ReturningObject>();
 
-    protected void Update () {
-
+    protected void Update()
+    {
         // Do the return
         _ReturnObjects();
     }
@@ -38,7 +38,7 @@ public class VRInteractionManipulationReturnObjects : MonoBehaviour {
     {
         for (int i = 0; i < m_ReturningObjects.Count; ++i)
         {
-            ReturningObject currentObject = (ReturningObject)m_ReturningObjects[i];
+            ReturningObject currentObject = m_ReturningObjects[i];
 
             // Move directly to final position if object asked for it or if transition speed is null
             bool finalizeReturn = currentObject.InstantReturn || (ObjectReturnSpeed < 0.0f) || Mathf.Approximately(ObjectReturnSpeed, 0.0f);
@@ -76,7 +76,7 @@ public class VRInteractionManipulationReturnObjects : MonoBehaviour {
 
     private void _FinalizeReturn( int iObjectId )
     {
-        ReturningObject currentObject = (ReturningObject)m_ReturningObjects[iObjectId];
+        ReturningObject currentObject = m_ReturningObjects[iObjectId];
 
         currentObject.Object.transform.localPosition = currentObject.TargetLocalPosition;
         currentObject.Object.transform.localRotation = currentObject.TargetLocalRotation;
@@ -134,12 +134,12 @@ public class VRInteractionManipulationReturnObjects : MonoBehaviour {
         }
     }
 
-    void OnEnable()
+    protected void OnEnable()
     {
         MiddleVR.VRLog(3, "[ ] VRInteractionManipulationReturnObjects: enabled");
     }
 
-    void OnDisable()
+    protected void OnDisable()
     {
         MiddleVR.VRLog(3, "[ ] VRInteractionManipulationReturnObjects: disabled");
 

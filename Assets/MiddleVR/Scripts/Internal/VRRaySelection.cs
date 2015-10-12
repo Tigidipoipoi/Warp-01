@@ -1,13 +1,12 @@
 ﻿/* VRRaySelection
  * MiddleVR
- * (c) i'm in VR
+ * (c) MiddleVR
  */
 
 using UnityEngine;
-using System.Collections;
 using MiddleVR_Unity3D;
 
-
+[AddComponentMenu("")]
 public class VRRaySelection : VRInteraction {
 
     public Color HoverColor = Color.green;
@@ -17,8 +16,7 @@ public class VRRaySelection : VRInteraction {
     private VRSelectionManager m_SelectionMgr = null;
     private VRWand m_Wand = null;
 
-
-    private void Start()
+    protected void Start()
     {
         // Make sure the base interaction is started and create interaction
         InitializeBaseInteraction();
@@ -39,7 +37,7 @@ public class VRRaySelection : VRInteraction {
         }
     }
 
-    private void Update ()
+    protected void Update ()
     {
         if (IsActive())
         {
@@ -85,72 +83,74 @@ public class VRRaySelection : VRInteraction {
         }
     }
 
-    private void _RaySelection()
+    protected void _RaySelection()
     {
         // Ray picking
-        RaycastHit[] hits;
-        Vector3 dir = transform.localToWorldMatrix * Vector3.forward;
+        Vector3 rayOrigin = transform.position;
+        Vector3 rayDirection = transform.TransformDirection(Vector3.forward);
 
-        hits = Physics.RaycastAll(transform.position, dir, m_Wand.GetDefaultRayLength());
+        VRSelection newSelection = null;
 
-        bool foundActor = false;
-        int currentHitId = 0;
-        int foundHitId = 0;
-        float distance = Mathf.Infinity;
-
-        while (currentHitId < hits.Length)
+        foreach (RaycastHit raycastHit in Physics.RaycastAll(rayOrigin, rayDirection, m_Wand.GetDefaultRayLength()))
         {
-            RaycastHit hit = hits[currentHitId];
-
-            if (hit.distance < distance && hit.collider.name != "VRWand")
+            if (newSelection != null && raycastHit.distance >= newSelection.SelectionDistance)
             {
-                if (hit.collider.GetComponent<VRActor>() == null)
+                continue;
+            }
+
+            GameObject objectHit = raycastHit.collider.gameObject;
+
+            if (objectHit.name != "VRWand")
+            {
+                // Ignore GameObject without the VRActor component
+                if (objectHit.GetComponent<VRActor>() == null)
                 {
-                    currentHitId++;
                     continue;
                 }
 
-                // Pass through empty/transparent GUI pixels
-                VRWebView webView = hit.collider.GetComponent<VRWebView>();
+                VRWebView webView = objectHit.GetComponent<VRWebView>();
+                VRRaycastHit completeHit = null;
                 if (webView != null)
                 {
-                    if (!webView.GetComponent<Renderer>().enabled || webView.IsPixelEmpty(hit.textureCoord))
-                    {
-                        currentHitId++;
-                        continue;
-                    }
+                    completeHit = webView.RaycastMesh(rayOrigin, rayDirection);
+                }
+                else
+                {
+                    completeHit = new VRRaycastHit(raycastHit);
                 }
 
-                foundActor = true;
-                foundHitId = currentHitId;
-                distance = hit.distance;
-            }
+                if (completeHit != null)
+                {
+                    // Special case : pass through transparent pixels of web views.
+                    if (webView != null)
+                    {
+                        if (!webView.GetComponent<Renderer>().enabled || webView.IsPixelEmpty(completeHit.textureCoord))
+                        {
+                            continue;
+                        }
+                    }
 
-            currentHitId++;
+                    // Create selection if it does not exist
+                    if (newSelection == null)
+                    {
+                        newSelection = new VRSelection();
+                    }
+
+                    newSelection.SourceWand = m_Wand;
+                    newSelection.SelectedObject = objectHit;
+                    newSelection.TextureCoordinate = completeHit.textureCoord;
+                    newSelection.SelectionDistance = completeHit.distance;
+                    newSelection.SelectionContact = completeHit.point;
+                    newSelection.SelectionNormal = completeHit.normal;
+                }
+            }
         }
 
         m_LastSelection = m_SelectionMgr.GetSelection();
-
-        // If something found, select
-        if (foundActor)
-        {
-            RaycastHit selectionHit = hits[foundHitId];
-            VRSelection newSelection = new VRSelection();
-            newSelection.SourceWand = m_Wand;
-            newSelection.SelectedObject = selectionHit.collider.gameObject;
-            newSelection.TextureCoordinate = selectionHit.textureCoord;
-            newSelection.SelectionDistance = selectionHit.distance;
-            newSelection.SelectionContact = selectionHit.point;
-            newSelection.SelectionNormal = selectionHit.normal;
-            m_SelectionMgr.SetSelection(newSelection);
-        }
-        else
-        {
-            m_SelectionMgr.SetSelection(null);
-        }
+        m_SelectionMgr.SetSelection(newSelection);
     }
 
-    private void _RefreshRayMesh()
+    protected void _RefreshRayMesh()
     {
         VRSelection selection = m_SelectionMgr.GetSelection();
 

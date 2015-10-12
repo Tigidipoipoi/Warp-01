@@ -1,35 +1,35 @@
 /* VRShortcutInvertEyes
  * MiddleVR
- * (c) i'm in VR
+ * (c) MiddleVR
  */
 
 using UnityEngine;
-using System.Collections;
 using MiddleVR_Unity3D;
-using System;
 
+[AddComponentMenu("MiddleVR/Samples/Shortcut Invert-Eyes")]
 public class VRShortcutInvertEyes : MonoBehaviour
 {
-
-    void Update () 
+    protected void Update()
     {
-        vrKeyboard keyb = MiddleVR.VRDeviceMgr.GetKeyboard();
+        vrKeyboard keyboard = MiddleVR.VRDeviceMgr.GetKeyboard();
 
-        // Invert eye
-        if (keyb != null && keyb.IsKeyToggled(MiddleVR.VRK_I) && (keyb.IsKeyPressed(MiddleVR.VRK_LSHIFT) || keyb.IsKeyPressed(MiddleVR.VRK_RSHIFT)))
+        // Invert eyes.
+        if (keyboard != null &&
+            keyboard.IsKeyToggled(MiddleVR.VRK_I) &&
+            (keyboard.IsKeyPressed(MiddleVR.VRK_LSHIFT) || keyboard.IsKeyPressed(MiddleVR.VRK_RSHIFT)))
         {
-            // For each vrCameraStereo, invert inter eye distance
-            uint camNb = MiddleVR.VRDisplayMgr.GetCamerasNb();
-            for( uint i=0 ; i<camNb ; ++i )
+            var displayMgr = MiddleVR.VRDisplayMgr;
+
+            // For each vrCameraStereo, invert inter eye distance.
+            for (uint i = 0, iEnd = displayMgr.GetCamerasNb(); i < iEnd; ++i)
             {
-                vrCamera cam = MiddleVR.VRDisplayMgr.GetCameraByIndex(i);
-                if(cam.IsA("CameraStereo"))
+                vrCamera cam = displayMgr.GetCameraByIndex(i);
+                if (cam.IsA("CameraStereo"))
                 {
-                    vrCameraStereo stereoCam = MiddleVR.VRDisplayMgr.GetCameraStereo(cam.GetName());
+                    vrCameraStereo stereoCam = displayMgr.GetCameraStereoById(cam.GetId());
                     stereoCam.SetInterEyeDistance( -stereoCam.GetInterEyeDistance() );
                 }
             }
         }
     }
-
 }

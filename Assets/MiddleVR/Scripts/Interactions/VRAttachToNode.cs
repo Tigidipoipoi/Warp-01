@@ -1,12 +1,13 @@
 /* VRAttachToNode
  * MiddleVR
- * (c) i'm in VR
+ * (c) MiddleVR
  */
 
 using UnityEngine;
 using System.Collections;
 using MiddleVR_Unity3D;
 
+[AddComponentMenu("MiddleVR/Interactions/Attach to Node")]
 public class VRAttachToNode  : MonoBehaviour {
 	public string VRParentNode   = "HandNode";
 	

@@ -1,6 +1,12 @@
-﻿using UnityEngine;
+﻿/* VRTouch
+ * MiddleVR
+ * (c) MiddleVR
+ */
+
+using UnityEngine;
 using System.Collections;
 
+[AddComponentMenu("")]
 public class VRTouch {
     public enum ETouchParameter
     {

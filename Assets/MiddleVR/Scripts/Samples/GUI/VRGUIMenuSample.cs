@@ -1,11 +1,14 @@
+/* VRGUIMenuSample
+
+ * MiddleVR
+ * (c) MiddleVR
+ */
+
 using UnityEngine;
-using System.Collections;
 using MiddleVR_Unity3D;
 
+[AddComponentMenu("MiddleVR/Samples/GUI/Menu")]
 public class VRGUIMenuSample : MonoBehaviour {
-
-    // Disable warning CS0414 "The private field 'XXX' is assigned but its value is never used"
-    #pragma warning disable 0414
 
     private vrGUIRendererWeb m_GUIRendererWeb;
     private vrWidgetMenu m_Menu;
@@ -18,8 +21,6 @@ public class VRGUIMenuSample : MonoBehaviour {
     private vrWidgetColorPicker m_Picker;
     private vrWidgetSlider m_Slider;
     private vrWidgetList m_List;
-
-    #pragma warning restore 0414
 
     private vrCommand m_ButtonCommand;
     private vrCommand m_CheckboxCommand;
@@ -66,8 +67,8 @@ public class VRGUIMenuSample : MonoBehaviour {
         return null;
     }
 
-    // Use this for initialization
-    void Start () {
+    private void Start()
+    {
         // Create commands
 
         m_ButtonCommand = new vrCommand("GUIMenuSample.ButtonCommand", ButtonHandler);
@@ -115,5 +116,29 @@ public class VRGUIMenuSample : MonoBehaviour {
         listContents.AddListItem( "Item 2" );
 
         m_List = new vrWidgetList("GUIMenuSample.List", m_Menu, "List", m_ListCommand, listContents, 0);
+    }
+
+    private void OnDestroy()
+    {
+        MiddleVR.DisposeObject(ref m_ButtonCommand);
+        MiddleVR.DisposeObject(ref m_CheckboxCommand);
+        MiddleVR.DisposeObject(ref m_RadioCommand);
+        MiddleVR.DisposeObject(ref m_ColorPickerCommand);
+        MiddleVR.DisposeObject(ref m_SliderCommand);
+        MiddleVR.DisposeObject(ref m_ListCommand);
+
+        MiddleVR.DisposeObject(ref m_Button1);
+        MiddleVR.DisposeObject(ref m_Checkbox);
+        MiddleVR.DisposeObject(ref m_Submenu);
+        MiddleVR.DisposeObject(ref m_Radio1);
+        MiddleVR.DisposeObject(ref m_Radio2);
+        MiddleVR.DisposeObject(ref m_Radio3);
+        MiddleVR.DisposeObject(ref m_Picker);
+        MiddleVR.DisposeObject(ref m_Slider);
+        MiddleVR.DisposeObject(ref m_List);
+
+        MiddleVR.DisposeObject(ref m_Menu);
+
+        MiddleVR.DisposeObject(ref m_GUIRendererWeb);
     }
 }

@@ -1,6 +1,6 @@
 /* VRApplySharedTransform
  * MiddleVR
- * (c) i'm in VR
+ * (c) MiddleVR
  */
 
 using UnityEngine;
@@ -11,6 +11,7 @@ using MiddleVR_Unity3D;
 // THIS SCRIPT IS DEPRECATED
 // Starting from MiddleVR 1.6.0 you only have to use the VRShareTransform script
 
+[AddComponentMenu("")] // Hide it.
 public class VRApplySharedTransform : MonoBehaviour {
 
     protected void Start()

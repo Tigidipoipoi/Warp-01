@@ -1,26 +1,27 @@
 /* VRElasticRepresentation
  * MiddleVR
- * (c) i'm in VR
+ * (c) MiddleVR
  */
 
 using UnityEngine;
 using System.Collections;
 using MiddleVR_Unity3D;
 
+[AddComponentMenu("")]
 public class VRElasticRepresentation : MonoBehaviour {
 
     public GameObject ElasticRoot;
     public GameObject Elastic;
 
-
-    void Start () {
+    protected void Start ()
+    {
         if( ElasticRoot==null || Elastic==null )
         {
             MiddleVR.VRLog( 2, "[X] VRElasticRepresentation error: bad ElasticRoot or Elastic GameObject reference" );
         }
     }
 
-    void SetElasticLength( float iLength)
+    void SetElasticLength( float iLength )
     {
         float length = iLength/2.0f;
 

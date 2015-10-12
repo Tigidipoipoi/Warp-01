@@ -1,24 +1,24 @@
 /* VRVirtualTrackerSimulation
  * MiddleVR
- * (c) i'm in VR
+ * (c) MiddleVR
  */
 
 using UnityEngine;
-using System.Collections;
 using MiddleVR_Unity3D;
 
+[AddComponentMenu("MiddleVR/Samples/Virtual Tracker Simulation")]
 public class VRVirtualTrackerSimulation : MonoBehaviour
 {
-    public string m_VirtualTrackerName="MyTracker";
+    public string m_VirtualTrackerName = "MyTracker";
 
-    private bool m_Init = false;
+    private bool m_IsInit = false;
 
     // The trackers
     private vrTracker m_Tracker = null;
     private vrAxis    m_Wiimote = null;
 
 
-    void Start ()
+    protected void Start()
     {
         // Retrieve trackers by name
         m_Tracker = MiddleVR.VRDeviceMgr.GetTracker(m_VirtualTrackerName);
@@ -37,13 +37,13 @@ public class VRVirtualTrackerSimulation : MonoBehaviour
 
         if (m_Tracker != null && m_Wiimote != null )
         {
-            m_Init = true;
+            m_IsInit = true;
         }
     }
 
-    void Update ()
+    protected void Update()
     {
-        if( m_Init == true )
+        if (m_IsInit)
         {
             m_Tracker.SetX (0.0f);
             m_Tracker.SetY (0.0f);
@@ -53,9 +53,9 @@ public class VRVirtualTrackerSimulation : MonoBehaviour
             float pitch = MiddleVR.RadToDeg( Mathf.Asin( Mathf.Clamp (m_Wiimote.GetValue(2),-1,1) ) );
             float roll  = MiddleVR.RadToDeg( Mathf.Asin( Mathf.Clamp (m_Wiimote.GetValue(1),-1,1) ) );
 
-            m_Tracker.SetYaw   ( yaw );
-            m_Tracker.SetPitch ( pitch );
-            m_Tracker.SetRoll  ( roll );
+            m_Tracker.SetYaw  ( yaw );
+            m_Tracker.SetPitch( pitch );
+            m_Tracker.SetRoll ( roll );
         }
     }
 }

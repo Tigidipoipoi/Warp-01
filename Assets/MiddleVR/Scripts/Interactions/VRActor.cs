@@ -1,6 +1,6 @@
 /* VRActor
  * MiddleVR
- * (c) i'm in VR
+ * (c) MiddleVR
  */
 
 using UnityEngine;
@@ -8,6 +8,7 @@ using System.Collections;
 using System.Collections.Generic;
 using MiddleVR_Unity3D;
 
+[AddComponentMenu("MiddleVR/Interactions/Actor")]
 public class VRActor : MonoBehaviour
 {
     [SerializeField]

@@ -1,13 +1,12 @@
 /* VRNavigationCollision
  * MiddleVR
- * (c) i'm in VR
+ * (c) MiddleVR
  */
 
 using UnityEngine;
-using System.Collections;
-using System.Collections.Generic;
 using MiddleVR_Unity3D;
 
+[AddComponentMenu("")]
 public class VRNavigationCollision : MonoBehaviour {
 
     public float  CollisionDistance = 0.20f;
@@ -17,12 +16,11 @@ public class VRNavigationCollision : MonoBehaviour {
     GameObject m_NavigationNode;
     vrNode3D   m_VRNavigationNode;
 
-    bool m_Fly = false;
+    bool m_IsFlying = false;
 
     bool m_Initialized = false;
 
     Vector3 m_LastCollisionNodePosition;
-
 
     public void SetCollisionNode( GameObject iCollisionNode )
     {
@@ -50,7 +48,7 @@ public class VRNavigationCollision : MonoBehaviour {
 
     public void SetFly( bool iFly )
     {
-        m_Fly = iFly;
+        m_IsFlying = iFly;
     }
 
     // Use this public method from interaction scripts to initialize and start collision
@@ -64,19 +62,18 @@ public class VRNavigationCollision : MonoBehaviour {
         }
         else
         {
-            MVRTools.Log( 2, "[X] VRHeadCollision: impossible to retrieve sepcified navigation or collision nodes" );
+            MVRTools.Log( 2, "[X] VRHeadCollision: impossible to retrieve specified navigation or collision nodes." );
         }
     }
 
-
-    void InitializeFromActiveNavigation()
+    protected void InitializeFromActiveNavigation()
     {
         // Search for navigation interaction parameters
         uint interactionNb = MiddleVR.VRInteractionMgr.GetInteractionsNb();
 
         if( interactionNb == 0 )
         {
-            MVRTools.Log( 4, "[~] VRHeadCollision: no interaction found in Interaction Manager" );
+            MVRTools.Log( 4, "[~] VRHeadCollision: no interaction found in Interaction Manager." );
             return;
         }
 
@@ -121,7 +118,7 @@ public class VRNavigationCollision : MonoBehaviour {
         Initialize();
     }
 
-    Vector3 ComputeReactionMovement( Vector3 iStartPosition, Vector3 iMovement )
+    protected Vector3 ComputeReactionMovement( Vector3 iStartPosition, Vector3 iMovement )
     {
         Vector3 reactionMovement = Vector3.zero;
 
@@ -130,7 +127,7 @@ public class VRNavigationCollision : MonoBehaviour {
         {
             // Compute reaction vector
             Vector3 collisionNormal = hit.normal;
-            if(!m_Fly)
+            if (!m_IsFlying)
             {
                 collisionNormal.y = 0.0f;
             }
@@ -144,8 +141,8 @@ public class VRNavigationCollision : MonoBehaviour {
         return reactionMovement;
     }
 
-    void Update () {
-
+    protected void Update()
+    {
         if( !m_Initialized )
         {
             InitializeFromActiveNavigation();

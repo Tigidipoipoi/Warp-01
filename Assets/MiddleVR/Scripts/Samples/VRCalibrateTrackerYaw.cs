@@ -1,36 +1,38 @@
 /* VRCalibrateTrackerYaw
  * MiddleVR
- * (c) i'm in VR
+ * (c) MiddleVR
  */
 
 using UnityEngine;
-using System.Collections;
 
+[AddComponentMenu("MiddleVR/Samples/Calibrate Tracker Yaw")]
 public class VRCalibrateTrackerYaw : MonoBehaviour {
     public string Tracker = "VRPNTracker0.Tracker0";
 
+    protected void Update()
+    {
+        vrTracker tracker   = null;
+        vrKeyboard keyboard = null;
 
-    void Update () {
-        vrTracker tracker = null;
-        vrKeyboard keyb = null;
+        var deviceMgr = MiddleVR.VRDeviceMgr;
 
-        if (MiddleVR.VRDeviceMgr != null)
+        if (deviceMgr != null)
         {
-            tracker = MiddleVR.VRDeviceMgr.GetTracker(Tracker);
-            keyb = MiddleVR.VRDeviceMgr.GetKeyboard();
+            tracker  = deviceMgr.GetTracker(Tracker);
+            keyboard = deviceMgr.GetKeyboard();
         }
 
-        if (keyb != null && keyb.IsKeyToggled(MiddleVR.VRK_SPACE))
+        if (keyboard != null && keyboard.IsKeyToggled(MiddleVR.VRK_SPACE))
         {
-            if( tracker != null )
+            if (tracker != null)
             {
-                float yaw   = tracker.GetYaw();
+                float yaw = tracker.GetYaw();
 
-                vrQuat neutralOr = new vrQuat(0,0,0,1);
-                neutralOr.SetEuler(-yaw, 0, 0);
-                vrQuat nq = neutralOr.GetInverse();
+                vrQuat neutralQ = new vrQuat();
+                neutralQ.SetEuler(-yaw, 0.0f, 0.0f);
+                vrQuat invNeutralQ = neutralQ.GetInverse();
 
-                tracker.SetNeutralOrientation(nq);
+                tracker.SetNeutralOrientation(invNeutralQ);
             }
         }
     }

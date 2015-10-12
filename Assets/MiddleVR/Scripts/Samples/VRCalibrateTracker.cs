@@ -1,25 +1,28 @@
 /* VRCalibrateTracker
  * MiddleVR
- * (c) i'm in VR
+ * (c) MiddleVR
  */
 
 using UnityEngine;
-using System.Collections;
 
+[AddComponentMenu("MiddleVR/Samples/Calibrate Tracker")]
 public class VRCalibrateTracker : MonoBehaviour {
     public string Tracker = "VRPNTracker0.Tracker0";
 
-    void Update () {
-        vrTracker tracker = null;
-        vrKeyboard keyb = null;
+    protected void Update()
+    {
+        vrTracker tracker   = null;
+        vrKeyboard keyboard = null;
 
-        if (MiddleVR.VRDeviceMgr != null)
+        var deviceMgr = MiddleVR.VRDeviceMgr;
+
+        if (deviceMgr != null)
         {
-            tracker = MiddleVR.VRDeviceMgr.GetTracker(Tracker);
-            keyb = MiddleVR.VRDeviceMgr.GetKeyboard();
+            tracker  = deviceMgr.GetTracker(Tracker);
+            keyboard = deviceMgr.GetKeyboard();
         }
 
-        if (keyb != null && keyb.IsKeyToggled(MiddleVR.VRK_SPACE))
+        if (keyboard != null && keyboard.IsKeyToggled(MiddleVR.VRK_SPACE))
         {
             if( tracker != null )
             {

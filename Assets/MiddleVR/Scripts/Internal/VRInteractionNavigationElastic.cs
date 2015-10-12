@@ -1,13 +1,12 @@
 /* VRInteractionNavigationElastic
  * MiddleVR
- * (c) i'm in VR
+ * (c) MiddleVR
  */
 
 using UnityEngine;
-using System.Collections;
 using MiddleVR_Unity3D;
-using System;
 
+[AddComponentMenu("")]
 public class VRInteractionNavigationElastic : VRInteraction {
     public string Name = "InteractionNavigationElastic";
 
@@ -25,9 +24,9 @@ public class VRInteractionNavigationElastic : VRInteraction {
     public float DistanceThreshold = 0.025f;
     public float AngleThreshold    = 5.0f;
 
-    public bool UseRotationYaw   = true;
+    public bool UseRotationYaw = true;
 
-    public bool Fly           = false;
+    public bool Fly = false;
 
     public GameObject       ElasticRepresentationPrefab;
     GameObject              m_ElasticRepresentationObject;
@@ -38,8 +37,7 @@ public class VRInteractionNavigationElastic : VRInteraction {
     bool m_Initialized = false;
     Transform m_VRSystemCenterNode = null;
 
-
-    private void Start()
+    protected void Start()
     {
         // Make sure the base interaction is started
         InitializeBaseInteraction();
@@ -77,7 +75,7 @@ public class VRInteractionNavigationElastic : VRInteraction {
         }
     }
 
-    void Update ()
+    protected void Update()
     {
         if (IsActive())
         {
@@ -123,7 +121,7 @@ public class VRInteractionNavigationElastic : VRInteraction {
         }
     }
 
-    void UpdateElasticRepresentation()
+    protected void UpdateElasticRepresentation()
     {
         if( m_ElasticRepresentation == null )
         {
@@ -136,7 +134,7 @@ public class VRInteractionNavigationElastic : VRInteraction {
         m_ElasticRepresentation.SetElasticPoints( startPosition, endPosition );
     }
 
-    void OnEnable()
+    protected void OnEnable()
     {
         MiddleVR.VRLog( 3, "[ ] VRInteractionNavigationElastic: enabled" );
         if( m_it != null )
@@ -145,7 +143,7 @@ public class VRInteractionNavigationElastic : VRInteraction {
         }
     }
 
-    void OnDisable()
+    protected void OnDisable()
     {
         MiddleVR.VRLog( 3, "[ ] VRInteractionNavigationElastic: disabled" );
         if( m_it != null && MiddleVR.VRInteractionMgr != null )

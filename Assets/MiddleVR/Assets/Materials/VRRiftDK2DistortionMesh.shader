@@ -1,7 +1,7 @@
 ﻿/* VRRiftDK2DistortionMesh
  * MiddleVR
- * (c) i'm in VR
- * Translated to Cg by i'm in VR from the Oculus SDK.
+ * (c) MiddleVR
+ * Translated to Cg by MiddleVR from the Oculus SDK.
  */
 Shader "Hidden" {
 	Properties {

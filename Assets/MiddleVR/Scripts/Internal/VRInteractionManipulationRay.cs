@@ -1,6 +1,6 @@
 /* VRInteractionManipulationRay
  * MiddleVR
- * (c) i'm in VR
+ * (c) MiddleVR
  *
  * Note: Made to be attached to the Wand
  */
@@ -10,6 +10,7 @@ using System.Collections;
 using MiddleVR_Unity3D;
 using System;
 
+[AddComponentMenu("")]
 public class VRInteractionManipulationRay : VRInteraction {
 
     public string Name               = "InteractionManipulationRay";
@@ -24,15 +25,15 @@ public class VRInteractionManipulationRay : VRInteraction {
     private GameObject m_CurrentSelectedObject    = null;
     private GameObject m_CurrentManipulatedObject = null;
 
-    private Vector3    m_ObjectInitialLocalPosition;
-    private Quaternion m_ObjectInitialLocalRotation;
+    private Vector3    m_ManipulatedObjectInitialLocalPosition;
+    private Quaternion m_ManipulatedObjectInitialLocalRotation;
+    private bool       m_ManipulatedObjectInitialIsKinematic;
 
     private MVRNodesMapper.ENodesSyncDirection m_ObjectPreviousSyncDir = MVRNodesMapper.ENodesSyncDirection.NoSynchronization;
 
     private vrInteraction m_PausedSelection = null;
 
-
-    private void Start()
+    protected void Start()
     {
         // Make sure the base interaction is started
         InitializeBaseInteraction();
@@ -59,7 +60,7 @@ public class VRInteractionManipulationRay : VRInteraction {
         m_Wand = this.GetComponent<VRWand>();
     }
 
-    void Update ()
+    protected void Update()
     {
         if (IsActive())
         {
@@ -90,7 +91,7 @@ public class VRInteractionManipulationRay : VRInteraction {
         }
     }
 
-    void OnEnable()
+    protected void OnEnable()
     {
         MiddleVR.VRLog( 3, "[ ] VRInteractionManipulationRay: enabled" );
         if( m_it != null )
@@ -99,7 +100,7 @@ public class VRInteractionManipulationRay : VRInteraction {
         }
     }
 
-    void OnDisable()
+    protected void OnDisable()
     {
         MiddleVR.VRLog( 3, "[ ] VRInteractionManipulationRay: disabled" );
 
@@ -125,8 +126,16 @@ public class VRInteractionManipulationRay : VRInteraction {
         m_it.SetManipulatedNode(middleVRNode);
 
         // Save initial position
-        m_ObjectInitialLocalPosition = m_CurrentManipulatedObject.transform.localPosition;
-        m_ObjectInitialLocalRotation = m_CurrentManipulatedObject.transform.localRotation;
+        m_ManipulatedObjectInitialLocalPosition = m_CurrentManipulatedObject.transform.localPosition;
+        m_ManipulatedObjectInitialLocalRotation = m_CurrentManipulatedObject.transform.localRotation;
+
+        // Pause rigidbody acceleration 
+        Rigidbody manipulatedRigidbody = iGrabbedObject.GetComponent<Rigidbody>();
+        if (manipulatedRigidbody != null)
+        {
+            m_ManipulatedObjectInitialIsKinematic = manipulatedRigidbody.isKinematic;
+            manipulatedRigidbody.isKinematic = true;
+        }
 
         // Deactivate selection during the manipulation
         vrInteraction selection = MiddleVR.VRInteractionMgr.GetActiveInteractionByTag("ContinuousSelection");
@@ -150,8 +159,8 @@ public class VRInteractionManipulationRay : VRInteraction {
         {
             if (returningObjectScript.enabled)
             {
-                returningObjectScript.AddReturningObject(m_CurrentManipulatedObject, m_ObjectInitialLocalPosition,
-                                                         m_ObjectInitialLocalRotation, false);
+                returningObjectScript.AddReturningObject(m_CurrentManipulatedObject, m_ManipulatedObjectInitialLocalPosition,
+                                                         m_ManipulatedObjectInitialLocalRotation, false);
             }
         }
 
@@ -161,7 +170,12 @@ public class VRInteractionManipulationRay : VRInteraction {
         VRActor vrActorScript = m_CurrentManipulatedObject.GetComponent<VRActor>();
         vrActorScript.SyncDirection = m_ObjectPreviousSyncDir;
 
-        m_CurrentManipulatedObject = null;
+        // Unpause rigidbody acceleration 
+        Rigidbody manipulatedRigidbody = m_CurrentManipulatedObject.GetComponent<Rigidbody>();
+        if (manipulatedRigidbody != null)
+        {
+            manipulatedRigidbody.isKinematic = m_ManipulatedObjectInitialIsKinematic;
+        }
 
         // Reactivate selection after the manipulation
         if (m_PausedSelection != null)
@@ -169,5 +183,7 @@ public class VRInteractionManipulationRay : VRInteraction {
             MiddleVR.VRInteractionMgr.Activate(m_PausedSelection);
             m_PausedSelection = null;
         }
+
+        m_CurrentManipulatedObject = null;
     }
 }

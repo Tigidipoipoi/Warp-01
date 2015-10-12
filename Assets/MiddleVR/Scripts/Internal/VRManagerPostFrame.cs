@@ -1,65 +1,71 @@
 /* VRManagerPostFrame
  * MiddleVR
- * (c) i'm in VR
+ * (c) MiddleVR
  */
 
 using UnityEngine;
 using System.Collections;
 using MiddleVR_Unity3D;
-using System.IO;
 
+[AddComponentMenu("")]
 public class VRManagerPostFrame : MonoBehaviour {
     public vrKernel kernel = null;
-    public vrDeviceManager dmgr = null;
-    public vrClusterManager cmgr = null;
+    public vrDeviceManager deviceMgr = null;
+    public vrClusterManager clusterMgr = null;
 
     private bool LoggedNoKeyboard = false;
 
-    IEnumerator EndOfFrame()
+    private void InitManagers()
     {
-        yield return new WaitForEndOfFrame();
-
-        VRManagerScript mgr = GetComponent<VRManagerScript>();
-        if (mgr != null && MiddleVR.VRKernel == null )
-        {
-            Debug.LogWarning("[ ] If you have an error mentionning 'DLLNotFoundException: MiddleVR_CSharp', please restart Unity. If this does not fix the problem, please make sure MiddleVR is in the PATH environment variable.");
-            mgr.GetComponent<GUIText>().text = "[ ] Check the console window to check if you have an error mentionning 'DLLNotFoundException: MiddleVR_CSharp', please restart Unity. If this does not fix the problem, please make sure MiddleVR is in the PATH environment variable.";
-        }
-
-        MVRTools.Log(4, "[>] Unity: Starting VR End of Frame.");
-
-        if( kernel == null )
+        if (kernel == null)
         {
             kernel = MiddleVR.VRKernel;
         }
 
-        if (dmgr == null)
+        if (deviceMgr == null)
         {
-            dmgr = MiddleVR.VRDeviceMgr;
+            deviceMgr = MiddleVR.VRDeviceMgr;
         }
 
-        if(cmgr == null)
+        if (clusterMgr == null)
         {
-            cmgr = MiddleVR.VRClusterMgr;
+            clusterMgr = MiddleVR.VRClusterMgr;
+        }
+    }
+
+    private IEnumerator PostFrameUpdate()
+    {
+        yield return new WaitForEndOfFrame();
+
+        VRManagerScript mgr = GetComponent<VRManagerScript>();
+        if (mgr != null && MiddleVR.VRKernel == null)
+        {
+            Debug.LogWarning("[ ] If you have an error mentioning 'DLLNotFoundException: MiddleVR_CSharp', please restart Unity. If this does not fix the problem, please make sure MiddleVR is in the PATH environment variable.");
+            mgr.GetComponent<GUIText>().text = "[ ] Check the console window to check if you have an error mentioning 'DLLNotFoundException: MiddleVR_CSharp', please restart Unity. If this does not fix the problem, please make sure MiddleVR is in the PATH environment variable.";
         }
 
-        if (dmgr != null )
+        MVRTools.Log(4, "[>] Unity: Start of VR PostFrameUpdate.");
+
+        if (kernel == null || deviceMgr == null || clusterMgr == null)
         {
-            vrKeyboard keyb = dmgr.GetKeyboard();
-            if (keyb != null)
+            InitManagers();
+        }
+
+        if (deviceMgr != null )
+        {
+            vrKeyboard keyboard = deviceMgr.GetKeyboard();
+            if (keyboard != null)
             {
-                VRManagerScript vrmgr = GetComponent<VRManagerScript>();
-
-                if (vrmgr != null && vrmgr.QuitOnEsc && keyb.IsKeyPressed((uint)MiddleVR.VRK_ESCAPE))
+                if (mgr != null && mgr.QuitOnEsc && keyboard.IsKeyPressed((uint)MiddleVR.VRK_ESCAPE))
                 {
-                    vrmgr.QuitApplication();
+                    mgr.QuitApplication();
                 }
             }
             else
             {
                 if (!LoggedNoKeyboard)
                 {
-                    MVRTools.Log("[X] No VR keyboard");
+                    MVRTools.Log("[X] No VR keyboard.");
                     LoggedNoKeyboard = true;
                 }
             }
@@ -67,29 +73,26 @@ public class VRManagerPostFrame : MonoBehaviour {
 
         if (kernel != null)
         {
-            /*
-            MVRTools.Log("SavingRT"); ;
-            SaveRT();
-             */
             kernel.PostFrameUpdate();
         }
 
-        MVRTools.Log(4, "[<] Unity: End of VR End of Frame.");
+        MVRTools.Log(4, "[<] Unity: End of VR PostFrameUpdate.");
 
-        if( kernel != null && kernel.GetFrame() == 2 && !Application.isEditor )
+        if (kernel != null && kernel.GetFrame() == 2 && !Application.isEditor)
         {
             MVRTools.Log(2, "[ ] If the application is stuck here and you're using Quad-buffer active stereoscopy, make sure that in the Player Settings of Unity, the option 'Run in Background' is checked.");
         }
     }
 
-    void Update () {
-        MVRTools.Log(4, "[>] Unity: VR PostFrame Update!");
+    private void Update()
+    {
+        MVRTools.Log(4, "[>] Unity: VR EndFrame Update!");
 
-        MiddleVR.VRClusterMgr.EndFrameUpdate();
+        MiddleVR.VRKernel.EndFrameUpdate();
 
-        MVRTools.Log(4, "[ ] Unity: StartCoRoutine EndOfFrame!");
-        StartCoroutine(EndOfFrame());
+        MVRTools.Log(4, "[ ] Unity: StartCoRoutine PostFrameUpdate");
+        StartCoroutine(PostFrameUpdate());
 
-        MVRTools.Log(4, "[<] Unity: End of VR PostFrame Update!");
+        MVRTools.Log(4, "[<] Unity: End of VR EndFrame Update!");
     }
 }

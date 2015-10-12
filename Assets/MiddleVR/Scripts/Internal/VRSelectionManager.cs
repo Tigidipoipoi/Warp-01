@@ -1,14 +1,15 @@
 ﻿/* VRSelectionManager
  * MiddleVR
- * (c) i'm in VR
+ * (c) MiddleVR
  */
 
 using UnityEngine;
 using System.Collections;
 
+[AddComponentMenu("")]
 public class VRSelectionManager : MonoBehaviour {
 
-    VRSelection m_Selection = null;//new VRSelection();
+    VRSelection m_Selection = null;
 
     public void SetSelection(VRSelection iSelection)
     {
@@ -33,16 +34,15 @@ public class VRSelection
     public Vector3 SelectionContact = Vector3.zero;
     public Vector3 SelectionNormal  = Vector3.zero;
 
-
     public static bool Compare(VRSelection iFirst, VRSelection iSecond)
     {
-        if (iFirst == null && iSecond == null)
-        {
-            return true;
-        }
-        else if (iFirst != null && iSecond != null)
+        if (iFirst != null && iSecond != null)
         {
             return iFirst.SelectedObject == iSecond.SelectedObject;
+        }
+        else if (iFirst == null && iSecond == null)
+        {
+            return true;
         }
         else
         {

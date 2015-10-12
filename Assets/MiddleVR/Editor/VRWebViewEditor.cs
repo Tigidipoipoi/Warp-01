@@ -1,6 +1,6 @@
 /* VRGUIScriptEditor
  * MiddleVR
- * (c) i'm in VR
+ * (c) MiddleVR
  */
 
 using UnityEngine;
@@ -31,9 +31,20 @@ public class VRWebViewEditor : Editor
 		if (GUILayout.Button("Pick html file"))
 		{
 			string path = EditorUtility.OpenFilePanel("Please choose a HTML file", "", "html");
-			MVRTools.Log("[+] Picked " + path );
-			m_VRWebViewScript.m_URL = path;
-			EditorUtility.SetDirty(m_VRWebViewScript);
+			if (path.Length != 0)
+			{
+				// Don't use Path.DirectorySeparatorChar because
+				// Unity always returns paths with slashes
+				string basePath = Application.dataPath + "/";
+				if(path.StartsWith(basePath))
+				{
+					path = path.Substring(basePath.Length);
+				}
+				
+				MVRTools.Log("[+] Picked " + path );
+				m_VRWebViewScript.m_URL = path;
+				EditorUtility.SetDirty(m_VRWebViewScript);
+			}
 		}
 		
 		DrawDefaultInspector();

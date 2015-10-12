@@ -1,12 +1,12 @@
 ﻿/* VRMenuManager
  * MiddleVR
- * (c) i'm in VR
+ * (c) MiddleVR
  */
 
 using UnityEngine;
-using System.Collections;
 using MiddleVR_Unity3D;
 
+[AddComponentMenu("")]
 public class VRMenuManager : MonoBehaviour
 {
     public int                  HideShowWandButton = 2;
@@ -41,7 +41,7 @@ public class VRMenuManager : MonoBehaviour
     private Vector3 m_TargetPosition;
     private Quaternion m_StartRotation;
 
-    private void Start()
+    protected void Start()
     {
         m_NormalScale = this.transform.localScale;
         this.transform.localScale = Vector3.zero;
@@ -49,7 +49,7 @@ public class VRMenuManager : MonoBehaviour
         _RefreshMenu();
     }
 
-    private void Update()
+    protected void Update()
     {
         if (!m_IsMenuUsed)
         {
@@ -90,6 +90,8 @@ public class VRMenuManager : MonoBehaviour
                     return;
                 }
             }
+
+            m_Initializing = false;
         }
 
         // Toggle visibility
@@ -111,7 +113,11 @@ public class VRMenuManager : MonoBehaviour
     {
         MaximizeButton.Toggle(m_IsMenuOpen);
         MenuGUI.GetComponent<MeshRenderer>().enabled = m_IsMenuOpen;
-        MenuGUI.GetComponent<Collider>().enabled = m_IsMenuOpen;
+        Collider menuCollider = MenuGUI.GetComponent<Collider>();
+        if( menuCollider != null )
+        {
+            menuCollider.enabled = m_IsMenuOpen;
+        }
     }
 
     public void ToggleVisiblity()

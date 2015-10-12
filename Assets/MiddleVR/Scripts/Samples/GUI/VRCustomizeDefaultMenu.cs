@@ -1,13 +1,14 @@
 ﻿/* VRCustomizeDefaultMenu
 
  * MiddleVR
- * (c) i'm in VR
+ * (c) MiddleVR
  */
-
 
 using UnityEngine;
 using System.Collections;
+using MiddleVR_Unity3D;
 
+[AddComponentMenu("MiddleVR/Samples/GUI/Customize Default Menu")]
 public class VRCustomizeDefaultMenu : MonoBehaviour
 {
     // Start waits on VRMenu creation with a coroutine
@@ -28,52 +29,56 @@ public class VRCustomizeDefaultMenu : MonoBehaviour
         // End coroutine
         yield break;
     }
+    private void OnDestroy()
+    {
+        MiddleVR.DisposeObject(ref m_MyItemCommand);
+    }
 
-    private vrCommand m_MyItemCommand;
+    private vrCommand m_MyItemCommand = null;
     vrValue MyItemCommandHandler(vrValue iValue)
     {
         print("My menu item has been clicked");
         return null;
     }
 
-    private void AddButton(VRMenu vrmenu)
+    private void AddButton(VRMenu iVRMenu)
     {
         // Add a button at the start of the menu
         m_MyItemCommand = new vrCommand("VRMenu.MyCustomButtonCommand", MyItemCommandHandler);
 
-        vrWidgetButton button = new vrWidgetButton("VRMenu.MyCustomButton", vrmenu.menu, "My Menu Item", m_MyItemCommand);
-        vrmenu.menu.SetChildIndex(button, 0);
+        vrWidgetButton button = new vrWidgetButton("VRMenu.MyCustomButton", iVRMenu.menu, "My Menu Item", m_MyItemCommand);
+        iVRMenu.menu.SetChildIndex(button, 0);
 
         // Add a separator below it
-        vrWidgetSeparator separator = new vrWidgetSeparator("VRMenu.MyCustomSeparator", vrmenu.menu);
-        vrmenu.menu.SetChildIndex(separator, 1);
+        vrWidgetSeparator separator = new vrWidgetSeparator("VRMenu.MyCustomSeparator", iVRMenu.menu);
+        iVRMenu.menu.SetChildIndex(separator, 1);
     }
 
-    private void RemoveItem(VRMenu vrmenu)
+    private void RemoveItem(VRMenu iVRMenu)
     {
         // Remove "Reset" submenu
-        for (uint i = 0; i < vrmenu.menu.GetChildrenNb(); ++i)
+        for (uint i = 0; i < iVRMenu.menu.GetChildrenNb(); ++i)
         {
-            vrWidget widget = vrmenu.menu.GetChild(i);
+            vrWidget widget = iVRMenu.menu.GetChild(i);
             if( widget.GetLabel().Contains("Reset"))
             {
-                vrmenu.menu.RemoveChild(widget);
+                iVRMenu.menu.RemoveChild(widget);
                 break;
             }
         }   
     }
 
-    private void MoveItems(VRMenu vrmenu)
+    private void MoveItems(VRMenu iVRMmenu)
     {
         // Move every menu item under a sub menu
         vrWidgetMenu subMenu = new vrWidgetMenu("VRMenu.MyNewSubMenu", null, "MiddleVR Menu");
 
-        while (vrmenu.menu.GetChildrenNb() > 0)
+        while (iVRMmenu.menu.GetChildrenNb() > 0)
         {
-            vrWidget widget = vrmenu.menu.GetChild(0);
+            vrWidget widget = iVRMmenu.menu.GetChild(0);
             widget.SetParent(subMenu);
         }
 
-        subMenu.SetParent(vrmenu.menu);
+        subMenu.SetParent(iVRMmenu.menu);
     }
 }

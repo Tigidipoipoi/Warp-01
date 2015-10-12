@@ -1,24 +1,20 @@
 ﻿/* VRGUIHTMLBasicSample
 
  * MiddleVR
- * (c) i'm in VR
+ * (c) MiddleVR
  */
 
 using UnityEngine;
-using System.Collections;
 
 /*
  * 
  * Use with data/GUI/HTMLBasicSample/index.html in MiddleVR install directory
  * 
  */
-
+[AddComponentMenu("MiddleVR/Samples/GUI/HTML Basic")]
 public class VRGUIHTMLBasicSample : MonoBehaviour
 {
-    // Disable warning CS0414 "The private field 'XXX' is assigned but its value is never used"
-    #pragma warning disable 0414
-
-    private vrCommand m_MyCommand;
+    private vrCommand m_MyCommand = null;
 
     private vrValue CommandHandler(vrValue iValue)
     {
@@ -31,7 +27,13 @@ public class VRGUIHTMLBasicSample : MonoBehaviour
         return null;
     }
 
-	void Start () {
+    private void Start()
+    {
         m_MyCommand = new vrCommand("MyCommand", CommandHandler);
-	}
+    }
+
+    private void OnDestroy()
+    {
+        MiddleVR.DisposeObject(ref m_MyCommand);
+    }
 }

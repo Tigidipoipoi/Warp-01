@@ -1,6 +1,6 @@
 /* VRShareTransform
  * MiddleVR
- * (c) i'm in VR
+ * (c) MiddleVR
  */
 
 using UnityEngine;
@@ -8,7 +8,8 @@ using System.Collections;
 
 using MiddleVR_Unity3D;
 
-// Share a GameObject transformation using MiddleVR Cluster Command
+// Share a GameObject transformation using MiddleVR Cluster Command.
+[AddComponentMenu("MiddleVR/Cluster/Share Transform")]
 public class VRShareTransform : MonoBehaviour {
     static private uint g_shareID = 1;
 
@@ -26,6 +27,15 @@ public class VRShareTransform : MonoBehaviour {
         m_Command = new vrCommand(shareName, _CommandHandler);
 
         m_ClusterMgr = MiddleVR.VRClusterMgr;
+    }
+
+    protected void OnDisable()
+    {
+        if( m_Command != null )
+        {
+            m_Command.Dispose();
+            m_Command = null;
+        }
     }
 
     // On the server, call the cluster command with a list of [position, rotation] every update

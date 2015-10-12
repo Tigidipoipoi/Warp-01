@@ -1,26 +1,30 @@
 ﻿/* VRClusterCommand
  * MiddleVR
- * (c) i'm in VR
+ * (c) MiddleVR
  */
 
 using UnityEngine;
-using System.Collections;
 using MiddleVR_Unity3D;
 
 // Command execution is synchronized across the cluster.
 // Command handlers are not executed instantly but the next time the cluster synchronizes,
 // in the same order they are called.
-
+[AddComponentMenu("MiddleVR/Samples/Cluster Command")]
 public class VRClusterCommand : MonoBehaviour {
 
     // If m_Name is an empty string, one will be automatically generated
     public string m_Name = "";
 
     private vrCommand m_Command = null;
-    
-    public void Start()
+
+    private void Start()
     {
         m_Command = new vrCommand(m_Name, _CommandHandler);
+    }
+
+    private void OnDestroy()
+    {
+        MiddleVR.DisposeObject(ref m_Command);
     }
 
     // When called on the server (master) node, an asynchronous call
@@ -45,5 +49,4 @@ public class VRClusterCommand : MonoBehaviour {
         // Do stuff here
         return null; // Return null/undefined vrValue
     }
-
 }

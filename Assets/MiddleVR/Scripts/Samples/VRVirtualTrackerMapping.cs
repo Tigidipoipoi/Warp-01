@@ -1,12 +1,12 @@
 /* VRVirtualTrackerMapping
  * MiddleVR
- * (c) i'm in VR
+ * (c) MiddleVR
  */
 
 using UnityEngine;
-using System.Collections;
 using MiddleVR_Unity3D;
 
+[AddComponentMenu("MiddleVR/Samples/Virtual Tracker Mapping")]
 public class VRVirtualTrackerMapping : MonoBehaviour
 {
     public string m_SourceTrackerName="VRPNTracker0.Tracker0";
@@ -23,71 +23,80 @@ public class VRVirtualTrackerMapping : MonoBehaviour
     public bool UsePitch     = true;
     public bool UseRoll      = true;
 
-    private bool m_Init = false;
+    private bool m_IsInit = false;
 
     // The trackers
     private vrTracker m_SourceTracker = null;
     private vrTracker m_DestinationVirtualTracker = null;
 
-    void Start ()
+    protected void Start()
     {
         // Retrieve trackers by name
         m_SourceTracker             = MiddleVR.VRDeviceMgr.GetTracker(m_SourceTrackerName);
         m_DestinationVirtualTracker = MiddleVR.VRDeviceMgr.GetTracker(m_DestinationVirtualTrackerName);
 
-        if( m_SourceTracker == null )
+        if (m_SourceTracker == null)
         {
-            MVRTools.Log("[X] VirtualTrackerMapping: Error : Can't find tracker '" + m_SourceTrackerName + "'.");
+            MVRTools.Log("[X] VirtualTrackerMapping: Error : Can't find tracker '"
+                + m_SourceTrackerName + "'.");
         }
-        if( m_DestinationVirtualTracker == null )
+        if (m_DestinationVirtualTracker == null)
         {
-            MVRTools.Log("[X] VirtualTrackerMapping: Error : Can't find tracker '" + m_DestinationVirtualTrackerName + "'.");
+            MVRTools.Log("[X] VirtualTrackerMapping: Error : Can't find tracker '" +
+                m_DestinationVirtualTrackerName + "'.");
         }
 
         if (m_SourceTracker != null && m_DestinationVirtualTracker != null)
         {
-            m_Init = true;
+            m_IsInit = true;
         }
     }
 
-    void Update ()
+    protected void Update()
     {
-        if (m_Init == true)
+        if (m_IsInit)
         {
-            // Multiply by scale value only if used
+            float scale = 1.0f;
+
             if (UsePositionScale)
             {
-                // Position
-                if (UsePositionX)
-                    m_DestinationVirtualTracker.SetX(PositionScaleValue * m_SourceTracker.GetX());
-                // Inverting Unity Y and MiddleVR Z because of different coordinate systems
-                if (UsePositionY)
-                    m_DestinationVirtualTracker.SetZ(PositionScaleValue * m_SourceTracker.GetZ());
-                // Inverting Unity Y and MiddleVR Z because of different coordinate systems
-                if (UsePositionZ)
-                    m_DestinationVirtualTracker.SetY(PositionScaleValue * m_SourceTracker.GetY());
+                scale = PositionScaleValue;
             }
-            else
+
+            // Position
+            //
+            // Show how coordinates values can be changed when feeding a virtual tracker.
+            //
+            if (UsePositionX)
             {
-                // Position
-                if (UsePositionX)
-                    m_DestinationVirtualTracker.SetX(m_SourceTracker.GetX());
-                // Inverting Unity Y and MiddleVR Z because of different coordinate systems
-                if (UsePositionY)
-                    m_DestinationVirtualTracker.SetZ(m_SourceTracker.GetZ());
-                // Inverting Unity Y and MiddleVR Z because of different coordinate systems
-                if (UsePositionZ)
-                    m_DestinationVirtualTracker.SetY(m_SourceTracker.GetY());
+                m_DestinationVirtualTracker.SetX(scale * m_SourceTracker.GetX());
+            }
+            if (UsePositionY)
+            {
+                m_DestinationVirtualTracker.SetZ(scale * m_SourceTracker.GetZ());
+            }
+            if (UsePositionZ)
+            {
+                m_DestinationVirtualTracker.SetY(scale * m_SourceTracker.GetY());
             }
 
             // Orientation
+            //
+            // Note that it is suggested to use quaternions if you do not need
+            // to decompose a rotation.
+            //
             if (UseYaw)
+            {
                 m_DestinationVirtualTracker.SetYaw(m_SourceTracker.GetYaw());
+            }
             if (UsePitch)
+            {
                 m_DestinationVirtualTracker.SetPitch(m_SourceTracker.GetPitch());
+            }
             if (UseRoll)
+            {
                 m_DestinationVirtualTracker.SetRoll(m_SourceTracker.GetRoll());
-
+            }
         }
     }
 }

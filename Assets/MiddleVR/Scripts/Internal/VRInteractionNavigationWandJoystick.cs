@@ -1,14 +1,13 @@
 /* VRInteractionNavigationWandJoystick
  * MiddleVR
- * (c) i'm in VR
+ * (c) MiddleVR
  */
 
 using UnityEngine;
-using System.Collections;
 using MiddleVR_Unity3D;
 using System;
 
-
+[AddComponentMenu("")]
 public class VRInteractionNavigationWandJoystick : VRInteraction {
     public string Name = "InteractionNavigationWandJoystick";
 
@@ -17,7 +16,7 @@ public class VRInteractionNavigationWandJoystick : VRInteraction {
 
     vrNode3D m_DirectionReferenceNode = null;
     vrNode3D m_TurnAroundNode = null;
-    
+
     public float TranslationSpeed = 1.0f;
     public float RotationSpeed = 45.0f;
 
@@ -25,8 +24,7 @@ public class VRInteractionNavigationWandJoystick : VRInteraction {
 
     vrInteractionNavigationWandJoystick m_it = null;
 
-
-    private void Start()
+    protected void Start()
     {
         // Make sure the base interaction is started
         InitializeBaseInteraction();
@@ -41,7 +39,7 @@ public class VRInteractionNavigationWandJoystick : VRInteraction {
         m_DirectionReferenceNode = MiddleVR.VRDisplayMgr.GetNode(DirectionReferenceNode);
         m_TurnAroundNode = MiddleVR.VRDisplayMgr.GetNode(TurnAroundNode);
 
-        if ( m_DirectionReferenceNode!= null && m_TurnAroundNode != null )
+        if( m_DirectionReferenceNode!= null && m_TurnAroundNode != null )
         {
             m_it.SetDirectionReferenceNode(m_DirectionReferenceNode);
             m_it.SetTurnAroundNode(m_TurnAroundNode);
@@ -55,7 +53,7 @@ public class VRInteractionNavigationWandJoystick : VRInteraction {
         }
     }
 
-    void OnEnable()
+    protected void OnEnable()
     {
         MiddleVR.VRLog( 3, "[ ] VRInteractionNavigationWandJoystick: enabled" );
         if( m_it != null )
@@ -64,7 +62,7 @@ public class VRInteractionNavigationWandJoystick : VRInteraction {
         }
     }
 
-    void OnDisable()
+    protected void OnDisable()
     {
         MiddleVR.VRLog( 3, "[ ] VRInteractionNavigationWandJoystick: disabled" );
         if( m_it != null && MiddleVR.VRInteractionMgr != null )

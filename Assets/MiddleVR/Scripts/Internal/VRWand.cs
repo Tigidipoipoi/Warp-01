@@ -1,12 +1,12 @@
 ﻿/* VRWand
  * MiddleVR
- * (c) i'm in VR
+ * (c) MiddleVR
  */
 
 using UnityEngine;
-using System.Collections;
 using MiddleVR_Unity3D;
 
+[AddComponentMenu("")]
 public class VRWand : MonoBehaviour
 {
     public float DefaultRayLength = 10;
@@ -21,7 +21,7 @@ public class VRWand : MonoBehaviour
     public bool SendWandEvents = true;
     public bool RepeatVRAction = false;
 
-    private void Start()
+    protected void Start()
     {
         m_SelectionMgr = this.GetComponent<VRSelectionManager>();
         if (m_SelectionMgr == null)
@@ -41,7 +41,7 @@ public class VRWand : MonoBehaviour
         m_WandRayRenderer = transform.FindChild("DefaultWandRepresentation/WandRay/RayMesh").GetComponent<Renderer>();
     }
 
-    private void Update()
+    protected void Update()
     {
         VRSelection selection = m_SelectionMgr.GetSelection();
 

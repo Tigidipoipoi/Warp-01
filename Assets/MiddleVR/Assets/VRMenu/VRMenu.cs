@@ -1,22 +1,19 @@
 /* VRMenu
  * MiddleVR
- * (c) i'm in VR
+ * (c) MiddleVR
  */
 
 using UnityEngine;
-using System.Collections;
 using System.Collections.Generic;
 using MiddleVR_Unity3D;
 
-public class VRMenu : MonoBehaviour {
-
+[AddComponentMenu("")]
+public class VRMenu : MonoBehaviour
+{
     private VRManagerScript m_VRManager;
 
-    // Disable warning CS0414 "The private field 'XXX' is assigned but its value is never used"
-    #pragma warning disable 0414
-
-    private vrGUIRendererWeb m_GUIRendererWeb;
-    private vrWidgetMenu     m_Menu;
+    private vrGUIRendererWeb m_GUIRendererWeb = null;
+    private vrWidgetMenu     m_Menu = null;
 
     public vrGUIRendererWeb guiRendererWeb
     {
@@ -59,9 +56,6 @@ public class VRMenu : MonoBehaviour {
     // Virtual Hand
     private vrWidgetMenu        m_VirtualHandOptions;
 
-
-    #pragma warning restore 0414
-
     // General
     private vrCommand m_ResetCurrentButtonCommand;
     private vrCommand m_ResetZeroButtonCommand;
@@ -85,7 +79,6 @@ public class VRMenu : MonoBehaviour {
     private vrEventListener m_Listener;
     private Dictionary<string, vrCommand> m_Commands = new Dictionary<string, vrCommand>();
     private Dictionary<string, vrWidgetToggleButton> m_Buttons = new Dictionary<string, vrWidgetToggleButton>();
-
 
     private bool EventListener(vrEvent iEvent)
     {
@@ -320,8 +313,7 @@ public class VRMenu : MonoBehaviour {
         return null;
     }
 
-
-    void Start ()
+    protected void Start ()
     {
         // Retrieve the VRManager
         VRManagerScript[] foundVRManager = FindObjectsOfType(typeof(VRManagerScript)) as VRManagerScript[];
@@ -337,7 +329,7 @@ public class VRMenu : MonoBehaviour {
 
         // Start listening to MiddleVR events
         m_Listener = new vrEventListener(EventListener);
-        MiddleVR.VRKernel.AddEventListener(m_Listener);
+        MiddleVR.VRInteractionMgr.AddEventListener(m_Listener);
 
         // Create commands
 
@@ -510,5 +502,59 @@ public class VRMenu : MonoBehaviour {
         {
             m_VirtualHandOptions.SetLabel("Virtual Hand");
         }
+    }
+
+    private void OnDestroy()
+    {
+        // Listener
+        MiddleVR.DisposeObject(ref m_Listener);
+
+        // Commands
+        foreach (var item in m_Commands)
+        {
+            MiddleVR.DisposeObject(item.Value);
+        }
+        m_Commands.Clear();
+
+        MiddleVR.DisposeObject(ref m_ResetCurrentButtonCommand);
+        MiddleVR.DisposeObject(ref m_ResetZeroButtonCommand);
+        MiddleVR.DisposeObject(ref m_ExitButtonCommand);
+        MiddleVR.DisposeObject(ref m_FramerateCheckboxCommand);
+        MiddleVR.DisposeObject(ref m_ProxiWarningCheckboxCommand);
+        MiddleVR.DisposeObject(ref m_NavigationModeRadioCommand);
+        MiddleVR.DisposeObject(ref m_FlyCheckboxCommand);
+        MiddleVR.DisposeObject(ref m_CollisionsCheckboxCommand);
+        MiddleVR.DisposeObject(ref m_ManipulationModeRadioCommand);
+        MiddleVR.DisposeObject(ref m_ReturnObjectsCheckboxCommand);
+        MiddleVR.DisposeObject(ref m_VirtualHandModeRadioCommand);
+
+        // Widgets
+        foreach (var item in m_Buttons)
+        {
+            MiddleVR.DisposeObject(item.Value);
+        }
+        m_Buttons.Clear();
+
+        MiddleVR.DisposeObject(ref m_ResetButtonMenu);
+        MiddleVR.DisposeObject(ref m_ResetCurrentButton);
+        MiddleVR.DisposeObject(ref m_ResetZeroButton);
+        MiddleVR.DisposeObject(ref m_ExitButtonMenu);
+        MiddleVR.DisposeObject(ref m_ExitButton);
+        MiddleVR.DisposeObject(ref m_GeneralOptions);
+        MiddleVR.DisposeObject(ref m_FramerateCheckbox);
+        MiddleVR.DisposeObject(ref m_ProxiWarningCheckbox);
+        MiddleVR.DisposeObject(ref m_GeneralSeparator);
+        MiddleVR.DisposeObject(ref m_NavigationOptions);
+        MiddleVR.DisposeObject(ref m_NavigationSeparator);
+        MiddleVR.DisposeObject(ref m_FlyCheckbox);
+        MiddleVR.DisposeObject(ref m_CollisionsCheckbox);
+        MiddleVR.DisposeObject(ref m_ManipulationOptions);
+        MiddleVR.DisposeObject(ref m_ManipulationSeparator);
+        MiddleVR.DisposeObject(ref m_ReturnObjectsCheckbox);
+        MiddleVR.DisposeObject(ref m_VirtualHandOptions);
+        MiddleVR.DisposeObject(ref m_Menu);
+
+        // GUIRenderer
+        MiddleVR.DisposeObject(ref m_GUIRendererWeb);
     }
 }

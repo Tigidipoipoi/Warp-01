@@ -1,20 +1,23 @@
 /* VRFollowNode
  * MiddleVR
- * (c) i'm in VR
+ * (c) MiddleVR
  */
 
 using UnityEngine;
-using System.Collections;
 using MiddleVR_Unity3D;
 
+[AddComponentMenu("MiddleVR/Samples/Follow Node")]
 public class VRFollowNode : MonoBehaviour {
     public string VRNodeName = "HeadNode";
     private vrNode3D m_Node = null;
 
-    void Update () {
-        if (m_Node == null && MiddleVR.VRDisplayMgr != null)
+    protected void Update()
+    {
+        var displayMgr = MiddleVR.VRDisplayMgr;
+
+        if (m_Node == null && displayMgr != null)
         {
-            m_Node = MiddleVR.VRDisplayMgr.GetNode(VRNodeName);
+            m_Node = displayMgr.GetNode(VRNodeName);
         }
 
         if (m_Node != null)

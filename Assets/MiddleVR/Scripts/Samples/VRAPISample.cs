@@ -1,35 +1,38 @@
 /* VRInteractionTest
  * MiddleVR
- * (c) i'm in VR
+ * (c) MiddleVR
  */
 
 using UnityEngine;
-using System.Collections;
 using MiddleVR_Unity3D;
 
+[AddComponentMenu("MiddleVR/Samples/API")]
 public class VRInteractionTest : MonoBehaviour {
 
-    void Update () {
+    protected void Update()
+    {
         TestWand();
         TestKeyboardMouse();
         TestDevices();
         TestDisplay();
     }
 
-    void TestWand()
+    private void TestWand()
     {
-        if (MiddleVR.VRDeviceMgr != null)
+        var deviceMgr = MiddleVR.VRDeviceMgr;
+
+        if (deviceMgr != null)
         {
             // Getting wand horizontal axis
-            float x = MiddleVR.VRDeviceMgr.GetWandHorizontalAxisValue();
+            float x = deviceMgr.GetWandHorizontalAxisValue();
             // Getting wand vertical axis
-            float y = MiddleVR.VRDeviceMgr.GetWandVerticalAxisValue();
+            float y = deviceMgr.GetWandVerticalAxisValue();
 
             // Getting state of primary wand button
-            bool b0 = MiddleVR.VRDeviceMgr.IsWandButtonPressed(0);
+            bool b0 = deviceMgr.IsWandButtonPressed(0);
 
             // Getting toggled state of primary wand button
-            // bool t0 = MiddleVR.VRDeviceMgr.IsWandButtonToggled(0);
+            // bool t0 = deviceMgr.IsWandButtonToggled(0);
 
             if (b0 == true)
             {
@@ -39,38 +42,43 @@ public class VRInteractionTest : MonoBehaviour {
         }
     }
 
-    void TestKeyboardMouse()
+    private void TestKeyboardMouse()
     {
-        if (MiddleVR.VRDeviceMgr != null)
+        var deviceMgr = MiddleVR.VRDeviceMgr;
+
+        if (deviceMgr != null)
         {
             // Testing mouse button
-            if (MiddleVR.VRDeviceMgr.IsMouseButtonPressed(0))
+            if (deviceMgr.IsMouseButtonPressed(0))
             {
                 MVRTools.Log("Mouse Button pressed!");
-                MVRTools.Log("VRMouseX : " + MiddleVR.VRDeviceMgr.GetMouseAxisValue(0));
+                MVRTools.Log("VRMouseX : " + deviceMgr.GetMouseAxisValue(0));
             }
 
             // Testing keyboard key
-            if (MiddleVR.VRDeviceMgr.IsKeyPressed(MiddleVR.VRK_SPACE))
+            if (deviceMgr.IsKeyPressed(MiddleVR.VRK_SPACE))
             {
                 MVRTools.Log("Space!");
             }
         }
     }
 
-    void TestDevices()
+    private void TestDevices()
     {
         vrTracker tracker = null;
         vrJoystick    joy = null;
         vrAxis       axis = null;
         vrButtons buttons = null;
 
+        var deviceMgr = MiddleVR.VRDeviceMgr;
+
         // Getting a reference to different device types
-        if (MiddleVR.VRDeviceMgr != null) {
-            tracker = MiddleVR.VRDeviceMgr.GetTracker("VRPNTracker0.Tracker0");
-            joy     = MiddleVR.VRDeviceMgr.GetJoystickByIndex(0);
-            axis    = MiddleVR.VRDeviceMgr.GetAxis("VRPNAxis0.Axis");
-            buttons = MiddleVR.VRDeviceMgr.GetButtons("VRPNButtons0.Buttons");
+        if (deviceMgr != null)
+        {
+            tracker = deviceMgr.GetTracker("VRPNTracker0.Tracker0");
+            joy     = deviceMgr.GetJoystickByIndex(0);
+            axis    = deviceMgr.GetAxis("VRPNAxis0.Axis");
+            buttons = deviceMgr.GetButtons("VRPNButtons0.Buttons");
         }
 
         // Getting tracker data
@@ -80,7 +88,8 @@ public class VRInteractionTest : MonoBehaviour {
         }
 
         // Testing joystick button
-        if (joy != null && joy.IsButtonPressed(0)) {
+        if (joy != null && joy.IsButtonPressed(0))
+        {
             MVRTools.Log("Joystick!");
         }
 
@@ -105,32 +114,41 @@ public class VRInteractionTest : MonoBehaviour {
         }
     }
 
-    void TestDisplay()
+    private void TestDisplay()
     {
-        // 3D nodes
-        vrNode3D      node  = null;
-        vrCamera     camera = null;
-        vrCameraStereo scam = null;
-        vrScreen     screen = null;
-        vrViewport       vp = null;
+        var displayMgr = MiddleVR.VRDisplayMgr;
 
-        if (MiddleVR.VRDisplayMgr != null)
+        if (displayMgr != null)
         {
-            node   = MiddleVR.VRDisplayMgr.GetNode("HeadNode");
-            if (node != null) { MVRTools.Log("Found HeadNode"); }
+            vrNode3D node = displayMgr.GetNode("HeadNode");
+            if (node != null)
+            {
+                MVRTools.Log("Found HeadNode");
+            }
 
-            camera = MiddleVR.VRDisplayMgr.GetCamera("Camera0");
-            if (camera != null) { MVRTools.Log("Found Camera0"); }
+            vrCamera cam = displayMgr.GetCamera("Camera0");
+            if (cam != null)
+            {
+                MVRTools.Log("Found Camera0");
+            }
 
-            scam   = MiddleVR.VRDisplayMgr.GetCameraStereo("CameraStereo0");
-            if (scam != null) { MVRTools.Log("Found CameraStereo0"); }
+            vrCameraStereo sCam = displayMgr.GetCameraStereo("CameraStereo0");
+            if (sCam != null)
+            {
+                MVRTools.Log("Found CameraStereo0");
+            }
 
-            screen = MiddleVR.VRDisplayMgr.GetScreen("Screen0");
-            if (screen != null) { MVRTools.Log("Found Screen0"); }
+            vrScreen screen = displayMgr.GetScreen("Screen0");
+            if (screen != null)
+            {
+                MVRTools.Log("Found Screen0");
+            }
 
-            vp     = MiddleVR.VRDisplayMgr.GetViewport("Viewport0");
-            if (vp != null) { MVRTools.Log("Found Viewport0"); }
+            vrViewport vp = displayMgr.GetViewport("Viewport0");
+            if (vp != null)
+            {
+                MVRTools.Log("Found Viewport0");
+            }
         }
-
     }
 }

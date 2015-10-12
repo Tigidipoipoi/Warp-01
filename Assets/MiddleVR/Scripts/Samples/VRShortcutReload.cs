@@ -1,30 +1,32 @@
 /* VRShortcutReload
  * MiddleVR
- * (c) i'm in VR
+ * (c) MiddleVR
  */
 
 using UnityEngine;
-using System.Collections;
 using MiddleVR_Unity3D;
-using System;
 
+[AddComponentMenu("MiddleVR/Samples/Shortcut Reload")]
 public class VRShortcutReload : MonoBehaviour
 {
-
-    void Update () 
+    protected void Update()
     {
-        vrKeyboard keyb = MiddleVR.VRDeviceMgr.GetKeyboard();
+        vrKeyboard keyboard = MiddleVR.VRDeviceMgr.GetKeyboard();
 
-        // Reload Simulation (level 0)
-        if (keyb != null && keyb.IsKeyToggled(MiddleVR.VRK_R) && (keyb.IsKeyPressed(MiddleVR.VRK_LSHIFT) || keyb.IsKeyPressed(MiddleVR.VRK_RSHIFT)) && (keyb.IsKeyPressed(MiddleVR.VRK_LCONTROL) || keyb.IsKeyPressed(MiddleVR.VRK_RCONTROL)))
+        if (keyboard != null &&
+            keyboard.IsKeyToggled(MiddleVR.VRK_R) &&
+            (keyboard.IsKeyPressed(MiddleVR.VRK_LSHIFT) || keyboard.IsKeyPressed(MiddleVR.VRK_RSHIFT)))
         {
-            Application.LoadLevel(0);
-        }
-        // Reload last loaded level
-        else if (keyb != null && keyb.IsKeyToggled(MiddleVR.VRK_R) && (keyb.IsKeyPressed(MiddleVR.VRK_LSHIFT) || keyb.IsKeyPressed(MiddleVR.VRK_RSHIFT)))
-        {
-            Application.LoadLevel( Application.loadedLevel );
+            if ((keyboard.IsKeyPressed(MiddleVR.VRK_LCONTROL) || keyboard.IsKeyPressed(MiddleVR.VRK_RCONTROL)))
+            {
+                // Reload Simulation (level 0).
+                Application.LoadLevel(0);
+            }
+            else
+            {
+                // Reload last loaded level.
+                Application.LoadLevel(Application.loadedLevel);
+            }
         }
     }
-
 }

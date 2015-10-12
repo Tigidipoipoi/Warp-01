@@ -1,11 +1,12 @@
 ﻿/* VRMenuMaximizeButton
  * MiddleVR
- * (c) i'm in VR
+ * (c) MiddleVR
  */
 
 using UnityEngine;
 using System.Collections;
 
+[AddComponentMenu("")]
 public class VRMenuMaximizeButton : MonoBehaviour
 {
     public VRMenuManager MenuManager;
@@ -14,8 +15,7 @@ public class VRMenuMaximizeButton : MonoBehaviour
     public Texture ClosedTexture;
     public Texture OpenTexture;
 
-
-    void VRAction()
+    protected void VRAction()
     {
         if (MenuManager != null)
         {
@@ -23,9 +23,9 @@ public class VRMenuMaximizeButton : MonoBehaviour
         }
     }
 
-    public void Toggle(bool iOpen)
+    public void Toggle(bool iIsOpen)
     {
-        if (iOpen)
+        if (iIsOpen)
         {
             ToggleIcon.GetComponent<Renderer>().material.SetTexture("_MainTex", OpenTexture);
         }

@@ -1,6 +1,6 @@
 /* ScreenProximityWarningShader
  * MiddleVR
- * (c) i'm in VR
+ * (c) MiddleVR
  */
 
 Shader "MiddleVR/ScreenProximityWarningShader" 

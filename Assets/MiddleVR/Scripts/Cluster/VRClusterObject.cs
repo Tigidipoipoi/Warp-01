@@ -1,12 +1,13 @@
 /* VRClusterObject
  * MiddleVR
- * (c) i'm in VR
+ * (c) MiddleVR
  */
 
 using UnityEngine;
 using System.Collections;
 using MiddleVR_Unity3D;
 
+[AddComponentMenu("MiddleVR/Cluster/Cluster Object")]
 public class VRClusterObject : MonoBehaviour {
     public bool IncludeChildren = true;
 
@@ -34,7 +35,7 @@ public class VRClusterObject : MonoBehaviour {
      *
      * This method must be called before EnableClusterScripts.
      */
-    void AddClusterScripts(GameObject iObject, bool iChildren)
+    private void AddClusterScripts(GameObject iObject, bool iChildren)
     {
         //MVRTools.Log("AddCluster to " + iObject);
         //print("AddCluster to " + iObject);

@@ -1,8 +1,12 @@
+/* VRInteractionVirtualHandGogo
+ * MiddleVR
+ * (c) MiddleVR
+ */
 using UnityEngine;
-using System.Collections;
 using MiddleVR_Unity3D;
 using System;
 
+[AddComponentMenu("")]
 public class VRInteractionVirtualHandGogo : VRInteraction {
 
     public string Name               = "InteractionVirtualHandGogo";
@@ -14,8 +18,7 @@ public class VRInteractionVirtualHandGogo : VRInteraction {
 
     vrInteractionVirtualHandGogo m_it = null;
 
-
-    private void Start()
+    protected void Start()
     {
         // Make sure the base interaction is started
         InitializeBaseInteraction();
@@ -44,12 +47,14 @@ public class VRInteractionVirtualHandGogo : VRInteraction {
         }
     }
 
-    void Update ()
+    /*
+    protected void Update()
     {
         // Nothing to do for this interaction, everything is done in the kernel
     }
+    */
 
-    void OnEnable()
+    protected void OnEnable()
     {
         MiddleVR.VRLog( 3, "[ ] VRInteractionVirtualHandGogo: enabled" );
         if( m_it != null )
@@ -58,7 +63,7 @@ public class VRInteractionVirtualHandGogo : VRInteraction {
         }
     }
 
-    void OnDisable()
+    protected void OnDisable()
     {
         MiddleVR.VRLog( 3, "[ ] VRInteractionVirtualHandGogo: disabled" );
 

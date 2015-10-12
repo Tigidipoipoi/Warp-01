@@ -1,6 +1,6 @@
 ﻿/* VR3DTextShader
  * MiddleVR
- * (c) i'm in VR
+ * (c) MiddleVR
  */
 
 Shader "MiddleVR/VR3DTextShader" {

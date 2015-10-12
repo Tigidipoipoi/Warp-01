@@ -1,13 +1,13 @@
 /* VRWandNavigation
  * MiddleVR
- * (c) i'm in VR
+ * (c) MiddleVR
  */
 
 using UnityEngine;
-using System.Collections;
-using MiddleVR_Unity3D;
 using System;
+using MiddleVR_Unity3D;
 
+[AddComponentMenu("")]
 //[RequireComponent (typeof(VRWandInteraction))]
 public class VRWandNavigation : MonoBehaviour {
     public string NodeToMove = "VRSystemCenterNode";
@@ -28,15 +28,21 @@ public class VRWandNavigation : MonoBehaviour {
     private bool m_SearchedNodeToMove     = false;
     private bool m_SearchedRotationNode   = false;
 
-    void Update()
+    protected void Update()
     {
         // Get nodes when created
-        if( m_DirectionRefNode == null )
+        if (m_DirectionRefNode == null)
+        {
             m_DirectionRefNode = GameObject.Find(DirectionReferenceNode);
-        if( m_NodeToMove == null )
+        }
+        if (m_NodeToMove == null)
+        {
             m_NodeToMove = GameObject.Find(NodeToMove);
-        if( m_TurnNode == null )
+        }
+        if (m_TurnNode == null)
+        {
             m_TurnNode = GameObject.Find(TurnAroundNode);
+        }
 
         if ( m_SearchedRefNode == false && m_DirectionRefNode == null )
         {
@@ -61,8 +67,10 @@ public class VRWandNavigation : MonoBehaviour {
             float speed = 0.0f;
             float speedR = 0.0f;
 
-            if( m_VRMgr == null )
+            if (m_VRMgr == null)
+            {
                 m_VRMgr = GameObject.Find("VRManager");
+            }
 
             if( m_VRMgr != null )
             {

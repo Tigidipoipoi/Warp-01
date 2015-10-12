@@ -1,14 +1,14 @@
 /* VRInteractionScreenProximityWarning
  * MiddleVR
- * (c) i'm in VR
+ * (c) MiddleVR
  */
 
 using UnityEngine;
 using System.Collections;
-using MiddleVR_Unity3D;
-using System;
 using System.Collections.Generic;
+using MiddleVR_Unity3D;
 
+[AddComponentMenu("")]
 public class VRInteractionScreenProximityWarning : MonoBehaviour {
 
     public string Name           = "InteractionScreenProximityWarning";
@@ -22,10 +22,9 @@ public class VRInteractionScreenProximityWarning : MonoBehaviour {
     private Dictionary<string, GameObject>      m_WarningRepresentationObjects = new Dictionary<string, GameObject>();
     private vrInteractionScreenProximityWarning m_it = null;
 
-
-    void Start ()
+    protected void Start()
     {
-        if(NodesToWatch.Count <= 0)
+        if( NodesToWatch.Count <= 0 )
         {
             return;
         }
@@ -50,9 +49,9 @@ public class VRInteractionScreenProximityWarning : MonoBehaviour {
         m_Initialized = true;
     }
 
-    void Update ()
+    protected void Update()
     {
-        if(!m_Initialized)
+        if( !m_Initialized )
         {
             return;
         }
@@ -142,7 +141,7 @@ public class VRInteractionScreenProximityWarning : MonoBehaviour {
         }
     }
 
-    void OnEnable()
+    protected void OnEnable()
     {
         if (m_it != null)
         {
@@ -150,7 +149,7 @@ public class VRInteractionScreenProximityWarning : MonoBehaviour {
         }
     }
 
-    void OnDisable()
+    protected void OnDisable()
     {
         if (MiddleVR.VRKernel != null && m_it != null)
         {
@@ -165,7 +164,7 @@ public class VRInteractionScreenProximityWarning : MonoBehaviour {
         m_WarningRepresentationObjects.Clear();
     }
 
-    void OnApplicationQuit()
+    protected void OnApplicationQuit()
     {
         if( m_it != null )
         {

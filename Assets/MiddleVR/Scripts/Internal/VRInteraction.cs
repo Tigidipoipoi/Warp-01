@@ -1,35 +1,45 @@
 ﻿/* VRInteraction
  * MiddleVR
- * (c) i'm in VR
+ * (c) MiddleVR
  */
 
 using UnityEngine;
-using System.Collections;
 using MiddleVR_Unity3D;
 
+[AddComponentMenu("")]
 public class VRInteraction : MonoBehaviour
 {
     private vrInteraction   m_Interaction = null;
-    private vrEventListener m_Listener;
+    private vrEventListener m_Listener = null;
 
-    private bool m_Active = false;
+    private bool m_IsActive = false;
 
+    private void OnDestroy()
+    {
+        MiddleVR.DisposeObject(ref m_Listener);
+        MiddleVR.DisposeObject(ref m_Interaction);
+    }
 
     private bool EventListener(vrEvent iEvent)
     {
         vrInteractionEvent evt = vrInteractionEvent.Cast(iEvent);
-        if (evt == null) return false;
+        if (evt == null)
+        {
+            return false;
+        }
 
         vrInteraction evtInteraction = evt.GetInteraction();
 
-        if(m_Interaction != null && evtInteraction != null && evt != null && evtInteraction.GetId() == m_Interaction.GetId())
+        if (m_Interaction != null && evtInteraction != null && evt != null &&
+            evtInteraction.GetId() == m_Interaction.GetId())
         {
-            if (evt.GetEventType() == (int)VRInteractionEventEnum.VRInteractionEvent_Activated)
+            var eventType = evt.GetEventType();
+
+            if (eventType == (int)VRInteractionEventEnum.VRInteractionEvent_Activated)
             {
                 Activate();
             }
-
-            if (evt.GetEventType() == (int)VRInteractionEventEnum.VRInteractionEvent_Deactivated)
+            else if (eventType == (int)VRInteractionEventEnum.VRInteractionEvent_Deactivated)
             {
                 Deactivate();
             }
@@ -40,9 +50,9 @@ public class VRInteraction : MonoBehaviour
 
     public void Activate()
     {
-        if (m_Active == false)
+        if (!m_IsActive)
         {
-            m_Active = true;
+            m_IsActive = true;
             MiddleVR.VRInteractionMgr.Activate(m_Interaction);
 
             OnActivate();
@@ -51,34 +61,34 @@ public class VRInteraction : MonoBehaviour
 
     public void Deactivate()
     {
-        if (m_Active == true)
+        if (m_IsActive)
         {
-            m_Active = false;
+            m_IsActive = false;
             MiddleVR.VRInteractionMgr.Deactivate(m_Interaction);
 
             OnDeactivate();
         }
     }
 
-    public virtual void OnActivate()
+    protected virtual void OnActivate()
     {
         MVRTools.Log(3, "[ ] VRInteraction: Activating '" + m_Interaction.GetName() + "'.");
     }
 
-    public virtual void OnDeactivate()
+    protected virtual void OnDeactivate()
     {
         MVRTools.Log(3, "[ ] VRInteraction: Deactivating '" + m_Interaction.GetName() + "'.");
     }
 
     public bool IsActive()
     {
-        return m_Active;
+        return m_IsActive;
     }
 
-    public void InitializeBaseInteraction ()
+    public void InitializeBaseInteraction()
     {
         m_Listener = new vrEventListener(EventListener);
-        MiddleVR.VRKernel.AddEventListener(m_Listener);
+        MiddleVR.VRInteractionMgr.AddEventListener(m_Listener);
     }
 
     public vrInteraction CreateInteraction(string iName)

@@ -1,13 +1,12 @@
 /* VRInteractionNavigationGrabWorld
  * MiddleVR
- * (c) i'm in VR
+ * (c) MiddleVR
  */
 
 using UnityEngine;
-using System.Collections;
 using MiddleVR_Unity3D;
-using System;
 
+[AddComponentMenu("")]
 public class VRInteractionNavigationGrabWorld : VRInteraction {
 
     public string Name            = "InteractionNavigationGrabWorld";
@@ -23,7 +22,7 @@ public class VRInteractionNavigationGrabWorld : VRInteraction {
     private bool m_Initialized = false;
 
 
-    private void Start()
+    protected void Start()
     {
         // Make sure the base interaction is started
         InitializeBaseInteraction();
@@ -48,7 +47,7 @@ public class VRInteractionNavigationGrabWorld : VRInteraction {
         }
     }
 
-    void Update ()
+    protected void Update()
     {
         if (IsActive())
         {
@@ -59,7 +58,7 @@ public class VRInteractionNavigationGrabWorld : VRInteraction {
         }
     }
 
-    void Initialize()
+    protected void Initialize()
     {
         GameObject vrSystemCenterNode = null;
         if (GameObject.Find("VRManager").GetComponent<VRManagerScript>().VRSystemCenterNode != null)
@@ -95,7 +94,7 @@ public class VRInteractionNavigationGrabWorld : VRInteraction {
         m_Initialized = true;
     }
 
-    void OnEnable()
+    protected void OnEnable()
     {
         MiddleVR.VRLog( 3, "[ ] VRInteractionNavigationGrabWorld: enabled" );
         if( m_it != null )
@@ -104,7 +103,7 @@ public class VRInteractionNavigationGrabWorld : VRInteraction {
         }
     }
 
-    void OnDisable()
+    protected void OnDisable()
     {
         MiddleVR.VRLog( 3, "[ ] VRInteractionNavigationGrabWorld: disabled" );
 
