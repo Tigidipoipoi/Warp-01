@@ -5,6 +5,8 @@ namespace Warp01
     public class WarpScript : MonoBehaviour
     {
         #region Members
+        public bool m_UseDirectWarp;
+
         public WarpScript m_Destination;
         public Transform m_ShuttleTransform;
         public Renderer m_ParticleRenderer;
@@ -19,8 +21,6 @@ namespace Warp01
         #region Unity events
         public void Start()
         {
-            Utils.ClearLog();
-
             if (m_ParticleRenderer == null)
             {
                 m_ParticleRenderer = transform.FindChild("Renderer")
@@ -45,7 +45,7 @@ namespace Warp01
         {
             if (enteringCollider.tag == "Player")
             {
-                Debug.Log("Player entered Warp.");
+                Debug.Log("Player entered Warp \"" + name + "\".");
                 ChangeParticleMaterial(m_TriggeredParticleMat);
             }
         }
@@ -55,7 +55,7 @@ namespace Warp01
             if (stayingCollider.tag == "Player"
 #if UNITY_EDITOR
                 // Double click to warp in editor mode.
-                && MiddleVR.VRDeviceMgr.IsMouseButtonToggled(0))
+                && Input.GetKeyUp(KeyCode.Space))
 #else
                 // Click wand's main button to warp in game.
                 && MiddleVR.VRDeviceMgr.IsWandButtonPressed(0))
@@ -70,7 +70,7 @@ namespace Warp01
         {
             if (exitingCollider.tag == "Player")
             {
-                Debug.Log("Player exited Warp.");
+                Debug.Log("Player exited Warp \"" + name + "\".");
                 ChangeParticleMaterial(m_OriginalParticleMat);
             }
         }
@@ -101,8 +101,25 @@ namespace Warp01
                 return;
             }
 
+            if (m_UseDirectWarp)
+            {
+                DirectWarp();
+            }
+            else
+            {
+                SmoothWarp();
+            }
+        }
+
+        public void DirectWarp()
+        {
             m_PlayerStartPosition.transform.position = m_Destination.m_ShuttleTransform.position;
             m_PlayerStartPosition.transform.rotation = m_Destination.m_ShuttleTransform.rotation;
+        }
+
+        public void SmoothWarp()
+        {
+
         }
     }
 }

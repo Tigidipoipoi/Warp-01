@@ -4,6 +4,7 @@ public class ShuttleGizmos : MonoBehaviour
 {
     #region Members
     public bool m_DisplayGizmos = true;
+    public Color m_ShuttleGizmoColor = new Color(0.0f, 100.0f, 0.0f, 0.5f);
 
     public Vector3 p_FloorPositionGizmo
     {
@@ -46,7 +47,7 @@ public class ShuttleGizmos : MonoBehaviour
             return;
         }
 
-        Gizmos.color = new Color(0.0f, 100.0f, 0.0f, 0.5f);
+        Gizmos.color = m_ShuttleGizmoColor;
         Gizmos.matrix = transform.localToWorldMatrix;
 
         Gizmos.DrawCube(p_FloorPositionGizmo, m_FloorSizeGizmo);
