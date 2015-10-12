@@ -1,4 +1,6 @@
 ﻿using UnityEngine;
+using System.Collections;
+using UnityStandardAssets.ImageEffects;
 
 namespace Warp01
 {
@@ -16,6 +18,12 @@ namespace Warp01
         public Material m_TriggeredParticleMat;
 
         public GameObject m_PlayerStartPosition;
+
+        public int m_StartIterations = 0;
+        public int m_MaxIterations = 10;
+        public float m_FadeTime = 0.25f;
+        public vrTimer m_FadeTimer = new vrTimer();
+        public Blur[] m_CameraBlurs;
         #endregion Members
 
         #region Unity events
@@ -38,6 +46,16 @@ namespace Warp01
             {
                 m_PlayerStartPosition = GameObject.FindGameObjectWithTag("Player");
             }
+
+            Camera[] cameras = Camera.allCameras;
+            m_CameraBlurs = new Blur[cameras.Length];
+
+            for (int i = 0; i < cameras.Length; ++i)
+            {
+                m_CameraBlurs[i] = cameras[i].GetComponent<Blur>();
+            }
+
+            EnableBlurs(false);
         }
 
         #region Trigger events
@@ -103,7 +121,7 @@ namespace Warp01
 
             if (m_UseDirectWarp)
             {
-                DirectWarp();
+                StartCoroutine("DirectWarp");
             }
             else
             {
@@ -111,15 +129,73 @@ namespace Warp01
             }
         }
 
-        public void DirectWarp()
+        public IEnumerator DirectWarp()
         {
+            yield return StartCoroutine("FadeBeforeDirectWarp");
+
             m_PlayerStartPosition.transform.position = m_Destination.m_ShuttleTransform.position;
             m_PlayerStartPosition.transform.rotation = m_Destination.m_ShuttleTransform.rotation;
+
+            yield return StartCoroutine("FadeAfterDirectWarp");
         }
 
         public void SmoothWarp()
         {
 
+        }
+
+        private IEnumerator FadeBeforeDirectWarp()
+        {
+            EnableBlurs();
+            m_FadeTimer.Reset();
+            while (m_FadeTime - (float)m_FadeTimer.seconds() > 0.0f)
+            {
+                float elapsedTimeRate = Mathf.Clamp((float)m_FadeTimer.seconds() / m_FadeTime, 0.0f, 1.0f);
+                SetBlurIteration((int)Mathf.Lerp(m_StartIterations, m_MaxIterations, elapsedTimeRate));
+
+                yield return null;
+            }
+        }
+
+        private IEnumerator FadeAfterDirectWarp()
+        {
+            m_FadeTimer.Reset();
+            while (m_FadeTime - (float)m_FadeTimer.seconds() > 0.0f)
+            {
+                float elapsedTimeRate = Mathf.Clamp((float)m_FadeTimer.seconds() / m_FadeTime, 0.0f, 1.0f);
+                SetBlurIteration((int)Mathf.Lerp(m_MaxIterations, m_StartIterations, elapsedTimeRate));
+
+                yield return null;
+            }
+            EnableBlurs(false);
+        }
+
+        public void SetBlurIteration(int iterations)
+        {
+            if (m_CameraBlurs == null
+                || m_CameraBlurs.Length < 0)
+            {
+                return;
+            }
+
+            foreach (Blur cameraBlur in m_CameraBlurs)
+            {
+                cameraBlur.iterations = iterations;
+            }
+        }
+
+        public void EnableBlurs(bool enable = true)
+        {
+            if (m_CameraBlurs == null
+                || m_CameraBlurs.Length < 0)
+            {
+                return;
+            }
+
+            foreach (Blur cameraBlur in m_CameraBlurs)
+            {
+                cameraBlur.enabled = enable;
+            }
         }
     }
 }
