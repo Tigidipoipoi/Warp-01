@@ -24,6 +24,11 @@ namespace Warp01
         public float m_FadeTime = 0.25f;
         public vrTimer m_FadeTimer = new vrTimer();
         public Blur[] m_CameraBlurs;
+
+        public float m_SmoothMoveTime = 3.0f;
+        public vrTimer m_SmoothMoveTimer = new vrTimer();
+        public Vector3 m_BeforePlayerPosition;
+        public Quaternion m_BeforePlayerRotation;
         #endregion Members
 
         #region Unity events
@@ -125,7 +130,7 @@ namespace Warp01
             }
             else
             {
-                SmoothWarp();
+                StartCoroutine("SmoothWarp");
             }
         }
 
@@ -139,9 +144,18 @@ namespace Warp01
             yield return StartCoroutine("FadeAfterDirectWarp");
         }
 
-        public void SmoothWarp()
+        public IEnumerator SmoothWarp()
         {
-
+            m_BeforePlayerPosition = m_PlayerStartPosition.transform.position;
+            m_BeforePlayerRotation = m_PlayerStartPosition.transform.rotation;
+            m_SmoothMoveTimer.Reset();
+            while ((float)m_SmoothMoveTimer.seconds() < m_SmoothMoveTime)
+            {
+                SmoothMove();
+                yield return null;
+            }
+            m_PlayerStartPosition.transform.position = m_Destination.m_ShuttleTransform.position;
+            m_PlayerStartPosition.transform.rotation = m_Destination.m_ShuttleTransform.rotation;
         }
 
         private IEnumerator FadeBeforeDirectWarp()
@@ -196,6 +210,21 @@ namespace Warp01
             {
                 cameraBlur.enabled = enable;
             }
+        }
+
+        private void SmoothMove()
+        {
+            Vector3 moveDistance = m_Destination.m_ShuttleTransform.position - m_BeforePlayerPosition;
+            float moveAngle = Quaternion.Angle(m_Destination.m_ShuttleTransform.rotation, m_BeforePlayerRotation);
+
+            float theRatio = Mathf.PI / m_SmoothMoveTime * (float)m_SmoothMoveTimer.seconds();
+            theRatio = theRatio - (Mathf.PI * 0.5f);
+            theRatio = Mathf.Sin(theRatio);
+            theRatio = (theRatio + 1) * 0.5f;
+
+            moveDistance = moveDistance * theRatio;
+            m_PlayerStartPosition.transform.position = m_BeforePlayerPosition + moveDistance;
+            m_PlayerStartPosition.transform.rotation = Quaternion.Slerp(m_BeforePlayerRotation, m_Destination.m_ShuttleTransform.transform.rotation, theRatio);
         }
     }
 }
