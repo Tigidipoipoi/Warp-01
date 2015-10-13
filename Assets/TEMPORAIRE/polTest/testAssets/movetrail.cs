@@ -11,7 +11,7 @@ public class movetrail : MonoBehaviour {
 	}
 	
 	// Update is called once per frame
-	void Update () {
+	void FixedUpdate () {
         transform.localPosition = iniPos + Random.insideUnitSphere * 0.6f;
 	}
 }
