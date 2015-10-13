@@ -34,6 +34,7 @@ namespace Warp01
         #region Unity events
         public void Start()
         {
+            #region Check null members
             if (m_ParticleRenderer == null)
             {
                 m_ParticleRenderer = transform.FindChild("Renderer")
@@ -51,6 +52,19 @@ namespace Warp01
             {
                 m_PlayerStartPosition = GameObject.FindGameObjectWithTag("Player");
             }
+
+            if (m_ShuttleTransform == null)
+            {
+                if (transform.parent.GetComponent<ShuttleGizmos>() != null)
+                {
+                    m_ShuttleTransform = transform.parent;
+                }
+                else
+                {
+                    Debug.LogError("WarpScript::Start => No shuttle attached to the warp \"" + name + "\".");
+                }
+            }
+            #endregion Check null members
 
             Camera[] cameras = Camera.allCameras;
             m_CameraBlurs = new Blur[cameras.Length];
@@ -134,28 +148,18 @@ namespace Warp01
             }
         }
 
+        #region Direct warp
         public IEnumerator DirectWarp()
         {
             yield return StartCoroutine("FadeBeforeDirectWarp");
 
-            m_PlayerStartPosition.transform.position = m_Destination.m_ShuttleTransform.position;
+            Vector3 newPosition = m_Destination.m_ShuttleTransform.position;
+            newPosition.y = m_PlayerStartPosition.transform.position.y;
+
+            m_PlayerStartPosition.transform.position = newPosition;
             m_PlayerStartPosition.transform.rotation = m_Destination.m_ShuttleTransform.rotation;
 
             yield return StartCoroutine("FadeAfterDirectWarp");
-        }
-
-        public IEnumerator SmoothWarp()
-        {
-            m_BeforePlayerPosition = m_PlayerStartPosition.transform.position;
-            m_BeforePlayerRotation = m_PlayerStartPosition.transform.rotation;
-            m_SmoothMoveTimer.Reset();
-            while ((float)m_SmoothMoveTimer.seconds() < m_SmoothMoveTime)
-            {
-                SmoothMove();
-                yield return null;
-            }
-            m_PlayerStartPosition.transform.position = m_Destination.m_ShuttleTransform.position;
-            m_PlayerStartPosition.transform.rotation = m_Destination.m_ShuttleTransform.rotation;
         }
 
         private IEnumerator FadeBeforeDirectWarp()
@@ -211,6 +215,22 @@ namespace Warp01
                 cameraBlur.enabled = enable;
             }
         }
+        #endregion Direct warp
+
+        #region Smooth warp
+        public IEnumerator SmoothWarp()
+        {
+            m_BeforePlayerPosition = m_PlayerStartPosition.transform.position;
+            m_BeforePlayerRotation = m_PlayerStartPosition.transform.rotation;
+            m_SmoothMoveTimer.Reset();
+            while ((float)m_SmoothMoveTimer.seconds() < m_SmoothMoveTime)
+            {
+                SmoothMove();
+                yield return null;
+            }
+            m_PlayerStartPosition.transform.position = m_Destination.m_ShuttleTransform.position;
+            m_PlayerStartPosition.transform.rotation = m_Destination.m_ShuttleTransform.rotation;
+        }
 
         private void SmoothMove()
         {
@@ -226,5 +246,6 @@ namespace Warp01
             m_PlayerStartPosition.transform.position = m_BeforePlayerPosition + moveDistance;
             m_PlayerStartPosition.transform.rotation = Quaternion.Slerp(m_BeforePlayerRotation, m_Destination.m_ShuttleTransform.transform.rotation, theRatio);
         }
+        #endregion Smooth warp
     }
 }
