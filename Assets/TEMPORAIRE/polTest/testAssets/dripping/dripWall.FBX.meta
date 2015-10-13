@@ -10,21 +10,26 @@ ModelImporter:
     100004: meshDroplets001
     100006: meshDroplets002
     100008: meshDroplets003
+    100010: meshDroplets004
     400000: //RootNode
     400002: meshDroplets
     400004: meshDroplets001
     400006: meshDroplets002
     400008: meshDroplets003
+    400010: meshDroplets004
     2300000: meshDroplets001
     2300002: meshDroplets002
     2300004: meshDroplets003
+    2300006: meshDroplets004
     3300000: meshDroplets001
     3300002: meshDroplets002
     3300004: meshDroplets003
+    3300006: meshDroplets004
     4300000: meshDroplets
     4300002: meshDroplets001
     4300004: meshDroplets002
     4300006: meshDroplets003
+    4300008: meshDroplets004
     9500000: //RootNode
     13700000: meshDroplets
   materials:
@@ -50,7 +55,7 @@ ModelImporter:
     isReadable: 1
   meshes:
     lODScreenPercentages: []
-    globalScale: 1
+    globalScale: 5
     meshCompression: 0
     addColliders: 0
     importBlendShapes: 1
