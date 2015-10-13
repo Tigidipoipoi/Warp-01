@@ -106,13 +106,13 @@ namespace Warp01
         public void OnTriggerStay(Collider stayingCollider)
         {
             if (stayingCollider.tag == "Player"
+                // Click wand's main button to warp in game.
+                && (MiddleVR.VRDeviceMgr.IsWandButtonPressed(0)
 #if UNITY_EDITOR
                 // Double click to warp in editor mode.
-                && Input.GetKeyUp(KeyCode.Space))
-#else
-                // Click wand's main button to warp in game.
-                && MiddleVR.VRDeviceMgr.IsWandButtonPressed(0))
+                || Input.GetKeyUp(KeyCode.Space)
 #endif
+                ))
             {
                 WarpToDestination();
             }
