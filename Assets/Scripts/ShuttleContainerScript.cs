@@ -2,9 +2,11 @@
 
 public class ShuttleContainerScript : MonoBehaviour
 {
+    public string c_HeadNodeName = "HeadNode";
+
     public void Start()
     {
-        GameObject headNode = transform.FindChild("HeadNode").gameObject;
+        GameObject headNode = transform.FindChild(c_HeadNodeName).gameObject;
 
         headNode.tag = "Player";
 
