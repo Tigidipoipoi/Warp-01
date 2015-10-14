@@ -10,7 +10,7 @@ namespace Warp01
         public bool m_UseDirectWarp;
 
         public WarpScript m_Destination;
-        public Transform m_ShuttleTransform;
+        public Transform m_ShuttleWarpClampTransform;
         [HideInInspector]
         public ShuttleScript m_ShuttleScript;
         public Renderer m_ParticleRenderer;
@@ -25,8 +25,6 @@ namespace Warp01
         /// Used to highlight the active warp's destination.
         /// </summary>
         public Material m_DestinationParticleMat;
-
-        public GameObject m_PlayerStartPosition;
 
         public int m_StartIterations = 0;
         public int m_MaxIterations = 10;
@@ -57,26 +55,20 @@ namespace Warp01
                 m_OriginalParticleMat = m_ParticleRenderer.material;
             }
 
-            if (m_PlayerStartPosition == null
-                || m_PlayerStartPosition.tag != "Player")
-            {
-                m_PlayerStartPosition = GameObject.FindGameObjectWithTag("Player");
-            }
-
-            if (m_ShuttleTransform == null)
+            if (m_ShuttleWarpClampTransform == null)
             {
                 if (transform.parent.GetComponent<ShuttleScript>() != null)
                 {
-                    m_ShuttleTransform = transform.parent;
+                    m_ShuttleWarpClampTransform = transform.parent;
                 }
                 else
                 {
                     Debug.LogError("WarpScript::Start => No shuttle attached to the warp \"" + name + "\".");
                 }
             }
-            if (m_ShuttleTransform != null)
+            if (m_ShuttleWarpClampTransform != null)
             {
-                m_ShuttleScript = m_ShuttleTransform.GetComponent<ShuttleScript>();
+                m_ShuttleScript = m_ShuttleWarpClampTransform.GetComponent<ShuttleScript>();
             }
             #endregion Check null members
 
@@ -170,11 +162,11 @@ namespace Warp01
         {
             yield return StartCoroutine("FadeBeforeDirectWarp");
 
-            Vector3 newPosition = m_Destination.m_ShuttleTransform.position;
-            newPosition.y = m_PlayerStartPosition.transform.position.y;
+            Vector3 newPosition = m_Destination.m_ShuttleWarpClampTransform.position;
+            newPosition.y = MVRCameraUtils.GetInstance.p_ShuttleContainer.position.y;
 
-            m_PlayerStartPosition.transform.position = newPosition;
-            m_PlayerStartPosition.transform.rotation = m_Destination.m_ShuttleTransform.rotation;
+            MVRCameraUtils.GetInstance.p_ShuttleContainer.position = newPosition;
+            MVRCameraUtils.GetInstance.p_ShuttleContainer.rotation = m_Destination.m_ShuttleWarpClampTransform.rotation;
 
             yield return StartCoroutine("FadeAfterDirectWarp");
         }
@@ -237,22 +229,22 @@ namespace Warp01
         #region Smooth warp
         public IEnumerator SmoothWarp()
         {
-            m_BeforePlayerPosition = m_PlayerStartPosition.transform.position;
-            m_BeforePlayerRotation = m_PlayerStartPosition.transform.rotation;
+            m_BeforePlayerPosition = MVRCameraUtils.GetInstance.p_ShuttleContainer.position;
+            m_BeforePlayerRotation = MVRCameraUtils.GetInstance.p_ShuttleContainer.rotation;
             m_SmoothMoveTimer.Reset();
             while ((float)m_SmoothMoveTimer.seconds() < m_SmoothMoveTime)
             {
                 SmoothMove();
                 yield return null;
             }
-            m_PlayerStartPosition.transform.position = m_Destination.m_ShuttleTransform.position;
-            m_PlayerStartPosition.transform.rotation = m_Destination.m_ShuttleTransform.rotation;
+            MVRCameraUtils.GetInstance.p_ShuttleContainer.position = m_Destination.m_ShuttleWarpClampTransform.position;
+            MVRCameraUtils.GetInstance.p_ShuttleContainer.rotation = m_Destination.m_ShuttleWarpClampTransform.rotation;
         }
 
         private void SmoothMove()
         {
-            Vector3 moveDistance = m_Destination.m_ShuttleTransform.position - m_BeforePlayerPosition;
-            float moveAngle = Quaternion.Angle(m_Destination.m_ShuttleTransform.rotation, m_BeforePlayerRotation);
+            Vector3 moveDistance = m_Destination.m_ShuttleWarpClampTransform.position - m_BeforePlayerPosition;
+            float moveAngle = Quaternion.Angle(m_Destination.m_ShuttleWarpClampTransform.rotation, m_BeforePlayerRotation);
 
             float theRatio = Mathf.PI / m_SmoothMoveTime * (float)m_SmoothMoveTimer.seconds();
             theRatio = theRatio - (Mathf.PI * 0.5f);
@@ -260,8 +252,8 @@ namespace Warp01
             theRatio = (theRatio + 1) * 0.5f;
 
             moveDistance = moveDistance * theRatio;
-            m_PlayerStartPosition.transform.position = m_BeforePlayerPosition + moveDistance;
-            m_PlayerStartPosition.transform.rotation = Quaternion.Slerp(m_BeforePlayerRotation, m_Destination.m_ShuttleTransform.transform.rotation, theRatio);
+            MVRCameraUtils.GetInstance.p_ShuttleContainer.position = m_BeforePlayerPosition + moveDistance;
+            MVRCameraUtils.GetInstance.p_ShuttleContainer.rotation = Quaternion.Slerp(m_BeforePlayerRotation, m_Destination.m_ShuttleWarpClampTransform.transform.rotation, theRatio);
         }
         #endregion Smooth warp
 
