@@ -185,7 +185,6 @@ public static class Utils
 
         int newIndex = (currentIndex + direction) % (maxIndex + 1);
 
-        Debug.Log(newIndex);
         if (newIndex < 0)
         {
             newIndex = maxIndex;

@@ -134,7 +134,7 @@ public class MVRCameraUtils : MonoBehaviour
     /// <summary>
     /// Cached value for <see cref="p_ShuttleContainer"/>.
     /// </summary>
-    public Transform m_ShuttleContainer;
+    private Transform m_ShuttleContainer;
     public Transform p_ShuttleContainer
     {
         get
