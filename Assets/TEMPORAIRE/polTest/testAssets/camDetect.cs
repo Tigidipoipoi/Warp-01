@@ -6,7 +6,7 @@ public class camDetect : MonoBehaviour {
     static public  Camera mainCam;
 
 	// Use this for initialization
-	void Awake () {
+	void Start () {
         for (int i = 0; i < Camera.allCamerasCount; i++)
         {
             if (Camera.allCameras[i].tag != "backgroundCam")
