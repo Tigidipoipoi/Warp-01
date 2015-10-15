@@ -1,16 +1,20 @@
 // Shader created with Shader Forge v1.18 
 // Shader Forge (c) Neat Corporation / Joachim Holmer - http://www.acegikmo.com/shaderforge/
 // Note: Manually altering this data may prevent you from opening it in Shader Forge
-/*SF_DATA;ver:1.18;sub:START;pass:START;ps:flbk:,iptp:0,cusa:False,bamd:0,lico:1,lgpr:1,limd:3,spmd:1,trmd:0,grmd:0,uamb:True,mssp:True,bkdf:True,hqlp:False,rprd:True,enco:False,rmgx:True,rpth:0,hqsc:True,nrmq:1,nrsp:0,vomd:0,spxs:False,tesm:0,culm:0,bsrc:0,bdst:1,dpts:2,wrdp:True,dith:0,rfrpo:True,rfrpn:Refraction,coma:15,ufog:True,aust:True,igpj:False,qofs:0,qpre:1,rntp:1,fgom:False,fgoc:False,fgod:False,fgor:False,fgmd:0,fgcr:0.5,fgcg:0.5,fgcb:0.5,fgca:1,fgde:0.01,fgrn:0,fgrf:300,stcl:False,stva:128,stmr:255,stmw:255,stcp:6,stps:0,stfa:0,stfz:0,ofsf:0,ofsu:0,f2p0:False;n:type:ShaderForge.SFN_Final,id:2865,x:32898,y:32709,varname:node_2865,prsc:2|diff-875-OUT,spec-8044-OUT,gloss-1130-OUT;n:type:ShaderForge.SFN_ChannelBlend,id:875,x:32210,y:32152,varname:node_875,prsc:2,chbt:0|M-4794-OUT,R-9962-R,G-8141-G,B-9878-B;n:type:ShaderForge.SFN_Tex2d,id:9962,x:31854,y:32114,ptovrint:False,ptlb:Texture YZ,ptin:_TextureYZ,varname:node_9962,prsc:2,glob:False,taghide:False,taghdr:False,tagprd:False,tagnsco:False,tagnrm:False,ntxv:0,isnm:False|UVIN-5905-UVOUT;n:type:ShaderForge.SFN_Tex2d,id:8141,x:31854,y:32286,ptovrint:False,ptlb:Texture ZX (horizontal),ptin:_TextureZXhorizontal,varname:_TextureR_copy,prsc:2,glob:False,taghide:False,taghdr:False,tagprd:False,tagnsco:False,tagnrm:False,ntxv:0,isnm:False|UVIN-6764-UVOUT;n:type:ShaderForge.SFN_Tex2d,id:9878,x:31854,y:32457,ptovrint:False,ptlb:Texture XY,ptin:_TextureXY,varname:_TextureR_copy_copy,prsc:2,glob:False,taghide:False,taghdr:False,tagprd:False,tagnsco:False,tagnrm:False,ntxv:0,isnm:False|UVIN-3873-UVOUT;n:type:ShaderForge.SFN_Append,id:1081,x:31163,y:32116,cmnt: YZ projection,varname:node_1081,prsc:2|A-5675-Y,B-5675-Z;n:type:ShaderForge.SFN_Append,id:1036,x:31163,y:32288,cmnt: ZX projection,varname:node_1036,prsc:2|A-5675-Z,B-5675-X;n:type:ShaderForge.SFN_Append,id:8072,x:31163,y:32459,cmnt: XY projection,varname:node_8072,prsc:2|A-5675-X,B-5675-Y;n:type:ShaderForge.SFN_FragmentPosition,id:5675,x:30971,y:32288,varname:node_5675,prsc:2;n:type:ShaderForge.SFN_Multiply,id:4794,x:31834,y:31846,varname:node_4794,prsc:2|A-8801-OUT,B-8801-OUT;n:type:ShaderForge.SFN_Abs,id:8801,x:31596,y:31846,varname:node_8801,prsc:2|IN-7536-OUT;n:type:ShaderForge.SFN_NormalVector,id:7536,x:31344,y:31846,prsc:2,pt:False;n:type:ShaderForge.SFN_Slider,id:8044,x:32447,y:32955,ptovrint:False,ptlb:Metalic,ptin:_Metalic,varname:node_8044,prsc:2,glob:False,taghide:False,taghdr:False,tagprd:False,tagnsco:False,tagnrm:False,min:0,cur:0,max:1;n:type:ShaderForge.SFN_Slider,id:1130,x:32447,y:33055,ptovrint:False,ptlb:Gloss,ptin:_Gloss,varname:_Metalic_copy,prsc:2,glob:False,taghide:False,taghdr:False,tagprd:False,tagnsco:False,tagnrm:False,min:0,cur:0,max:1;n:type:ShaderForge.SFN_Rotator,id:3873,x:31637,y:32457,varname:node_3873,prsc:2|UVIN-8072-OUT,ANG-1920-OUT;n:type:ShaderForge.SFN_ValueProperty,id:5167,x:31273,y:32552,ptovrint:False,ptlb:B rotation,ptin:_Brotation,varname:node_5167,prsc:2,glob:False,taghide:False,taghdr:False,tagprd:False,tagnsco:False,tagnrm:False,v1:0;n:type:ShaderForge.SFN_Rotator,id:5905,x:31630,y:32114,varname:node_5905,prsc:2|UVIN-1081-OUT,ANG-2543-OUT;n:type:ShaderForge.SFN_ValueProperty,id:3285,x:31273,y:32211,ptovrint:False,ptlb:R rotation,ptin:_Rrotation,varname:_Brotationradian_copy,prsc:2,glob:False,taghide:False,taghdr:False,tagprd:False,tagnsco:False,tagnrm:False,v1:0;n:type:ShaderForge.SFN_Rotator,id:6764,x:31630,y:32286,varname:node_6764,prsc:2|UVIN-1036-OUT,ANG-5023-OUT;n:type:ShaderForge.SFN_ValueProperty,id:4869,x:31273,y:32386,ptovrint:False,ptlb:G rotation,ptin:_Grotation,varname:_Rrotationradian_copy,prsc:2,glob:False,taghide:False,taghdr:False,tagprd:False,tagnsco:False,tagnrm:False,v1:0;n:type:ShaderForge.SFN_Vector1,id:2946,x:30826,y:31938,varname:node_2946,prsc:2,v1:180;n:type:ShaderForge.SFN_Pi,id:7001,x:30859,y:31835,varname:node_7001,prsc:2;n:type:ShaderForge.SFN_Divide,id:2943,x:30993,y:31835,cmnt: convert radian to degrees,varname:node_2943,prsc:2|A-7001-OUT,B-2946-OUT;n:type:ShaderForge.SFN_Multiply,id:2543,x:31455,y:32149,varname:node_2543,prsc:2|A-2943-OUT,B-3285-OUT;n:type:ShaderForge.SFN_Multiply,id:5023,x:31455,y:32322,varname:node_5023,prsc:2|A-2943-OUT,B-4869-OUT;n:type:ShaderForge.SFN_Multiply,id:1920,x:31455,y:32491,varname:node_1920,prsc:2|A-2943-OUT,B-5167-OUT;proporder:9962-3285-8141-4869-9878-5167-8044-1130;pass:END;sub:END;*/
+/*SF_DATA;ver:1.18;sub:START;pass:START;ps:flbk:,iptp:0,cusa:False,bamd:0,lico:1,lgpr:1,limd:3,spmd:1,trmd:0,grmd:0,uamb:True,mssp:True,bkdf:True,hqlp:False,rprd:True,enco:False,rmgx:True,rpth:0,hqsc:True,nrmq:1,nrsp:0,vomd:0,spxs:False,tesm:0,culm:0,bsrc:0,bdst:1,dpts:2,wrdp:True,dith:0,rfrpo:True,rfrpn:Refraction,coma:15,ufog:True,aust:True,igpj:False,qofs:0,qpre:1,rntp:1,fgom:False,fgoc:False,fgod:False,fgor:False,fgmd:0,fgcr:0.5,fgcg:0.5,fgcb:0.5,fgca:1,fgde:0.01,fgrn:0,fgrf:300,stcl:False,stva:128,stmr:255,stmw:255,stcp:6,stps:0,stfa:0,stfz:0,ofsf:0,ofsu:0,f2p0:False;n:type:ShaderForge.SFN_Final,id:2865,x:32908,y:32723,varname:node_2865,prsc:2|diff-875-OUT,spec-8044-OUT,gloss-1130-OUT,normal-2569-OUT;n:type:ShaderForge.SFN_ChannelBlend,id:875,x:32210,y:32152,varname:node_875,prsc:2,chbt:0|M-4794-OUT,R-9962-R,G-8141-G,B-9878-B;n:type:ShaderForge.SFN_Tex2d,id:9962,x:31854,y:32114,ptovrint:False,ptlb:///   Texture YZ,ptin:_TextureYZ,varname:node_9962,prsc:2,glob:False,taghide:False,taghdr:False,tagprd:False,tagnsco:False,tagnrm:False,ntxv:0,isnm:False|UVIN-5905-UVOUT;n:type:ShaderForge.SFN_Tex2d,id:8141,x:31854,y:32286,ptovrint:False,ptlb:///   Texture ZX (horizontal),ptin:_TextureZXhorizontal,varname:_TextureR_copy,prsc:2,glob:False,taghide:False,taghdr:False,tagprd:False,tagnsco:False,tagnrm:False,ntxv:0,isnm:False|UVIN-6764-UVOUT;n:type:ShaderForge.SFN_Tex2d,id:9878,x:31854,y:32457,ptovrint:False,ptlb:///   Texture XY,ptin:_TextureXY,varname:_TextureR_copy_copy,prsc:2,glob:False,taghide:False,taghdr:False,tagprd:False,tagnsco:False,tagnrm:False,ntxv:0,isnm:False|UVIN-3873-UVOUT;n:type:ShaderForge.SFN_Append,id:1081,x:31163,y:32114,cmnt: YZ projection,varname:node_1081,prsc:2|A-5675-Y,B-5675-Z;n:type:ShaderForge.SFN_Append,id:1036,x:31163,y:32288,cmnt: ZX projection,varname:node_1036,prsc:2|A-5675-Z,B-5675-X;n:type:ShaderForge.SFN_Append,id:8072,x:31163,y:32459,cmnt: XY projection,varname:node_8072,prsc:2|A-5675-X,B-5675-Y;n:type:ShaderForge.SFN_FragmentPosition,id:5675,x:30971,y:32288,varname:node_5675,prsc:2;n:type:ShaderForge.SFN_Multiply,id:4794,x:32139,y:31896,varname:node_4794,prsc:2|A-8801-OUT,B-8801-OUT;n:type:ShaderForge.SFN_Abs,id:8801,x:31942,y:31896,varname:node_8801,prsc:2|IN-7536-OUT;n:type:ShaderForge.SFN_NormalVector,id:7536,x:31756,y:31896,prsc:2,pt:False;n:type:ShaderForge.SFN_Slider,id:8044,x:32423,y:32689,ptovrint:False,ptlb:Metalic,ptin:_Metalic,varname:node_8044,prsc:2,glob:False,taghide:False,taghdr:False,tagprd:False,tagnsco:False,tagnrm:False,min:0,cur:0,max:1;n:type:ShaderForge.SFN_Slider,id:1130,x:32423,y:32789,ptovrint:False,ptlb:Gloss,ptin:_Gloss,varname:_Metalic_copy,prsc:2,glob:False,taghide:False,taghdr:False,tagprd:False,tagnsco:False,tagnrm:False,min:0,cur:0,max:1;n:type:ShaderForge.SFN_Rotator,id:3873,x:31637,y:32457,varname:node_3873,prsc:2|UVIN-8072-OUT,ANG-1920-OUT;n:type:ShaderForge.SFN_ValueProperty,id:5167,x:31273,y:32552,ptovrint:False,ptlb:B rotation,ptin:_Brotation,varname:node_5167,prsc:2,glob:False,taghide:False,taghdr:False,tagprd:False,tagnsco:False,tagnrm:False,v1:0;n:type:ShaderForge.SFN_Rotator,id:5905,x:31630,y:32114,varname:node_5905,prsc:2|UVIN-1081-OUT,ANG-2543-OUT;n:type:ShaderForge.SFN_ValueProperty,id:3285,x:31273,y:32211,ptovrint:False,ptlb:R rotation,ptin:_Rrotation,varname:_Brotationradian_copy,prsc:2,glob:False,taghide:False,taghdr:False,tagprd:False,tagnsco:False,tagnrm:False,v1:0;n:type:ShaderForge.SFN_Rotator,id:6764,x:31630,y:32286,varname:node_6764,prsc:2|UVIN-1036-OUT,ANG-5023-OUT;n:type:ShaderForge.SFN_ValueProperty,id:4869,x:31273,y:32386,ptovrint:False,ptlb:G rotation,ptin:_Grotation,varname:_Rrotationradian_copy,prsc:2,glob:False,taghide:False,taghdr:False,tagprd:False,tagnsco:False,tagnrm:False,v1:0;n:type:ShaderForge.SFN_Vector1,id:2946,x:30826,y:31938,varname:node_2946,prsc:2,v1:180;n:type:ShaderForge.SFN_Pi,id:7001,x:30859,y:31835,varname:node_7001,prsc:2;n:type:ShaderForge.SFN_Divide,id:2943,x:30993,y:31835,cmnt: convert radian to degrees,varname:node_2943,prsc:2|A-7001-OUT,B-2946-OUT;n:type:ShaderForge.SFN_Multiply,id:2543,x:31455,y:32149,varname:node_2543,prsc:2|A-2943-OUT,B-3285-OUT;n:type:ShaderForge.SFN_Multiply,id:5023,x:31455,y:32322,varname:node_5023,prsc:2|A-2943-OUT,B-4869-OUT;n:type:ShaderForge.SFN_Multiply,id:1920,x:31455,y:32491,varname:node_1920,prsc:2|A-2943-OUT,B-5167-OUT;n:type:ShaderForge.SFN_Multiply,id:3215,x:32303,y:32902,varname:node_3215,prsc:2|A-8099-OUT,B-8099-OUT;n:type:ShaderForge.SFN_Abs,id:8099,x:32119,y:32902,varname:node_8099,prsc:2|IN-3865-OUT;n:type:ShaderForge.SFN_NormalVector,id:3865,x:31946,y:32902,prsc:2,pt:False;n:type:ShaderForge.SFN_Append,id:5597,x:31411,y:33102,cmnt: YZ projection,varname:node_5597,prsc:2|A-5657-Y,B-5657-Z;n:type:ShaderForge.SFN_Append,id:3176,x:31411,y:33274,cmnt: ZX projection,varname:node_3176,prsc:2|A-5657-Z,B-5657-X;n:type:ShaderForge.SFN_Append,id:3163,x:31411,y:33445,cmnt: XY projection,varname:node_3163,prsc:2|A-5657-X,B-5657-Y;n:type:ShaderForge.SFN_FragmentPosition,id:5657,x:31219,y:33274,varname:node_5657,prsc:2;n:type:ShaderForge.SFN_Tex2d,id:6799,x:32056,y:33098,ptovrint:False,ptlb:Normal map YZ,ptin:_NormalmapYZ,varname:node_6799,prsc:2,glob:False,taghide:False,taghdr:False,tagprd:False,tagnsco:False,tagnrm:False,ntxv:0,isnm:True|UVIN-9001-UVOUT;n:type:ShaderForge.SFN_Tex2d,id:5748,x:32056,y:33276,ptovrint:False,ptlb:Normal map ZX,ptin:_NormalmapZX,varname:_NormalYZ_copy,prsc:2,glob:False,taghide:False,taghdr:False,tagprd:False,tagnsco:False,tagnrm:False,ntxv:0,isnm:True|UVIN-4686-UVOUT;n:type:ShaderForge.SFN_Tex2d,id:143,x:32056,y:33454,ptovrint:False,ptlb:Normal map XY,ptin:_NormalmapXY,varname:_NormalYZ_copy_copy,prsc:2,glob:False,taghide:False,taghdr:False,tagprd:False,tagnsco:False,tagnrm:False,ntxv:2,isnm:False|UVIN-9896-UVOUT;n:type:ShaderForge.SFN_ChannelBlend,id:2569,x:32572,y:33152,varname:node_2569,prsc:2,chbt:0|M-3215-OUT,R-6799-RGB,G-5748-RGB,B-9235-OUT;n:type:ShaderForge.SFN_Rotator,id:9896,x:31900,y:33454,varname:node_9896,prsc:2|UVIN-3163-OUT,ANG-1920-OUT;n:type:ShaderForge.SFN_Rotator,id:9001,x:31900,y:33098,varname:node_9001,prsc:2|UVIN-5597-OUT,ANG-2543-OUT;n:type:ShaderForge.SFN_Rotator,id:4686,x:31900,y:33276,varname:node_4686,prsc:2|UVIN-3176-OUT,ANG-5023-OUT;n:type:ShaderForge.SFN_ValueProperty,id:9571,x:32056,y:33646,ptovrint:False,ptlb:Normal XY value,ptin:_NormalXYvalue,varname:node_9571,prsc:2,glob:False,taghide:False,taghdr:False,tagprd:False,tagnsco:False,tagnrm:False,v1:0;n:type:ShaderForge.SFN_Multiply,id:9235,x:32261,y:33504,varname:node_9235,prsc:2|A-143-RGB,B-9571-OUT;proporder:9962-6799-3285-8141-5748-4869-9878-143-5167-9571-8044-1130;pass:END;sub:END;*/
 
 Shader "Shader Forge/triplanarMapping" {
     Properties {
-        _TextureYZ ("Texture YZ", 2D) = "white" {}
+        _TextureYZ ("///   Texture YZ", 2D) = "white" {}
+        _NormalmapYZ ("Normal map YZ", 2D) = "white" {}
         _Rrotation ("R rotation", Float ) = 0
-        _TextureZXhorizontal ("Texture ZX (horizontal)", 2D) = "white" {}
+        _TextureZXhorizontal ("///   Texture ZX (horizontal)", 2D) = "white" {}
+        _NormalmapZX ("Normal map ZX", 2D) = "white" {}
         _Grotation ("G rotation", Float ) = 0
-        _TextureXY ("Texture XY", 2D) = "white" {}
+        _TextureXY ("///   Texture XY", 2D) = "white" {}
+        _NormalmapXY ("Normal map XY", 2D) = "black" {}
         _Brotation ("B rotation", Float ) = 0
+        _NormalXYvalue ("Normal XY value", Float ) = 0
         _Metalic ("Metalic", Range(0, 1)) = 0
         _Gloss ("Gloss", Range(0, 1)) = 0
     }
@@ -51,6 +55,10 @@ Shader "Shader Forge/triplanarMapping" {
             uniform float _Brotation;
             uniform float _Rrotation;
             uniform float _Grotation;
+            uniform sampler2D _NormalmapYZ; uniform float4 _NormalmapYZ_ST;
+            uniform sampler2D _NormalmapZX; uniform float4 _NormalmapZX_ST;
+            uniform sampler2D _NormalmapXY; uniform float4 _NormalmapXY_ST;
+            uniform float _NormalXYvalue;
             struct VertexInput {
                 float4 vertex : POSITION;
                 float3 normal : NORMAL;
@@ -99,7 +107,36 @@ Shader "Shader Forge/triplanarMapping" {
                 float3x3 tangentTransform = float3x3( i.tangentDir, i.bitangentDir, i.normalDir);
 /////// Vectors:
                 float3 viewDirection = normalize(_WorldSpaceCameraPos.xyz - i.posWorld.xyz);
-                float3 normalDirection = i.normalDir;
+                float3 node_8099 = abs(i.normalDir);
+                float3 node_3215 = (node_8099*node_8099);
+                float node_2943 = (3.141592654/180.0); //  convert radian to degrees
+                float node_2543 = (node_2943*_Rrotation);
+                float node_9001_ang = node_2543;
+                float node_9001_spd = 1.0;
+                float node_9001_cos = cos(node_9001_spd*node_9001_ang);
+                float node_9001_sin = sin(node_9001_spd*node_9001_ang);
+                float2 node_9001_piv = float2(0.5,0.5);
+                float2 node_9001 = (mul(float2(i.posWorld.g,i.posWorld.b)-node_9001_piv,float2x2( node_9001_cos, -node_9001_sin, node_9001_sin, node_9001_cos))+node_9001_piv);
+                float3 _NormalmapYZ_var = UnpackNormal(tex2D(_NormalmapYZ,TRANSFORM_TEX(node_9001, _NormalmapYZ)));
+                float node_5023 = (node_2943*_Grotation);
+                float node_4686_ang = node_5023;
+                float node_4686_spd = 1.0;
+                float node_4686_cos = cos(node_4686_spd*node_4686_ang);
+                float node_4686_sin = sin(node_4686_spd*node_4686_ang);
+                float2 node_4686_piv = float2(0.5,0.5);
+                float2 node_4686 = (mul(float2(i.posWorld.b,i.posWorld.r)-node_4686_piv,float2x2( node_4686_cos, -node_4686_sin, node_4686_sin, node_4686_cos))+node_4686_piv);
+                float3 _NormalmapZX_var = UnpackNormal(tex2D(_NormalmapZX,TRANSFORM_TEX(node_4686, _NormalmapZX)));
+                float node_1920 = (node_2943*_Brotation);
+                float node_9896_ang = node_1920;
+                float node_9896_spd = 1.0;
+                float node_9896_cos = cos(node_9896_spd*node_9896_ang);
+                float node_9896_sin = sin(node_9896_spd*node_9896_ang);
+                float2 node_9896_piv = float2(0.5,0.5);
+                float2 node_9896 = (mul(float2(i.posWorld.r,i.posWorld.g)-node_9896_piv,float2x2( node_9896_cos, -node_9896_sin, node_9896_sin, node_9896_cos))+node_9896_piv);
+                float4 _NormalmapXY_var = tex2D(_NormalmapXY,TRANSFORM_TEX(node_9896, _NormalmapXY));
+                float3 node_2569 = (node_3215.r*_NormalmapYZ_var.rgb + node_3215.g*_NormalmapZX_var.rgb + node_3215.b*(_NormalmapXY_var.rgb*_NormalXYvalue));
+                float3 normalLocal = node_2569;
+                float3 normalDirection = normalize(mul( normalLocal, tangentTransform )); // Perturbed normals
                 float3 viewReflectDirection = reflect( -viewDirection, normalDirection );
                 float3 lightDirection = normalize(_WorldSpaceLightPos0.xyz);
                 float3 lightColor = _LightColor0.rgb;
@@ -150,22 +187,21 @@ Shader "Shader Forge/triplanarMapping" {
                 float LdotH = max(0.0,dot(lightDirection, halfDirection));
                 float3 node_8801 = abs(i.normalDir);
                 float3 node_4794 = (node_8801*node_8801);
-                float node_2943 = (3.141592654/180.0); //  convert radian to degrees
-                float node_5905_ang = (node_2943*_Rrotation);
+                float node_5905_ang = node_2543;
                 float node_5905_spd = 1.0;
                 float node_5905_cos = cos(node_5905_spd*node_5905_ang);
                 float node_5905_sin = sin(node_5905_spd*node_5905_ang);
                 float2 node_5905_piv = float2(0.5,0.5);
                 float2 node_5905 = (mul(float2(i.posWorld.g,i.posWorld.b)-node_5905_piv,float2x2( node_5905_cos, -node_5905_sin, node_5905_sin, node_5905_cos))+node_5905_piv);
                 float4 _TextureYZ_var = tex2D(_TextureYZ,TRANSFORM_TEX(node_5905, _TextureYZ));
-                float node_6764_ang = (node_2943*_Grotation);
+                float node_6764_ang = node_5023;
                 float node_6764_spd = 1.0;
                 float node_6764_cos = cos(node_6764_spd*node_6764_ang);
                 float node_6764_sin = sin(node_6764_spd*node_6764_ang);
                 float2 node_6764_piv = float2(0.5,0.5);
                 float2 node_6764 = (mul(float2(i.posWorld.b,i.posWorld.r)-node_6764_piv,float2x2( node_6764_cos, -node_6764_sin, node_6764_sin, node_6764_cos))+node_6764_piv);
                 float4 _TextureZXhorizontal_var = tex2D(_TextureZXhorizontal,TRANSFORM_TEX(node_6764, _TextureZXhorizontal));
-                float node_3873_ang = (node_2943*_Brotation);
+                float node_3873_ang = node_1920;
                 float node_3873_spd = 1.0;
                 float node_3873_cos = cos(node_3873_spd*node_3873_ang);
                 float node_3873_sin = sin(node_3873_spd*node_3873_ang);
@@ -238,6 +274,10 @@ Shader "Shader Forge/triplanarMapping" {
             uniform float _Brotation;
             uniform float _Rrotation;
             uniform float _Grotation;
+            uniform sampler2D _NormalmapYZ; uniform float4 _NormalmapYZ_ST;
+            uniform sampler2D _NormalmapZX; uniform float4 _NormalmapZX_ST;
+            uniform sampler2D _NormalmapXY; uniform float4 _NormalmapXY_ST;
+            uniform float _NormalXYvalue;
             struct VertexInput {
                 float4 vertex : POSITION;
                 float3 normal : NORMAL;
@@ -275,7 +315,36 @@ Shader "Shader Forge/triplanarMapping" {
                 float3x3 tangentTransform = float3x3( i.tangentDir, i.bitangentDir, i.normalDir);
 /////// Vectors:
                 float3 viewDirection = normalize(_WorldSpaceCameraPos.xyz - i.posWorld.xyz);
-                float3 normalDirection = i.normalDir;
+                float3 node_8099 = abs(i.normalDir);
+                float3 node_3215 = (node_8099*node_8099);
+                float node_2943 = (3.141592654/180.0); //  convert radian to degrees
+                float node_2543 = (node_2943*_Rrotation);
+                float node_9001_ang = node_2543;
+                float node_9001_spd = 1.0;
+                float node_9001_cos = cos(node_9001_spd*node_9001_ang);
+                float node_9001_sin = sin(node_9001_spd*node_9001_ang);
+                float2 node_9001_piv = float2(0.5,0.5);
+                float2 node_9001 = (mul(float2(i.posWorld.g,i.posWorld.b)-node_9001_piv,float2x2( node_9001_cos, -node_9001_sin, node_9001_sin, node_9001_cos))+node_9001_piv);
+                float3 _NormalmapYZ_var = UnpackNormal(tex2D(_NormalmapYZ,TRANSFORM_TEX(node_9001, _NormalmapYZ)));
+                float node_5023 = (node_2943*_Grotation);
+                float node_4686_ang = node_5023;
+                float node_4686_spd = 1.0;
+                float node_4686_cos = cos(node_4686_spd*node_4686_ang);
+                float node_4686_sin = sin(node_4686_spd*node_4686_ang);
+                float2 node_4686_piv = float2(0.5,0.5);
+                float2 node_4686 = (mul(float2(i.posWorld.b,i.posWorld.r)-node_4686_piv,float2x2( node_4686_cos, -node_4686_sin, node_4686_sin, node_4686_cos))+node_4686_piv);
+                float3 _NormalmapZX_var = UnpackNormal(tex2D(_NormalmapZX,TRANSFORM_TEX(node_4686, _NormalmapZX)));
+                float node_1920 = (node_2943*_Brotation);
+                float node_9896_ang = node_1920;
+                float node_9896_spd = 1.0;
+                float node_9896_cos = cos(node_9896_spd*node_9896_ang);
+                float node_9896_sin = sin(node_9896_spd*node_9896_ang);
+                float2 node_9896_piv = float2(0.5,0.5);
+                float2 node_9896 = (mul(float2(i.posWorld.r,i.posWorld.g)-node_9896_piv,float2x2( node_9896_cos, -node_9896_sin, node_9896_sin, node_9896_cos))+node_9896_piv);
+                float4 _NormalmapXY_var = tex2D(_NormalmapXY,TRANSFORM_TEX(node_9896, _NormalmapXY));
+                float3 node_2569 = (node_3215.r*_NormalmapYZ_var.rgb + node_3215.g*_NormalmapZX_var.rgb + node_3215.b*(_NormalmapXY_var.rgb*_NormalXYvalue));
+                float3 normalLocal = node_2569;
+                float3 normalDirection = normalize(mul( normalLocal, tangentTransform )); // Perturbed normals
                 float3 lightDirection = normalize(lerp(_WorldSpaceLightPos0.xyz, _WorldSpaceLightPos0.xyz - i.posWorld.xyz,_WorldSpaceLightPos0.w));
                 float3 lightColor = _LightColor0.rgb;
                 float3 halfDirection = normalize(viewDirection+lightDirection);
@@ -292,22 +361,21 @@ Shader "Shader Forge/triplanarMapping" {
                 float LdotH = max(0.0,dot(lightDirection, halfDirection));
                 float3 node_8801 = abs(i.normalDir);
                 float3 node_4794 = (node_8801*node_8801);
-                float node_2943 = (3.141592654/180.0); //  convert radian to degrees
-                float node_5905_ang = (node_2943*_Rrotation);
+                float node_5905_ang = node_2543;
                 float node_5905_spd = 1.0;
                 float node_5905_cos = cos(node_5905_spd*node_5905_ang);
                 float node_5905_sin = sin(node_5905_spd*node_5905_ang);
                 float2 node_5905_piv = float2(0.5,0.5);
                 float2 node_5905 = (mul(float2(i.posWorld.g,i.posWorld.b)-node_5905_piv,float2x2( node_5905_cos, -node_5905_sin, node_5905_sin, node_5905_cos))+node_5905_piv);
                 float4 _TextureYZ_var = tex2D(_TextureYZ,TRANSFORM_TEX(node_5905, _TextureYZ));
-                float node_6764_ang = (node_2943*_Grotation);
+                float node_6764_ang = node_5023;
                 float node_6764_spd = 1.0;
                 float node_6764_cos = cos(node_6764_spd*node_6764_ang);
                 float node_6764_sin = sin(node_6764_spd*node_6764_ang);
                 float2 node_6764_piv = float2(0.5,0.5);
                 float2 node_6764 = (mul(float2(i.posWorld.b,i.posWorld.r)-node_6764_piv,float2x2( node_6764_cos, -node_6764_sin, node_6764_sin, node_6764_cos))+node_6764_piv);
                 float4 _TextureZXhorizontal_var = tex2D(_TextureZXhorizontal,TRANSFORM_TEX(node_6764, _TextureZXhorizontal));
-                float node_3873_ang = (node_2943*_Brotation);
+                float node_3873_ang = node_1920;
                 float node_3873_spd = 1.0;
                 float node_3873_cos = cos(node_3873_spd*node_3873_ang);
                 float node_3873_sin = sin(node_3873_spd*node_3873_ang);
@@ -410,21 +478,24 @@ Shader "Shader Forge/triplanarMapping" {
                 float3 node_8801 = abs(i.normalDir);
                 float3 node_4794 = (node_8801*node_8801);
                 float node_2943 = (3.141592654/180.0); //  convert radian to degrees
-                float node_5905_ang = (node_2943*_Rrotation);
+                float node_2543 = (node_2943*_Rrotation);
+                float node_5905_ang = node_2543;
                 float node_5905_spd = 1.0;
                 float node_5905_cos = cos(node_5905_spd*node_5905_ang);
                 float node_5905_sin = sin(node_5905_spd*node_5905_ang);
                 float2 node_5905_piv = float2(0.5,0.5);
                 float2 node_5905 = (mul(float2(i.posWorld.g,i.posWorld.b)-node_5905_piv,float2x2( node_5905_cos, -node_5905_sin, node_5905_sin, node_5905_cos))+node_5905_piv);
                 float4 _TextureYZ_var = tex2D(_TextureYZ,TRANSFORM_TEX(node_5905, _TextureYZ));
-                float node_6764_ang = (node_2943*_Grotation);
+                float node_5023 = (node_2943*_Grotation);
+                float node_6764_ang = node_5023;
                 float node_6764_spd = 1.0;
                 float node_6764_cos = cos(node_6764_spd*node_6764_ang);
                 float node_6764_sin = sin(node_6764_spd*node_6764_ang);
                 float2 node_6764_piv = float2(0.5,0.5);
                 float2 node_6764 = (mul(float2(i.posWorld.b,i.posWorld.r)-node_6764_piv,float2x2( node_6764_cos, -node_6764_sin, node_6764_sin, node_6764_cos))+node_6764_piv);
                 float4 _TextureZXhorizontal_var = tex2D(_TextureZXhorizontal,TRANSFORM_TEX(node_6764, _TextureZXhorizontal));
-                float node_3873_ang = (node_2943*_Brotation);
+                float node_1920 = (node_2943*_Brotation);
+                float node_3873_ang = node_1920;
                 float node_3873_spd = 1.0;
                 float node_3873_cos = cos(node_3873_spd*node_3873_ang);
                 float node_3873_sin = sin(node_3873_spd*node_3873_ang);

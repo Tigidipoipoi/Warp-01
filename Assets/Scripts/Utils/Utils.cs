@@ -1,11 +1,6 @@
 ﻿using UnityEngine;
-using UnityEngine.UI;
 using UnityEngine.EventSystems;
-
-using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 
 /// <summary>
 /// This class regroups a bunch of static method and extensions usefull for most of the other classes.
@@ -190,7 +185,6 @@ public static class Utils
 
         int newIndex = (currentIndex + direction) % (maxIndex + 1);
 
-        Debug.Log(newIndex);
         if (newIndex < 0)
         {
             newIndex = maxIndex;
