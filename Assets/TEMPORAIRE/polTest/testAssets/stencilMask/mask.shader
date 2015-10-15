@@ -11,6 +11,8 @@
 		ColorMask 0
 		ZWrite On
 
+		//Cull Off //if 2-sided
+
 		// Do nothing specific in the pass:
 
 		Pass{}
