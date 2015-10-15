@@ -11,11 +11,20 @@ namespace Warp01
 
         public WarpScript m_Destination;
         public Transform m_ShuttleTransform;
+        [HideInInspector]
+        public ShuttleScript m_ShuttleScript;
         public Renderer m_ParticleRenderer;
 
         [HideInInspector]
         public Material m_OriginalParticleMat;
+        /// <summary>
+        /// Used to highlight the active warp.
+        /// </summary>
         public Material m_TriggeredParticleMat;
+        /// <summary>
+        /// Used to highlight the active warp's destination.
+        /// </summary>
+        public Material m_DestinationParticleMat;
 
         public GameObject m_PlayerStartPosition;
 
@@ -42,7 +51,8 @@ namespace Warp01
                     .GetComponent<Renderer>();
             }
 
-            if (m_ParticleRenderer != null)
+            if (m_ParticleRenderer != null
+                && m_OriginalParticleMat == null)
             {
                 m_OriginalParticleMat = m_ParticleRenderer.material;
             }
@@ -55,7 +65,7 @@ namespace Warp01
 
             if (m_ShuttleTransform == null)
             {
-                if (transform.parent.GetComponent<ShuttleGizmos>() != null)
+                if (transform.parent.GetComponent<ShuttleScript>() != null)
                 {
                     m_ShuttleTransform = transform.parent;
                 }
@@ -63,6 +73,10 @@ namespace Warp01
                 {
                     Debug.LogError("WarpScript::Start => No shuttle attached to the warp \"" + name + "\".");
                 }
+            }
+            if (m_ShuttleTransform != null)
+            {
+                m_ShuttleScript = m_ShuttleTransform.GetComponent<ShuttleScript>();
             }
             #endregion Check null members
 
@@ -82,23 +96,24 @@ namespace Warp01
         {
             if (enteringCollider.tag == "Player")
             {
-                Debug.Log("Player entered Warp \"" + name + "\".");
                 ChangeParticleMaterial(m_TriggeredParticleMat);
+                ActivateDestinationFeedBack();
+                // We change the color of the warp destination.
+                m_Destination.ChangeParticleMaterial(m_DestinationParticleMat);
             }
         }
 
         public void OnTriggerStay(Collider stayingCollider)
         {
             if (stayingCollider.tag == "Player"
+                // Click wand's main button to warp in game.
+                && (MiddleVR.VRDeviceMgr.IsWandButtonPressed(0)
 #if UNITY_EDITOR
                 // Double click to warp in editor mode.
-                && Input.GetKeyUp(KeyCode.Space))
-#else
-                // Click wand's main button to warp in game.
-                && MiddleVR.VRDeviceMgr.IsWandButtonPressed(0))
+                || Input.GetKeyUp(KeyCode.Space)
 #endif
+                ))
             {
-                Debug.Log("Want to warp to " + m_Destination.name + ".");
                 WarpToDestination();
             }
         }
@@ -107,8 +122,10 @@ namespace Warp01
         {
             if (exitingCollider.tag == "Player")
             {
-                Debug.Log("Player exited Warp \"" + name + "\".");
                 ChangeParticleMaterial(m_OriginalParticleMat);
+                ActivateDestinationFeedBack(false);
+                // We change the color of the warp destination.
+                m_Destination.ChangeParticleMaterial(m_OriginalParticleMat);
             }
         }
         #endregion Trigger events
@@ -134,7 +151,7 @@ namespace Warp01
         {
             if (m_Destination == null)
             {
-                Debug.LogError("WarpScript::WarpToDestination => You don't have any destination set.");
+                Debug.LogError("WarpScript::WarpToDestination => The warp \"" + name + "\" don't have any destination set.");
                 return;
             }
 
@@ -247,5 +264,16 @@ namespace Warp01
             m_PlayerStartPosition.transform.rotation = Quaternion.Slerp(m_BeforePlayerRotation, m_Destination.m_ShuttleTransform.transform.rotation, theRatio);
         }
         #endregion Smooth warp
+
+        public void ActivateDestinationFeedBack(bool activate = true)
+        {
+            if (m_Destination == null)
+            {
+                Debug.LogError("WarpScript::ActivateDestinationFeedBack => The warp \"" + name + "\" don't have any destination set.");
+                return;
+            }
+
+            m_Destination.m_ShuttleScript.EnableFeedBackProjector(activate);
+        }
     }
 }
