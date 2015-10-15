@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-public class ShuttleScript : MonoBehaviour
+public class ShuttleFeedbackScript : MonoBehaviour
 {
     public Projector m_FeedBackProjector;
 

@@ -29,6 +29,7 @@ public class ChangeSceneManager : MonoBehaviour
     // We avoid to reload the "ManagersScene"
     public int m_StartLevelIndex = 1;
     public int m_MaxLevelIndex;
+    public int m_LastLevelIndex;
 
     public GameObject m_LastLevelLoaded;
     #endregion Members
@@ -65,12 +66,12 @@ public class ChangeSceneManager : MonoBehaviour
         if (loadNextLevel)
         {
             newLevelIndex = Utils.GetNearestNeighbourIndex(
-                Application.loadedLevel, m_MaxLevelIndex, m_StartLevelIndex, true);
+                m_LastLevelIndex, m_MaxLevelIndex, m_StartLevelIndex, true);
         }
         else
         {
             newLevelIndex = Utils.GetNearestNeighbourIndex(
-                Application.loadedLevel, m_MaxLevelIndex, m_StartLevelIndex, false);
+                m_LastLevelIndex, m_MaxLevelIndex, m_StartLevelIndex, false);
         }
 
         if (m_LoadAsync)
@@ -83,13 +84,15 @@ public class ChangeSceneManager : MonoBehaviour
         }
     }
 
-    public void ChangeLastLevelLoaded(GameObject loadedLevelContainer)
+    public void ChangeLastLevelLoaded(NotifyAdditiveLevelLoaded loadedLevelContainer)
     {
         if (m_LastLevelLoaded != null)
         {
             Destroy(m_LastLevelLoaded);
             Resources.UnloadUnusedAssets();
         }
-        m_LastLevelLoaded = loadedLevelContainer;
+
+        m_LastLevelLoaded = loadedLevelContainer.gameObject;
+        m_LastLevelIndex = loadedLevelContainer.m_LevelIndex;
     }
 }

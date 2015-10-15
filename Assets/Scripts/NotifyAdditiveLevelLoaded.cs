@@ -2,8 +2,10 @@
 
 public class NotifyAdditiveLevelLoaded : MonoBehaviour
 {
+    public int m_LevelIndex;
+
     void Start()
     {
-        ChangeSceneManager.GetInstance.ChangeLastLevelLoaded(gameObject);
+        ChangeSceneManager.GetInstance.ChangeLastLevelLoaded(this);
     }
 }

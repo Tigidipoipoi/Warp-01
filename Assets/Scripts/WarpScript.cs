@@ -12,7 +12,7 @@ namespace Warp01
         public WarpScript m_Destination;
         public Transform m_ShuttleWarpClampTransform;
         [HideInInspector]
-        public ShuttleScript m_ShuttleScript;
+        public ShuttleFeedbackScript m_ShuttleScript;
         public Renderer m_ParticleRenderer;
 
         [HideInInspector]
@@ -30,7 +30,6 @@ namespace Warp01
         public int m_MaxIterations = 10;
         public float m_FadeTime = 0.25f;
         public vrTimer m_FadeTimer = new vrTimer();
-        public Blur[] m_CameraBlurs;
 
         public float m_SmoothMoveTime = 3.0f;
         public vrTimer m_SmoothMoveTimer = new vrTimer();
@@ -57,7 +56,7 @@ namespace Warp01
 
             if (m_ShuttleWarpClampTransform == null)
             {
-                if (transform.parent.GetComponent<ShuttleScript>() != null)
+                if (transform.parent.GetComponent<ShuttleFeedbackScript>() != null)
                 {
                     m_ShuttleWarpClampTransform = transform.parent;
                 }
@@ -68,19 +67,9 @@ namespace Warp01
             }
             if (m_ShuttleWarpClampTransform != null)
             {
-                m_ShuttleScript = m_ShuttleWarpClampTransform.GetComponent<ShuttleScript>();
+                m_ShuttleScript = m_ShuttleWarpClampTransform.GetComponent<ShuttleFeedbackScript>();
             }
             #endregion Check null members
-
-            Camera[] cameras = Camera.allCameras;
-            m_CameraBlurs = new Blur[cameras.Length];
-
-            for (int i = 0; i < cameras.Length; ++i)
-            {
-                m_CameraBlurs[i] = cameras[i].GetComponent<Blur>();
-            }
-
-            EnableBlurs(false);
         }
 
         #region Trigger events
@@ -100,7 +89,7 @@ namespace Warp01
         {
             if (stayingCollider.tag == "Player"
                 // Click wand's main button to warp in game.
-                && (MiddleVR.VRDeviceMgr.IsWandButtonPressed(0)
+                && (MiddleVR.VRDeviceMgr.IsWandButtonToggled(0)
 #if UNITY_EDITOR
                 // Double click to warp in editor mode.
                 || Input.GetKeyUp(KeyCode.Space)
@@ -174,12 +163,12 @@ namespace Warp01
 
         private IEnumerator FadeBeforeDirectWarp()
         {
-            EnableBlurs();
+            CameraEffectsManager.GetInstance.EnableBlurs();
             m_FadeTimer.Reset();
             while (m_FadeTime - (float)m_FadeTimer.seconds() > 0.0f)
             {
                 float elapsedTimeRate = Mathf.Clamp((float)m_FadeTimer.seconds() / m_FadeTime, 0.0f, 1.0f);
-                SetBlurIteration((int)Mathf.Lerp(m_StartIterations, m_MaxIterations, elapsedTimeRate));
+                CameraEffectsManager.GetInstance.SetBlurIteration((int)Mathf.Lerp(m_StartIterations, m_MaxIterations, elapsedTimeRate));
 
                 yield return null;
             }
@@ -191,39 +180,10 @@ namespace Warp01
             while (m_FadeTime - (float)m_FadeTimer.seconds() > 0.0f)
             {
                 float elapsedTimeRate = Mathf.Clamp((float)m_FadeTimer.seconds() / m_FadeTime, 0.0f, 1.0f);
-                SetBlurIteration((int)Mathf.Lerp(m_MaxIterations, m_StartIterations, elapsedTimeRate));
-
+                CameraEffectsManager.GetInstance.SetBlurIteration((int)Mathf.Lerp(m_MaxIterations, m_StartIterations, elapsedTimeRate));
                 yield return null;
             }
-            EnableBlurs(false);
-        }
-
-        public void SetBlurIteration(int iterations)
-        {
-            if (m_CameraBlurs == null
-                || m_CameraBlurs.Length < 0)
-            {
-                return;
-            }
-
-            foreach (Blur cameraBlur in m_CameraBlurs)
-            {
-                cameraBlur.iterations = iterations;
-            }
-        }
-
-        public void EnableBlurs(bool enable = true)
-        {
-            if (m_CameraBlurs == null
-                || m_CameraBlurs.Length < 0)
-            {
-                return;
-            }
-
-            foreach (Blur cameraBlur in m_CameraBlurs)
-            {
-                cameraBlur.enabled = enable;
-            }
+            CameraEffectsManager.GetInstance.EnableBlurs(false);
         }
         #endregion Direct warp
 
