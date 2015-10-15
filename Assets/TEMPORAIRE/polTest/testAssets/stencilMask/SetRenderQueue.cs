@@ -8,6 +8,7 @@
 
 using UnityEngine;
 
+[ExecuteInEditMode]
 [AddComponentMenu("Rendering/SetRenderQueue")]
 
 public class SetRenderQueue : MonoBehaviour
@@ -18,7 +19,7 @@ public class SetRenderQueue : MonoBehaviour
 
     protected void Awake()
     {
-        Material[] materials = GetComponent<Renderer>().materials;
+        Material[] materials = GetComponent<Renderer>().sharedMaterials;
         for (int i = 0; i < materials.Length && i < m_queues.Length; ++i)
         {
             materials[i].renderQueue = m_queues[i];
