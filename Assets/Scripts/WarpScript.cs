@@ -1,6 +1,5 @@
 ﻿using UnityEngine;
 using System.Collections;
-using UnityStandardAssets.ImageEffects;
 
 namespace Warp01
 {
@@ -26,10 +25,7 @@ namespace Warp01
         /// </summary>
         public Material m_DestinationParticleMat;
 
-        public int m_StartIterations = 0;
-        public int m_MaxIterations = 10;
-        public float m_FadeTime = 0.25f;
-        public vrTimer m_FadeTimer = new vrTimer();
+        public float m_FadeTime = 0.75f;
 
         public float m_SmoothMoveTime = 3.0f;
         public vrTimer m_SmoothMoveTimer = new vrTimer();
@@ -150,7 +146,7 @@ namespace Warp01
         #region Direct warp
         public IEnumerator DirectWarp()
         {
-            yield return StartCoroutine("FadeBeforeDirectWarp");
+            yield return CameraEffectsManager.GetInstance.StartCoroutine("IncreaseBlur", m_FadeTime);
 
             Vector3 newPosition = m_Destination.m_ShuttleWarpClampTransform.position;
             newPosition.y = MVRCameraUtils.GetInstance.p_ShuttleContainer.position.y;
@@ -158,32 +154,7 @@ namespace Warp01
             MVRCameraUtils.GetInstance.p_ShuttleContainer.position = newPosition;
             MVRCameraUtils.GetInstance.p_ShuttleContainer.rotation = m_Destination.m_ShuttleWarpClampTransform.rotation;
 
-            yield return StartCoroutine("FadeAfterDirectWarp");
-        }
-
-        private IEnumerator FadeBeforeDirectWarp()
-        {
-            CameraEffectsManager.GetInstance.EnableBlurs();
-            m_FadeTimer.Reset();
-            while (m_FadeTime - (float)m_FadeTimer.seconds() > 0.0f)
-            {
-                float elapsedTimeRate = Mathf.Clamp((float)m_FadeTimer.seconds() / m_FadeTime, 0.0f, 1.0f);
-                CameraEffectsManager.GetInstance.SetBlurIteration((int)Mathf.Lerp(m_StartIterations, m_MaxIterations, elapsedTimeRate));
-
-                yield return null;
-            }
-        }
-
-        private IEnumerator FadeAfterDirectWarp()
-        {
-            m_FadeTimer.Reset();
-            while (m_FadeTime - (float)m_FadeTimer.seconds() > 0.0f)
-            {
-                float elapsedTimeRate = Mathf.Clamp((float)m_FadeTimer.seconds() / m_FadeTime, 0.0f, 1.0f);
-                CameraEffectsManager.GetInstance.SetBlurIteration((int)Mathf.Lerp(m_MaxIterations, m_StartIterations, elapsedTimeRate));
-                yield return null;
-            }
-            CameraEffectsManager.GetInstance.EnableBlurs(false);
+            yield return CameraEffectsManager.GetInstance.StartCoroutine("DecreaseBlur", m_FadeTime);
         }
         #endregion Direct warp
 

@@ -25,6 +25,9 @@ public class MVRCameraUtils : MonoBehaviour
     }
     #endregion
 
+    #region Members
+    public const int c_NonStereoCameraNumber = 8;
+
     #region Cameras' name
     public string c_StereoCamFront = "CameraStereo_Front";
     public string c_StereoCamFloor = "CameraStereo_Floor";
@@ -154,6 +157,41 @@ public class MVRCameraUtils : MonoBehaviour
             return m_ShuttleContainer;
         }
     }
+
+    /// <summary>
+    /// Cached value for <see cref=""/>.
+    /// </summary>
+    private Camera[] m_AllCameras;
+    public Camera[] p_AllCameras
+    {
+        get
+        {
+            if (m_AllCameras == null)
+            {
+                if (p_CameraStereoFloor == null
+                    || p_CameraStereoFront == null
+                    || p_CameraStereoLeft == null
+                    || p_CameraStereoRight == null)
+                {
+                    return new Camera[0];
+                }
+
+                m_AllCameras = new Camera[c_NonStereoCameraNumber];
+
+                m_AllCameras[0] = GetCameraGameObject(c_StereoCamFront + c_CamSuffixLeft).GetComponent<Camera>();
+                m_AllCameras[1] = GetCameraGameObject(c_StereoCamFront + c_CamSuffixRight).GetComponent<Camera>();
+                m_AllCameras[2] = GetCameraGameObject(c_StereoCamFloor + c_CamSuffixLeft).GetComponent<Camera>();
+                m_AllCameras[3] = GetCameraGameObject(c_StereoCamFloor + c_CamSuffixRight).GetComponent<Camera>();
+                m_AllCameras[4] = GetCameraGameObject(c_StereoCamLeft + c_CamSuffixLeft).GetComponent<Camera>();
+                m_AllCameras[5] = GetCameraGameObject(c_StereoCamLeft + c_CamSuffixRight).GetComponent<Camera>();
+                m_AllCameras[6] = GetCameraGameObject(c_StereoCamRight + c_CamSuffixLeft).GetComponent<Camera>();
+                m_AllCameras[7] = GetCameraGameObject(c_StereoCamRight + c_CamSuffixRight).GetComponent<Camera>();
+            }
+
+            return m_AllCameras;
+        }
+    }
+    #endregion Members
 
     private GameObject GetCameraGameObject(string cameraName)
     {
