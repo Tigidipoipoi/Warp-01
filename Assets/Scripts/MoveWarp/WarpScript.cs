@@ -148,10 +148,7 @@ namespace Warp01
         {
             yield return CameraEffectsManager.GetInstance.StartCoroutine("IncreaseBlur", m_FadeTime);
 
-            Vector3 newPosition = m_Destination.m_ShuttleWarpClampTransform.position;
-            newPosition.y = MVRCameraUtils.GetInstance.p_ShuttleContainer.position.y;
-
-            MVRCameraUtils.GetInstance.p_ShuttleContainer.position = newPosition;
+            MVRCameraUtils.GetInstance.p_ShuttleContainer.position = m_Destination.m_ShuttleWarpClampTransform.position;
             MVRCameraUtils.GetInstance.p_ShuttleContainer.rotation = m_Destination.m_ShuttleWarpClampTransform.rotation;
 
             yield return CameraEffectsManager.GetInstance.StartCoroutine("DecreaseBlur", m_FadeTime);
@@ -176,7 +173,7 @@ namespace Warp01
         private void SmoothMove()
         {
             Vector3 moveDistance = m_Destination.m_ShuttleWarpClampTransform.position - m_BeforePlayerPosition;
-            float moveAngle = Quaternion.Angle(m_Destination.m_ShuttleWarpClampTransform.rotation, m_BeforePlayerRotation);
+            //float moveAngle = Quaternion.Angle(m_Destination.m_ShuttleWarpClampTransform.rotation, m_BeforePlayerRotation);
 
             float theRatio = Mathf.PI / m_SmoothMoveTime * (float)m_SmoothMoveTimer.seconds();
             theRatio = theRatio - (Mathf.PI * 0.5f);

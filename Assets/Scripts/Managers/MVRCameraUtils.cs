@@ -119,18 +119,28 @@ public class MVRCameraUtils : MonoBehaviour
     #endregion Right Camera
 
     /// <summary>
+    /// Cached value for <see cref="p_PlayerTransform"/>.
+    /// </summary>
+    private Transform m_PlayerTransform;
+    /// <summary>
     /// Get the player position and rotation.
     /// </summary>
     public Transform p_PlayerTransform
     {
         get
         {
-            if (p_CameraStereoFront == null)
+            if (m_PlayerTransform == null)
             {
-                return null;
+                GameObject playerGO = GameObject.FindGameObjectWithTag("Player");
+                if (playerGO == null)
+                {
+                    m_PlayerTransform = null;
+                }
+
+                m_PlayerTransform = playerGO.transform;
             }
 
-            return p_CameraStereoFront.transform;
+            return m_PlayerTransform;
         }
     }
 

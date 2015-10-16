@@ -10,7 +10,7 @@ public class ShuttleContainerScript : MonoBehaviour
 
         headNode.tag = "Player";
 
-        SphereCollider headCollider = headNode.AddComponent<SphereCollider>();
+        headNode.AddComponent<SphereCollider>();
         Rigidbody headRigidbody = headNode.AddComponent<Rigidbody>();
         headRigidbody.useGravity = false;
         headRigidbody.isKinematic = false;
