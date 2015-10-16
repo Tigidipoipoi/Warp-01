@@ -9,7 +9,7 @@ public static class Utils
 {
     public const float c_CentimetersToInchesCoef = 0.3937f;
 
-    public const float c_PrecisionForFloatComparison = 0.01f;
+    public const float c_FloatPrecision = 0.001f;
 
     public const int c_ImageResolution = 100;
 
@@ -308,26 +308,26 @@ public static class Utils
     }
 
     /// <summary>
-    /// Determines if a float a is nearly equal the float b according to <seealso cref="Utils.c_PrecisionForFloatComparison"/>.
+    /// Determines if a float a is nearly equal the float b according to <seealso cref="Utils.c_FloatPrecision"/>.
     /// </summary>
     /// <returns><c>true</c> if a is nearly equal to b; otherwise, <c>false</c>.</returns>
     /// <param name="a">The first float.</param>
     /// <param name="b">The second float.</param>
     /// <param name="nearlyValue">The range used to determine what is "near".</param>
-    public static bool IsNearlyEqualTo(this float a, float b, float nearlyValue = c_PrecisionForFloatComparison)
+    public static bool IsNearlyEqualTo(this float a, float b, float nearlyValue = c_FloatPrecision)
     {
         return a >= b - nearlyValue
             && a <= b + nearlyValue;
     }
 
     /// <summary>
-    /// Determines if a vector a is nearly equal the vector b according to <seealso cref="Utils.c_PrecisionForFloatComparison"/>.
+    /// Determines if a vector a is nearly equal the vector b according to <seealso cref="Utils.c_FloatPrecision"/>.
     /// </summary>
     /// <returns><c>true</c> if a is nearly equal to b; otherwise, <c>false</c>.</returns>
     /// <param name="a">The first vector.</param>
     /// <param name="b">The second vector.</param>
     /// <param name="nearlyValue">The range used to determine what is "near".</param>
-    public static bool IsNearlyEqualTo(this Vector3 a, Vector3 b, float nearlyValue = c_PrecisionForFloatComparison)
+    public static bool IsNearlyEqualTo(this Vector3 a, Vector3 b, float nearlyValue = c_FloatPrecision)
     {
         return a.x.IsNearlyEqualTo(b.x)
             && a.y.IsNearlyEqualTo(b.y)
