@@ -10,6 +10,7 @@ public class MoveCarpetScript : MonoBehaviour
     public Transform m_OriginalParent;
 
     private ChangeSceneManager.DestroyLastLevelLoadedHandler m_DestroyHandler;
+    private VRInteractionNavigationWandJoystick m_JoystickNavigation;
     #endregion Members
 
     #region Unity Events
@@ -21,6 +22,8 @@ public class MoveCarpetScript : MonoBehaviour
 
         m_DestroyHandler = new ChangeSceneManager.DestroyLastLevelLoadedHandler(ResetMoveCarpetForDestroy);
         ChangeSceneManager.GetInstance.OnDestroyLastLevelLoaded += m_DestroyHandler;
+        m_JoystickNavigation = FindObjectOfType<VRInteractionNavigationWandJoystick>();
+        m_JoystickNavigation.EnableTranslation(false);
     }
 
     public void Update()
@@ -116,5 +119,6 @@ public class MoveCarpetScript : MonoBehaviour
     public void OnDestroy()
     {
         ChangeSceneManager.GetInstance.OnDestroyLastLevelLoaded -= m_DestroyHandler;
+        m_JoystickNavigation.EnableTranslation(true);
     }
 }

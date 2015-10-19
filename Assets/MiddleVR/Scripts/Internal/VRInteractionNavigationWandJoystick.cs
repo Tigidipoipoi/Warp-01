@@ -70,4 +70,16 @@ public class VRInteractionNavigationWandJoystick : VRInteraction {
             MiddleVR.VRInteractionMgr.Deactivate( m_it );
         }
     }
+
+    public void EnableTranslation(bool enable = true)
+    {
+        if (enable)
+        {
+            m_it.SetTranslationSpeed(TranslationSpeed);
+        }
+        else
+        {
+            m_it.SetTranslationSpeed(0.0f);
+        }
+    }
 }

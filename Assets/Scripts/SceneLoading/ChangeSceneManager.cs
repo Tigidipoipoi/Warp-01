@@ -92,6 +92,7 @@ public class ChangeSceneManager : MonoBehaviour
 
     public void ChangeLastLevelLoaded(NotifyAdditiveLevelLoaded loadedLevelContainer)
     {
+        // We empty the stack only if the current level or the previous is a full level.
         if (loadedLevelContainer.m_IsFullLevel
             || m_LastLevelLoadedStack.Peek().m_IsFullLevel)
         {
@@ -104,13 +105,14 @@ public class ChangeSceneManager : MonoBehaviour
 
     public void DestroyOtherLevelLoaded()
     {
+        // Security check.
         if (m_LastLevelLoadedStack == null
             || m_LastLevelLoadedStack.Count == 0)
         {
             return;
         }
 
-        // Event
+        // Event.
         if (OnDestroyLastLevelLoaded != null)
         {
             OnDestroyLastLevelLoaded();
