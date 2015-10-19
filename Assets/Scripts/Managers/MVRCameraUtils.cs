@@ -26,98 +26,6 @@ public class MVRCameraUtils : MonoBehaviour
     #endregion
 
     #region Members
-    public const int c_NonStereoCameraNumber = 8;
-
-    #region Cameras' name
-    public string c_StereoCamFront = "CameraStereo_Front";
-    public string c_StereoCamFloor = "CameraStereo_Floor";
-    public string c_StereoCamLeft = "CameraStereo_Left";
-    public string c_StereoCamRight = "CameraStereo_Right";
-
-    public string c_CamSuffixLeft = ".Left";
-    public string c_CamSuffixRight = ".Right";
-    #endregion Cameras' name
-
-    #region Front camera
-    /// <summary>
-    /// Cached value for <see cref="p_CameraStereoFront"/>.
-    /// </summary>
-    private GameObject m_CameraStereoFront;
-    public GameObject p_CameraStereoFront
-    {
-        get
-        {
-            if (m_CameraStereoFront == null
-                && MiddleVR.VRDisplayMgr != null)
-            {
-                m_CameraStereoFront = GetCameraGameObject(c_StereoCamFront);
-            }
-
-            return m_CameraStereoFront;
-        }
-    }
-    #endregion Front camera
-
-    #region Floor camera
-    /// <summary>
-    /// Cached value for <see cref="p_CameraStereoFloor"/>.
-    /// </summary>
-    private GameObject m_CameraStereoFloor;
-    public GameObject p_CameraStereoFloor
-    {
-        get
-        {
-            if (m_CameraStereoFloor == null
-                && MiddleVR.VRDisplayMgr != null)
-            {
-                m_CameraStereoFloor = GetCameraGameObject(c_StereoCamFloor);
-            }
-
-            return m_CameraStereoFloor;
-        }
-    }
-    #endregion Floor camera
-
-    #region Left Camera
-    /// <summary>
-    /// Cached value for <see cref="p_CameraStereoLeft"/>.
-    /// </summary>
-    private GameObject m_CameraStereoLeft;
-    public GameObject p_CameraStereoLeft
-    {
-        get
-        {
-            if (m_CameraStereoLeft == null
-                && MiddleVR.VRDisplayMgr != null)
-            {
-                m_CameraStereoLeft = GetCameraGameObject(c_StereoCamLeft);
-            }
-
-            return m_CameraStereoLeft;
-        }
-    }
-    #endregion Left Camera
-
-    #region Right Camera
-    /// <summary>
-    /// Cached value for <see cref="p_CameraStereoRight"/>.
-    /// </summary>
-    private GameObject m_CameraStereoRight;
-    public GameObject p_CameraStereoRight
-    {
-        get
-        {
-            if (m_CameraStereoRight == null
-                && MiddleVR.VRDisplayMgr != null)
-            {
-                m_CameraStereoRight = GetCameraGameObject(c_StereoCamRight);
-            }
-
-            return m_CameraStereoRight;
-        }
-    }
-    #endregion Right Camera
-
     /// <summary>
     /// Cached value for <see cref="p_PlayerTransform"/>.
     /// </summary>
@@ -171,31 +79,31 @@ public class MVRCameraUtils : MonoBehaviour
     /// <summary>
     /// Cached value for <see cref=""/>.
     /// </summary>
-    private Camera[] m_AllCameras;
+    public Camera[] m_AllCameras;
     public Camera[] p_AllCameras
     {
         get
         {
-            if (m_AllCameras == null)
+            if (m_AllCameras == null
+                || m_AllCameras.Length < 1)
             {
-                if (p_CameraStereoFloor == null
-                    || p_CameraStereoFront == null
-                    || p_CameraStereoLeft == null
-                    || p_CameraStereoRight == null)
+                // We substract the server's camera.
+                uint vrCamNumber = MiddleVR.VRDisplayMgr.GetCamerasNb() - 1;
+                int unityCamNumber = (int)vrCamNumber / 3 * 2;
+                m_AllCameras = new Camera[unityCamNumber];
+
+                for (uint i = 0, j = 0; i < vrCamNumber; i += 3, j += 2)
                 {
-                    return new Camera[0];
+                    // Left Cam
+                    vrCamera leftVRCam = MiddleVR.VRDisplayMgr.GetCamera(i + 1);
+                    GameObject leftCamGO = GameObject.Find(leftVRCam.GetName());
+                    m_AllCameras[j] = leftCamGO.GetComponent<Camera>();
+
+                    // Right Cam
+                    vrCamera rightVRCam = MiddleVR.VRDisplayMgr.GetCamera(i + 2);
+                    GameObject rightCamGO = GameObject.Find(rightVRCam.GetName());
+                    m_AllCameras[j + 1] = rightCamGO.GetComponent<Camera>();
                 }
-
-                m_AllCameras = new Camera[c_NonStereoCameraNumber];
-
-                m_AllCameras[0] = GetCameraGameObject(c_StereoCamFront + c_CamSuffixLeft).GetComponent<Camera>();
-                m_AllCameras[1] = GetCameraGameObject(c_StereoCamFront + c_CamSuffixRight).GetComponent<Camera>();
-                m_AllCameras[2] = GetCameraGameObject(c_StereoCamFloor + c_CamSuffixLeft).GetComponent<Camera>();
-                m_AllCameras[3] = GetCameraGameObject(c_StereoCamFloor + c_CamSuffixRight).GetComponent<Camera>();
-                m_AllCameras[4] = GetCameraGameObject(c_StereoCamLeft + c_CamSuffixLeft).GetComponent<Camera>();
-                m_AllCameras[5] = GetCameraGameObject(c_StereoCamLeft + c_CamSuffixRight).GetComponent<Camera>();
-                m_AllCameras[6] = GetCameraGameObject(c_StereoCamRight + c_CamSuffixLeft).GetComponent<Camera>();
-                m_AllCameras[7] = GetCameraGameObject(c_StereoCamRight + c_CamSuffixRight).GetComponent<Camera>();
             }
 
             return m_AllCameras;
