@@ -22,7 +22,7 @@ public class sphereTru : MonoBehaviour {
 	void Update () {
         if (!isInside)
         {
-            if (Vector3.Distance(camDetect.mainCam.position, transform.position) <= radius)
+            if (Vector3.Distance(MVRCameraUtils.GetInstance.p_PlayerTransform.position, transform.position) <= radius)
             {
                 isInside = true;
                 line.enabled = true;
@@ -31,10 +31,10 @@ public class sphereTru : MonoBehaviour {
         }
         else
         {
-            insideErrorTxt.position = camDetect.mainCam.position;
+            insideErrorTxt.position = MVRCameraUtils.GetInstance.p_PlayerTransform.position;
 
 
-            if (Vector3.Distance(camDetect.mainCam.position, insideSphere.position) > radius)
+            if (Vector3.Distance(MVRCameraUtils.GetInstance.p_PlayerTransform.position, insideSphere.position) > radius)
             {
                 isInside = false;
                 line.enabled = false;
@@ -43,7 +43,7 @@ public class sphereTru : MonoBehaviour {
             }
         }
         Quaternion oldrot = insideErrorTxt.rotation;
-        insideErrorTxt.LookAt(insideErrorTxt.position + camDetect.mainCam.forward);
+        insideErrorTxt.LookAt(insideErrorTxt.position + MVRCameraUtils.GetInstance.p_PlayerTransform.forward);
         insideErrorTxt.rotation = Quaternion.Lerp(oldrot, insideErrorTxt.rotation, Time.deltaTime * 2f);
     }
 

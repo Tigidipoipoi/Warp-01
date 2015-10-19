@@ -11,6 +11,12 @@
 		ColorMask 0
 		ZWrite On
 
+		/*Stencil{
+			Ref 1
+			Comp always
+			Pass replace
+		}*/
+
 		//Cull Off //if 2-sided
 
 		// Do nothing specific in the pass:
