@@ -207,4 +207,25 @@ public class MVRCameraUtils : MonoBehaviour
     {
         return GameObject.Find(MiddleVR.VRDisplayMgr.GetCamera(cameraName).GetName());
     }
+
+    /// <summary>
+    /// </summary>
+    /// <param name="newPosition"></param>
+    /// <param name="additive">If true will add <paramref name="newPosition"/> to the current shuttle's position.</param>
+    public void SetShuttlePosition(Vector3 newPosition, bool additive = false)
+    {
+        if (p_ShuttleContainer == null)
+        {
+            return;
+        }
+
+        if (additive)
+        {
+            m_ShuttleContainer.transform.position += newPosition;
+        }
+        else
+        {
+            m_ShuttleContainer.transform.position = newPosition;
+        }
+    }
 }

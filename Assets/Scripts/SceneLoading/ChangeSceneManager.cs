@@ -22,6 +22,9 @@ public class ChangeSceneManager : MonoBehaviour
     }
     #endregion
 
+    public delegate void DestroyLastLevelLoadedHandler();
+    public event DestroyLastLevelLoadedHandler OnDestroyLastLevelLoaded;
+
     #region Members
     public bool m_LoadAsync;
 
@@ -33,6 +36,7 @@ public class ChangeSceneManager : MonoBehaviour
     public GameObject m_LastLevelLoaded;
     #endregion Members
 
+    #region Unity Events
     public void Start()
     {
         m_MaxLevelIndex = Application.levelCount - 1;
@@ -54,6 +58,7 @@ public class ChangeSceneManager : MonoBehaviour
             }
         }
     }
+    #endregion Unity Events
 
     /// <summary>
     /// </summary>
@@ -85,13 +90,25 @@ public class ChangeSceneManager : MonoBehaviour
 
     public void ChangeLastLevelLoaded(NotifyAdditiveLevelLoaded loadedLevelContainer)
     {
-        if (m_LastLevelLoaded != null)
-        {
-            Destroy(m_LastLevelLoaded);
-            Resources.UnloadUnusedAssets();
-        }
+        DestroyLastLevelLoaded();
 
         m_LastLevelLoaded = loadedLevelContainer.gameObject;
         m_LastLevelIndex = loadedLevelContainer.m_LevelIndex;
+    }
+
+    public void DestroyLastLevelLoaded()
+    {
+        if (m_LastLevelLoaded == null)
+        {
+            return;
+        }
+
+        if (OnDestroyLastLevelLoaded != null)
+        {
+            OnDestroyLastLevelLoaded();
+        }
+
+        Destroy(m_LastLevelLoaded);
+        Resources.UnloadUnusedAssets();
     }
 }
