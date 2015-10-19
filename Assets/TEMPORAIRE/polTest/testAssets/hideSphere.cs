@@ -39,7 +39,7 @@ public class hideSphere : MonoBehaviour {
                 GetComponent<Rigidbody>().AddForce(100f * new Vector3(Random.Range(-1f, 1f), Random.Range(-1f, 1f), Random.Range(-1f, 1f)));
             }
 
-            if (Vector3.Angle(camDetect.mainCam.forward, (transform.position - camDetect.mainCam.position)) > 70f)
+            if (Vector3.Angle(MVRCameraUtils.GetInstance.p_PlayerTransform.forward, (transform.position - MVRCameraUtils.GetInstance.p_PlayerTransform.position)) > 70f)
             {
                 isHidden = false;
             }
@@ -69,7 +69,7 @@ public class hideSphere : MonoBehaviour {
                 }
             }
 
-            if (Vector3.Angle(camDetect.mainCam.forward, (transform.position - camDetect.mainCam.position)) < 30f)
+            if (Vector3.Angle(MVRCameraUtils.GetInstance.p_PlayerTransform.forward, (transform.position - MVRCameraUtils.GetInstance.p_PlayerTransform.position)) < 30f)
             {
                 isHidden = true;
             }
@@ -82,9 +82,9 @@ public class hideSphere : MonoBehaviour {
     {
         if (isHidden) 
         {
-            //Vector3 forwardCam = camDetect.mainCam.forward;
-            Vector3 targetBehind = camDetect.mainCam.position - 2f * camDetect.mainCam.forward;
-            GetComponent<Rigidbody>().AddForce((((targetBehind - transform.position).normalized + ((transform.position - camDetect.mainCam.position).normalized / (0.2f*Vector3.Distance(transform.position, camDetect.mainCam.position)))) * Vector3.Angle((targetBehind - transform.position), (transform.position - camDetect.mainCam.position)) * strengthMove) / Mathf.Max(1f, GetComponent<Rigidbody>().velocity.magnitude));
+            //Vector3 forwardCam = MVRCameraUtils.GetInstance.p_PlayerTransform.forward;
+            Vector3 targetBehind = MVRCameraUtils.GetInstance.p_PlayerTransform.position - 2f * MVRCameraUtils.GetInstance.p_PlayerTransform.forward;
+            GetComponent<Rigidbody>().AddForce((((targetBehind - transform.position).normalized + ((transform.position - MVRCameraUtils.GetInstance.p_PlayerTransform.position).normalized / (0.2f*Vector3.Distance(transform.position, MVRCameraUtils.GetInstance.p_PlayerTransform.position)))) * Vector3.Angle((targetBehind - transform.position), (transform.position - MVRCameraUtils.GetInstance.p_PlayerTransform.position)) * strengthMove) / Mathf.Max(1f, GetComponent<Rigidbody>().velocity.magnitude));
 
         }
     }
