@@ -53,10 +53,12 @@ public class MoveCarpetScript : MonoBehaviour
         // We offset by "Utils.c_FloatPrecision" to avoid arrows to superimpose with the ground.
         playerPosition.y -= MVRCameraUtils.GetInstance.p_PlayerTransform.localPosition.y - Utils.c_FloatPrecision;
 
+        // Place
         transform.position = playerPosition;
-        transform.LookAt(MVRCameraUtils.GetInstance.p_PlayerTransform.forward,
-            transform.up);
         transform.parent = MVRCameraUtils.GetInstance.p_ShuttleContainer;
+
+        // Rotate
+        transform.localRotation = Quaternion.identity;
     }
 
     public void StartMoveShuttleInDirection(e_Directions direction)
