@@ -1,4 +1,5 @@
 using UnityEngine;
+using System.Collections.Generic;
 
 public class ChangeSceneManager : MonoBehaviour
 {
@@ -33,13 +34,14 @@ public class ChangeSceneManager : MonoBehaviour
     public int m_MaxLevelIndex;
     public int m_LastLevelIndex;
 
-    public GameObject m_LastLevelLoaded;
+    public Stack<NotifyAdditiveLevelLoaded> m_LastLevelLoadedStack;
     #endregion Members
 
     #region Unity Events
     public void Start()
     {
         m_MaxLevelIndex = Application.levelCount - 1;
+        m_LastLevelLoadedStack = new Stack<NotifyAdditiveLevelLoaded>();
     }
 
     public void Update()
@@ -90,25 +92,34 @@ public class ChangeSceneManager : MonoBehaviour
 
     public void ChangeLastLevelLoaded(NotifyAdditiveLevelLoaded loadedLevelContainer)
     {
-        DestroyLastLevelLoaded();
+        if (loadedLevelContainer.m_IsFullLevel
+            || m_LastLevelLoadedStack.Peek().m_IsFullLevel)
+        {
+            DestroyOtherLevelLoaded();
+        }
 
-        m_LastLevelLoaded = loadedLevelContainer.gameObject;
+        m_LastLevelLoadedStack.Push(loadedLevelContainer);
         m_LastLevelIndex = loadedLevelContainer.m_LevelIndex;
     }
 
-    public void DestroyLastLevelLoaded()
+    public void DestroyOtherLevelLoaded()
     {
-        if (m_LastLevelLoaded == null)
+        if (m_LastLevelLoadedStack == null
+            || m_LastLevelLoadedStack.Count == 0)
         {
             return;
         }
 
+        // Event
         if (OnDestroyLastLevelLoaded != null)
         {
             OnDestroyLastLevelLoaded();
         }
 
-        Destroy(m_LastLevelLoaded);
+        while (m_LastLevelLoadedStack.Count > 0)
+        {
+            Destroy(m_LastLevelLoadedStack.Pop().gameObject);
+        }
         Resources.UnloadUnusedAssets();
     }
 }
