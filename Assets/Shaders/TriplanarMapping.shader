@@ -130,7 +130,8 @@ Shader "Shader Forge/triplanarMapping" {
                 float2 node_4686_piv = float2(0.5,0.5);
                 float2 node_4686 = (mul(float2(i.posWorld.b,i.posWorld.r)-node_4686_piv,float2x2( node_4686_cos, -node_4686_sin, node_4686_sin, node_4686_cos))+node_4686_piv);
                 float3 _NormalmapZX_var = UnpackNormal(tex2D(_NormalmapZX,TRANSFORM_TEX(node_4686, _NormalmapZX)));
-                float node_9896_ang = (node_2943*_Brotation);
+                float node_1920 = (node_2943*_Brotation);
+                float node_9896_ang = node_1920;
                 float node_9896_spd = 1.0;
                 float node_9896_cos = cos(node_9896_spd*node_9896_ang);
                 float node_9896_sin = sin(node_9896_spd*node_9896_ang);
@@ -203,7 +204,7 @@ Shader "Shader Forge/triplanarMapping" {
                 float2 node_6764_piv = float2(0.5,0.5);
                 float2 node_6764 = (mul(float2(i.posWorld.b,i.posWorld.r)-node_6764_piv,float2x2( node_6764_cos, -node_6764_sin, node_6764_sin, node_6764_cos))+node_6764_piv);
                 float4 _TextureZX_var = tex2D(_TextureZX,TRANSFORM_TEX(node_6764, _TextureZX));
-                float node_3873_ang = (node_2943*_Brotation);
+                float node_3873_ang = node_1920;
                 float node_3873_spd = 1.0;
                 float node_3873_cos = cos(node_3873_spd*node_3873_ang);
                 float node_3873_sin = sin(node_3873_spd*node_3873_ang);
@@ -338,7 +339,8 @@ Shader "Shader Forge/triplanarMapping" {
                 float2 node_4686_piv = float2(0.5,0.5);
                 float2 node_4686 = (mul(float2(i.posWorld.b,i.posWorld.r)-node_4686_piv,float2x2( node_4686_cos, -node_4686_sin, node_4686_sin, node_4686_cos))+node_4686_piv);
                 float3 _NormalmapZX_var = UnpackNormal(tex2D(_NormalmapZX,TRANSFORM_TEX(node_4686, _NormalmapZX)));
-                float node_9896_ang = (node_2943*_Brotation);
+                float node_1920 = (node_2943*_Brotation);
+                float node_9896_ang = node_1920;
                 float node_9896_spd = 1.0;
                 float node_9896_cos = cos(node_9896_spd*node_9896_ang);
                 float node_9896_sin = sin(node_9896_spd*node_9896_ang);
@@ -377,7 +379,7 @@ Shader "Shader Forge/triplanarMapping" {
                 float2 node_6764_piv = float2(0.5,0.5);
                 float2 node_6764 = (mul(float2(i.posWorld.b,i.posWorld.r)-node_6764_piv,float2x2( node_6764_cos, -node_6764_sin, node_6764_sin, node_6764_cos))+node_6764_piv);
                 float4 _TextureZX_var = tex2D(_TextureZX,TRANSFORM_TEX(node_6764, _TextureZX));
-                float node_3873_ang = (node_2943*_Brotation);
+                float node_3873_ang = node_1920;
                 float node_3873_spd = 1.0;
                 float node_3873_cos = cos(node_3873_spd*node_3873_ang);
                 float node_3873_sin = sin(node_3873_spd*node_3873_ang);
@@ -496,7 +498,8 @@ Shader "Shader Forge/triplanarMapping" {
                 float2 node_6764_piv = float2(0.5,0.5);
                 float2 node_6764 = (mul(float2(i.posWorld.b,i.posWorld.r)-node_6764_piv,float2x2( node_6764_cos, -node_6764_sin, node_6764_sin, node_6764_cos))+node_6764_piv);
                 float4 _TextureZX_var = tex2D(_TextureZX,TRANSFORM_TEX(node_6764, _TextureZX));
-                float node_3873_ang = (node_2943*_Brotation);
+                float node_1920 = (node_2943*_Brotation);
+                float node_3873_ang = node_1920;
                 float node_3873_spd = 1.0;
                 float node_3873_cos = cos(node_3873_spd*node_3873_ang);
                 float node_3873_sin = sin(node_3873_spd*node_3873_ang);
