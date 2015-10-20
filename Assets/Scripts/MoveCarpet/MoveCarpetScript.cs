@@ -14,6 +14,9 @@ public class MoveCarpetScript : MonoBehaviour
     private ChangeSceneManager.DestroyLastLevelLoadedHandler m_DestroyHandler;
     private VRInteractionNavigationWandJoystick m_JoystickNavigation;
     private MoveCarpetEnableHandler m_MoveCarpetEnableHandler;
+
+    public delegate void CantDisplayCarpetHandler();
+    public static event CantDisplayCarpetHandler OnCantDisplayCarpet;
     #endregion Members
 
     #region Unity Events
@@ -41,9 +44,13 @@ public class MoveCarpetScript : MonoBehaviour
             PlaceAndRotateCarpetOnPlayer();
 
             // We assert that the whole carpet can be reachable.
-            if (m_MoveCarpetEnableHandler)
+            if (m_MoveCarpetEnableHandler.m_PlayerCanDisplayCarpet)
             {
                 EnableMoveCarpet(!m_IsDisplayed);
+            }
+            else if (OnCantDisplayCarpet != null)
+            {
+                OnCantDisplayCarpet();
             }
         }
     }

@@ -31,6 +31,7 @@ public class MoveCarpetEnableHandler : MonoBehaviour
 
     public void Die()
     {
+        ChangeSceneManager.GetInstance.OnDestroyLastLevelLoaded -= m_DestroyHandler;
         Destroy(gameObject);
     }
 
