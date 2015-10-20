@@ -3,7 +3,7 @@
 public class ShuttleContainerScript : MonoBehaviour
 {
     public string c_HeadNodeName = "HeadNode";
-    public float c_ColliderRadius = 0.3f;
+    public float c_ColliderRadius = 0.25f;
 
     public void Start()
     {

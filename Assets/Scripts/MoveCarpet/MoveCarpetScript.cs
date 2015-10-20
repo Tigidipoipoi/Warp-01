@@ -4,9 +4,11 @@ using System.Collections;
 public class MoveCarpetScript : MonoBehaviour
 {
     #region Members
+    public float m_MoveSpeed = 0.001f;
+
     [HideInInspector]
     public bool m_IsDisplayed = true;
-    public float m_MoveSpeed = 0.001f;
+    [HideInInspector]
     public Transform m_OriginalParent;
 
     private ChangeSceneManager.DestroyLastLevelLoadedHandler m_DestroyHandler;
@@ -64,6 +66,34 @@ public class MoveCarpetScript : MonoBehaviour
         transform.localRotation = Quaternion.identity;
     }
 
+    #region Move Methods & Coroutines
+    #region Human joystick
+    public void StartMoveShuttleInDirection()
+    {
+        StopCoroutine("MoveShuttleInDirection");
+        StartCoroutine("MoveShuttleInDirection");
+    }
+
+    private IEnumerator MoveShuttleInDirection()
+    {
+        Debug.Log("Start MoveShuttleInDirection");
+        Vector3 playerPosition = new Vector3();
+        Vector3 moveDirection = new Vector3();
+        while (m_IsDisplayed)
+        {
+            playerPosition = MVRCameraUtils.GetInstance.p_PlayerTransform.position;
+
+            moveDirection = playerPosition - transform.position;
+            moveDirection = Vector3.ProjectOnPlane(moveDirection, transform.up).normalized;
+
+            MVRCameraUtils.GetInstance.SetShuttlePosition(moveDirection * m_MoveSpeed, additive: true);
+
+            yield return null;
+        }
+    }
+    #endregion Human joystick
+
+    #region DDR Carpet
     public void StartMoveShuttleInDirection(e_Directions direction)
     {
         if (direction == e_Directions.COUNT
@@ -77,16 +107,11 @@ public class MoveCarpetScript : MonoBehaviour
         StartCoroutine("MoveShuttleInDirection", direction);
     }
 
-    public void StopMoveShuttleInDirection()
-    {
-        StopCoroutine("MoveShuttleInDirection");
-    }
-
     private IEnumerator MoveShuttleInDirection(e_Directions direction)
     {
+        Vector3 moveDirection = new Vector3();
         while (m_IsDisplayed)
         {
-            Vector3 moveDirection = new Vector3();
             switch (direction)
             {
                 case e_Directions.LEFT:
@@ -102,14 +127,21 @@ public class MoveCarpetScript : MonoBehaviour
                     moveDirection = -MVRCameraUtils.GetInstance.p_ShuttleContainer.transform.forward;
                     break;
             }
-            Debug.Log(moveDirection.ToString() + " & " + m_MoveSpeed.ToString());
 
             MVRCameraUtils.GetInstance.SetShuttlePosition(moveDirection * m_MoveSpeed, additive: true);
 
             yield return null;
         }
     }
+    #endregion DDR Carpet
 
+    public void StopMoveShuttleInDirection()
+    {
+        StopCoroutine("MoveShuttleInDirection");
+    }
+    #endregion Move Methods & Coroutines
+
+    #region Destroy Events
     public void ResetMoveCarpetForDestroy()
     {
         transform.parent = m_OriginalParent;
@@ -121,4 +153,5 @@ public class MoveCarpetScript : MonoBehaviour
         ChangeSceneManager.GetInstance.OnDestroyLastLevelLoaded -= m_DestroyHandler;
         m_JoystickNavigation.EnableTranslation(true);
     }
+    #endregion Destroy Events
 }

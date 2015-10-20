@@ -87,8 +87,15 @@ public class MVRCameraUtils : MonoBehaviour
             if (m_AllCameras == null
                 || m_AllCameras.Length < 1)
             {
-                // We substract the server's camera.
-                uint vrCamNumber = MiddleVR.VRDisplayMgr.GetCamerasNb() - 1;
+                uint vrCamNumber = MiddleVR.VRDisplayMgr.GetCamerasNb();
+                // A little security.
+                int vrCamNumberMod3 = (int)vrCamNumber % 3;
+                if (vrCamNumberMod3 != 0)
+                {
+                    Debug.LogWarning(MiddleVR.VRDisplayMgr.GetCamera(vrCamNumber - 1));
+                    vrCamNumber = vrCamNumber - (vrCamNumber % 3);
+                }
+
                 int unityCamNumber = (int)vrCamNumber / 3 * 2;
                 m_AllCameras = new Camera[unityCamNumber];
 
