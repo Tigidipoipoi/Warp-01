@@ -6,8 +6,8 @@ using System.Collections;
 /// </summary>
 public class TestSomeStuff : MonoBehaviour
 {
-    private VRInteractionNavigationWandJoystick m_JoystickNavigation;
-    private bool m_EnableTranslation;
+    private BoxCollider m_TriggerToCopy;
+    private BoxCollider m_AddedTrigger;
 
     public IEnumerator Start()
     {
@@ -15,15 +15,17 @@ public class TestSomeStuff : MonoBehaviour
 
         Utils.ClearLog();
 
-        m_JoystickNavigation = FindObjectOfType<VRInteractionNavigationWandJoystick>();
+        m_TriggerToCopy = GetComponent<BoxCollider>();
+
+        m_AddedTrigger = MVRCameraUtils.GetInstance.p_ShuttleContainer.gameObject.AddComponent<BoxCollider>();
+        m_AddedTrigger.SetFrom(m_TriggerToCopy);
     }
 
     public void Update()
     {
         if (Input.GetKeyUp(KeyCode.Space))
         {
-            m_JoystickNavigation.EnableTranslation(m_EnableTranslation);
-            m_EnableTranslation = !m_EnableTranslation;
+            Destroy(m_AddedTrigger);
         }
     }
 }

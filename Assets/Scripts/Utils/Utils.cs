@@ -405,5 +405,22 @@ public static class Utils
 
         return corners;
     }
+
+    /// <summary>
+    /// Sets <paramref name="boxToSet"/>'s values by copying <paramref name="source"/>'s.
+    /// </summary>
+    /// <param name="boxToSet"></param>
+    /// <param name="source"></param>
+    public static void SetFrom(this BoxCollider boxToSet, BoxCollider source)
+    {
+        boxToSet.center = source.center;
+        boxToSet.contactOffset = source.contactOffset;
+        boxToSet.enabled = source.enabled;
+        boxToSet.hideFlags = source.hideFlags;
+        boxToSet.isTrigger = source.isTrigger;
+        boxToSet.material = source.material;
+        boxToSet.sharedMaterial = source.sharedMaterial;
+        boxToSet.size = source.size;
+    }
     #endregion Extensions
 }

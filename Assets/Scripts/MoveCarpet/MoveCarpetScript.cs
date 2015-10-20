@@ -13,6 +13,7 @@ public class MoveCarpetScript : MonoBehaviour
 
     private ChangeSceneManager.DestroyLastLevelLoadedHandler m_DestroyHandler;
     private VRInteractionNavigationWandJoystick m_JoystickNavigation;
+    private MoveCarpetEnableHandler m_MoveCarpetEnableHandler;
     #endregion Members
 
     #region Unity Events
@@ -20,12 +21,17 @@ public class MoveCarpetScript : MonoBehaviour
     {
         m_OriginalParent = transform.parent;
 
-        EnableMoveCarpet(false);
+        m_MoveCarpetEnableHandler = FindObjectOfType<MoveCarpetEnableHandler>();
 
+        // Prepare to clean on new scene load.
         m_DestroyHandler = new ChangeSceneManager.DestroyLastLevelLoadedHandler(ResetMoveCarpetForDestroy);
         ChangeSceneManager.GetInstance.OnDestroyLastLevelLoaded += m_DestroyHandler;
+
+        // We disable the move by joystick but keep the rotation.
         m_JoystickNavigation = FindObjectOfType<VRInteractionNavigationWandJoystick>();
         m_JoystickNavigation.EnableTranslation(false);
+
+        EnableMoveCarpet(false);
     }
 
     public void Update()
@@ -33,7 +39,12 @@ public class MoveCarpetScript : MonoBehaviour
         if (MiddleVR.VRDeviceMgr.IsWandButtonToggled(2))
         {
             PlaceAndRotateCarpetOnPlayer();
-            EnableMoveCarpet(!m_IsDisplayed);
+
+            // We assert that the whole carpet can be reachable.
+            if (m_MoveCarpetEnableHandler)
+            {
+                EnableMoveCarpet(!m_IsDisplayed);
+            }
         }
     }
 
@@ -43,6 +54,12 @@ public class MoveCarpetScript : MonoBehaviour
         {
             EnableMoveCarpet(false);
         }
+    }
+
+    public void OnDestroy()
+    {
+        ChangeSceneManager.GetInstance.OnDestroyLastLevelLoaded -= m_DestroyHandler;
+        m_JoystickNavigation.EnableTranslation(true);
     }
     #endregion Unity Events
 
@@ -141,17 +158,11 @@ public class MoveCarpetScript : MonoBehaviour
     }
     #endregion Move Methods & Coroutines
 
-    #region Destroy Events
+    #region Destroy Handler
     public void ResetMoveCarpetForDestroy()
     {
         transform.parent = m_OriginalParent;
         EnableMoveCarpet(false);
     }
-
-    public void OnDestroy()
-    {
-        ChangeSceneManager.GetInstance.OnDestroyLastLevelLoaded -= m_DestroyHandler;
-        m_JoystickNavigation.EnableTranslation(true);
-    }
-    #endregion Destroy Events
+    #endregion Destroy handler
 }
