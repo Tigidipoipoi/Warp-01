@@ -25,7 +25,6 @@ public class MoveCarpetEnableHandler : MonoBehaviour
         ChangeSceneManager.GetInstance.OnDestroyLastLevelLoaded += m_DestroyHandler;
 
         transform.parent = MVRCameraUtils.GetInstance.p_ShuttleContainer;
-
         ResetTriggerBounds();
     }
 
