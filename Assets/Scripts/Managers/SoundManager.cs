@@ -26,7 +26,6 @@ public class SoundManager : MonoBehaviour
     #region Members
     public AudioSource m_AudioSource;
     public AudioClip m_CantDisplayCarpetSound;
-    private MoveCarpetScript.CantDisplayCarpetHandler m_CantDisplayCarpetHandler;
     #endregion Members
 
     public void Start()
