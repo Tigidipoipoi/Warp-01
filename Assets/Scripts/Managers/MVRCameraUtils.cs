@@ -77,6 +77,30 @@ public class MVRCameraUtils : MonoBehaviour
     }
 
     /// <summary>
+    /// Cached value for <see cref="p_WandTransform"/>.
+    /// </summary>
+    private Transform m_WandTransform;
+    public Transform p_WandTransform
+    {
+        get
+        {
+            if (m_WandTransform == null)
+            {
+                GameObject wandGO = GameObject.FindGameObjectWithTag("Wand");
+
+                if (wandGO == null)
+                {
+                    return null;
+                }
+
+                m_WandTransform = wandGO.transform;
+            }
+
+            return m_WandTransform;
+        }
+    }
+
+    /// <summary>
     /// Cached value for <see cref=""/>.
     /// </summary>
     public Camera[] m_AllCameras;

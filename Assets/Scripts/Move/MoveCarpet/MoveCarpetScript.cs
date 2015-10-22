@@ -17,6 +17,10 @@ public class MoveCarpetScript : MonoBehaviour
 
     public delegate void CantDisplayCarpetHandler();
     public static event CantDisplayCarpetHandler OnCantDisplayCarpet;
+
+    [Range(0, 4)]
+    [Tooltip("There are 5 buttons on the Senso Light & Shadows, so choose in the range 0 to 4.")]
+    public uint m_DisplayTargetButton;
     #endregion Members
 
     #region Unity Events
@@ -39,12 +43,13 @@ public class MoveCarpetScript : MonoBehaviour
 
     public void Update()
     {
-        if (MiddleVR.VRDeviceMgr.IsWandButtonToggled(2))
+        if (MiddleVR.VRDeviceMgr.IsWandButtonToggled(m_DisplayTargetButton))
         {
             PlaceAndRotateCarpetOnPlayer();
 
             // We assert that the whole carpet can be reachable.
-            if (m_MoveCarpetEnableHandler.m_PlayerCanDisplayCarpet)
+            if (m_MoveCarpetEnableHandler != null
+                && m_MoveCarpetEnableHandler.m_PlayerCanDisplayCarpet)
             {
                 EnableMoveCarpet(!m_IsDisplayed);
             }
@@ -100,7 +105,6 @@ public class MoveCarpetScript : MonoBehaviour
 
     private IEnumerator MoveShuttleInDirection()
     {
-        Debug.Log("Start MoveShuttleInDirection");
         Vector3 playerPosition = new Vector3();
         Vector3 moveDirection = new Vector3();
         while (m_IsDisplayed)
