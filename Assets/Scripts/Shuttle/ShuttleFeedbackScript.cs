@@ -2,25 +2,26 @@
 
 public class ShuttleFeedbackScript : MonoBehaviour
 {
-    public Projector m_FeedBackProjector;
+    public GameObject m_FeedBackGO;
 
     public void Start()
     {
-        if (m_FeedBackProjector == null)
+        if (m_FeedBackGO == null)
         {
-            m_FeedBackProjector = transform.GetComponentInChildren<Projector>();
+            Debug.LogWarning("ShuttleFeedbackScript::Start => No warp destination feedback for \"" + name + "\"!");
+            Destroy(this);
         }
-        EnableFeedBackProjector(false);
+        EnableFeedBack(false);
     }
 
-    public void EnableFeedBackProjector(bool enable = true)
+    public void EnableFeedBack(bool enable = true)
     {
-        if (m_FeedBackProjector == null)
+        if (m_FeedBackGO == null)
         {
             Debug.LogWarning("ShuttleFeedbackScript::EnableFeedBackProjector => No feedback projector is attached to the shuttle \"" + name + "\".");
             return;
         }
 
-        m_FeedBackProjector.enabled = enable;
+        m_FeedBackGO.SetActive(enable);
     }
 }

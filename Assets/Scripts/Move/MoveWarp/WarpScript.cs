@@ -200,7 +200,7 @@ namespace Warp01
                 return;
             }
 
-            m_Destination.m_ShuttleScript.EnableFeedBackProjector(activate);
+            m_Destination.m_ShuttleScript.EnableFeedBack(activate);
         }
     }
 }
