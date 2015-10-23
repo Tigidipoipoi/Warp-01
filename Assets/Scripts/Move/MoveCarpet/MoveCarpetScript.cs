@@ -1,9 +1,12 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class MoveCarpetScript : MonoBehaviour
+public class MoveCarpetScript : CleanBehaviourOnDestroy
 {
     #region Members
+    public delegate void CantDisplayCarpetHandler();
+    public static event CantDisplayCarpetHandler OnCantDisplayCarpet;
+
     public float m_MoveSpeed = 0.001f;
 
     [HideInInspector]
@@ -11,12 +14,8 @@ public class MoveCarpetScript : MonoBehaviour
     [HideInInspector]
     public Transform m_OriginalParent;
 
-    private ChangeSceneManager.DestroyLastLevelLoadedHandler m_DestroyHandler;
     private VRInteractionNavigationWandJoystick m_JoystickNavigation;
     private MoveCarpetEnableHandler m_MoveCarpetEnableHandler;
-
-    public delegate void CantDisplayCarpetHandler();
-    public static event CantDisplayCarpetHandler OnCantDisplayCarpet;
 
     [Range(0, 4)]
     [Tooltip("There are 5 buttons on the Senso Light & Shadows, so choose in the range 0 to 4.")]
@@ -24,15 +23,13 @@ public class MoveCarpetScript : MonoBehaviour
     #endregion Members
 
     #region Unity Events
-    public void Start()
+    public override void Start()
     {
+        base.Start();
+
         m_OriginalParent = transform.parent;
 
         m_MoveCarpetEnableHandler = FindObjectOfType<MoveCarpetEnableHandler>();
-
-        // Prepare to clean on new scene load.
-        m_DestroyHandler = new ChangeSceneManager.DestroyLastLevelLoadedHandler(ResetMoveCarpetForDestroy);
-        ChangeSceneManager.GetInstance.OnDestroyLastLevelLoaded += m_DestroyHandler;
 
         // We disable the move by joystick but keep the rotation.
         m_JoystickNavigation = FindObjectOfType<VRInteractionNavigationWandJoystick>();
@@ -66,12 +63,6 @@ public class MoveCarpetScript : MonoBehaviour
         {
             EnableMoveCarpet(false);
         }
-    }
-
-    public void OnDestroy()
-    {
-        ChangeSceneManager.GetInstance.OnDestroyLastLevelLoaded -= m_DestroyHandler;
-        m_JoystickNavigation.EnableTranslation(true);
     }
     #endregion Unity Events
 
@@ -170,6 +161,14 @@ public class MoveCarpetScript : MonoBehaviour
     #endregion Move Methods & Coroutines
 
     #region Destroy Handler
+    public override void Die()
+    {
+        base.Die();
+
+        ResetMoveCarpetForDestroy();
+        m_JoystickNavigation.EnableTranslation(true);
+    }
+
     public void ResetMoveCarpetForDestroy()
     {
         transform.parent = m_OriginalParent;

@@ -17,7 +17,7 @@ public class ShuttleFeedbackScript : MonoBehaviour
     {
         if (m_FeedBackProjector == null)
         {
-            Debug.LogError("ShuttleScript::EnableFeedBackProjector => No feedback projector is attached to the shuttle \"" + name + "\".");
+            Debug.LogWarning("ShuttleFeedbackScript::EnableFeedBackProjector => No feedback projector is attached to the shuttle \"" + name + "\".");
             return;
         }
 

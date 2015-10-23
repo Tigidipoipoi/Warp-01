@@ -6,7 +6,7 @@ public class MovePointing : MonoBehaviour
     #region Members
     [Range(0, 4)]
     [Tooltip("There are 5 buttons on the Senso Light & Shadows, so choose in the range 0 to 4.")]
-    public uint m_WandButtonToMove;
+    public uint m_MoveButton;
 
     public float m_MoveSpeed = 0.001f;
 
@@ -33,7 +33,7 @@ public class MovePointing : MonoBehaviour
 
     public void Update()
     {
-        p_MoveButtonPressed = MiddleVR.VRDeviceMgr.IsWandButtonPressed(m_WandButtonToMove);
+        p_MoveButtonPressed = MiddleVR.VRDeviceMgr.IsWandButtonPressed(m_MoveButton);
     }
 
     public void StartMoveShuttleInDirection()

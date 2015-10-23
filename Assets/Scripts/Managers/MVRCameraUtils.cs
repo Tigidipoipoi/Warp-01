@@ -116,7 +116,6 @@ public class MVRCameraUtils : MonoBehaviour
                 int vrCamNumberMod3 = (int)vrCamNumber % 3;
                 if (vrCamNumberMod3 != 0)
                 {
-                    Debug.LogWarning(MiddleVR.VRDisplayMgr.GetCamera(vrCamNumber - 1));
                     vrCamNumber = vrCamNumber - (vrCamNumber % 3);
                 }
 
