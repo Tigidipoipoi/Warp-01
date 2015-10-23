@@ -9,17 +9,18 @@ public class MoveCarpetScript : CleanBehaviourOnDestroy
 
     public float m_MoveSpeed = 0.001f;
 
+    [Range(0, 4)]
+    [Tooltip("There are 5 buttons on the Senso Light & Shadows, so choose in the range 0 to 4.")]
+    public uint m_DisplayTargetButton;
+
     [HideInInspector]
     public bool m_IsDisplayed = true;
     [HideInInspector]
     public Transform m_OriginalParent;
 
     private VRInteractionNavigationWandJoystick m_JoystickNavigation;
-    private MoveCarpetEnableHandler m_MoveCarpetEnableHandler;
 
-    [Range(0, 4)]
-    [Tooltip("There are 5 buttons on the Senso Light & Shadows, so choose in the range 0 to 4.")]
-    public uint m_DisplayTargetButton;
+    private MoveCarpetEnableHandler m_MoveCarpetEnableHandler;
     #endregion Members
 
     #region Unity Events

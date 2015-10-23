@@ -82,4 +82,16 @@ public class VRInteractionNavigationWandJoystick : VRInteraction {
             m_it.SetTranslationSpeed(0.0f);
         }
     }
+
+    public void EnableRotation(bool enable = true)
+    {
+        if (enable)
+        {
+            m_it.SetRotationSpeed(RotationSpeed);
+        }
+        else
+        {
+            m_it.SetRotationSpeed(0.0f);
+        }
+    }
 }

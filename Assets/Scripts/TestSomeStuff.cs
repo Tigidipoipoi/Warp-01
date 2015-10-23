@@ -9,7 +9,7 @@ public class TestSomeStuff : MonoBehaviour
     public IEnumerator Start()
     {
         yield return null;
-
         Utils.ClearLog();
+
     }
 }

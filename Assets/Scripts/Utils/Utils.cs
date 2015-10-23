@@ -9,7 +9,7 @@ public static class Utils
 {
     public const float c_CentimetersToInchesCoef = 0.3937f;
 
-    public const float c_FloatPrecision = 0.01f;
+    public const float c_FloatPrecision = 0.001f;
 
     public const int c_ImageResolution = 100;
 
