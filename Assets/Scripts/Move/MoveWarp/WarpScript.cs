@@ -190,11 +190,17 @@ namespace Warp01
         {
             if (m_Destination == null)
             {
-                Debug.LogError("WarpScript::ActivateDestinationFeedBack => The warp \"" + name + "\" don't have any destination set.");
+                Debug.LogWarning("WarpScript::ActivateDestinationFeedBack => The warp \"" + name + "\" don't have any destination set.");
                 return;
             }
 
-            m_Destination.m_ShuttleScript.EnableFeedBackProjector(activate);
+            if (m_Destination.m_ShuttleScript == null)
+            {
+                Debug.LogWarning("WarpScript::ActivateDestinationFeedBack => The destination warp \"" + name + "\" don't have any shuttleScript set.");
+                return;
+            }
+
+            m_Destination.m_ShuttleScript.EnableFeedBack(activate);
         }
     }
 }

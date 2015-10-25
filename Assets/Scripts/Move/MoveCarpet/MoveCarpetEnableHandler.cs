@@ -2,36 +2,32 @@
 using System.Collections;
 
 [RequireComponent(typeof(BoxCollider))]
-public class MoveCarpetEnableHandler : MonoBehaviour
+public class MoveCarpetEnableHandler : CleanBehaviourOnDestroy
 {
     #region Members
     public bool m_PlayerCanDisplayCarpet;
 
     private MoveCarpetScript m_MoveCarpetScript;
     private BoxCollider m_CarpetCallZone;
-
-    private ChangeSceneManager.DestroyLastLevelLoadedHandler m_DestroyHandler;
     #endregion Members
 
     #region Unity Events
-    public void Start()
+    public override void Start()
     {
+        base.Start();
+
         m_CarpetCallZone = GetComponent<BoxCollider>();
 
         m_MoveCarpetScript = FindObjectOfType<MoveCarpetScript>();
 
-        // Prepare to clean on new scene load.
-        m_DestroyHandler = new ChangeSceneManager.DestroyLastLevelLoadedHandler(Die);
-        ChangeSceneManager.GetInstance.OnDestroyLastLevelLoaded += m_DestroyHandler;
-
         transform.parent = MVRCameraUtils.GetInstance.p_ShuttleContainer;
-
         ResetTriggerBounds();
     }
 
-    public void Die()
+    public override void Die()
     {
-        ChangeSceneManager.GetInstance.OnDestroyLastLevelLoaded -= m_DestroyHandler;
+        base.Die();
+
         Destroy(gameObject);
     }
 

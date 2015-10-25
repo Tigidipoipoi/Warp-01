@@ -5,8 +5,11 @@ public class NotifyAdditiveLevelLoaded : MonoBehaviour
     public bool m_IsFullLevel = true;
     public int m_LevelIndex;
 
-    void Start()
+    void Awake()
     {
-        ChangeSceneManager.GetInstance.ChangeLastLevelLoaded(this);
+        if (ChangeSceneManager.GetInstance != null)
+        {
+            ChangeSceneManager.GetInstance.ChangeLastLevelLoaded(this);
+        }
     }
 }

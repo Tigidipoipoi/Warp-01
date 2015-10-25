@@ -1,4 +1,6 @@
 ﻿using UnityEngine;
+using System.Linq;
+using UnityStandardAssets.ImageEffects;
 
 /// <summary>
 /// This class regroups a bunch of usefull stuff for interacting with cameras.
@@ -77,6 +79,30 @@ public class MVRCameraUtils : MonoBehaviour
     }
 
     /// <summary>
+    /// Cached value for <see cref="p_WandTransform"/>.
+    /// </summary>
+    private Transform m_WandTransform;
+    public Transform p_WandTransform
+    {
+        get
+        {
+            if (m_WandTransform == null)
+            {
+                GameObject wandGO = GameObject.FindGameObjectWithTag("Wand");
+
+                if (wandGO == null)
+                {
+                    return null;
+                }
+
+                m_WandTransform = wandGO.transform;
+            }
+
+            return m_WandTransform;
+        }
+    }
+
+    /// <summary>
     /// Cached value for <see cref=""/>.
     /// </summary>
     public Camera[] m_AllCameras;
@@ -92,25 +118,12 @@ public class MVRCameraUtils : MonoBehaviour
                 int vrCamNumberMod3 = (int)vrCamNumber % 3;
                 if (vrCamNumberMod3 != 0)
                 {
-                    Debug.LogWarning(MiddleVR.VRDisplayMgr.GetCamera(vrCamNumber - 1));
                     vrCamNumber = vrCamNumber - (vrCamNumber % 3);
                 }
 
-                int unityCamNumber = (int)vrCamNumber / 3 * 2;
-                m_AllCameras = new Camera[unityCamNumber];
-
-                for (uint i = 0, j = 0; i < vrCamNumber; i += 3, j += 2)
-                {
-                    // Left Cam
-                    vrCamera leftVRCam = MiddleVR.VRDisplayMgr.GetCamera(i + 1);
-                    GameObject leftCamGO = GameObject.Find(leftVRCam.GetName());
-                    m_AllCameras[j] = leftCamGO.GetComponent<Camera>();
-
-                    // Right Cam
-                    vrCamera rightVRCam = MiddleVR.VRDisplayMgr.GetCamera(i + 2);
-                    GameObject rightCamGO = GameObject.Find(rightVRCam.GetName());
-                    m_AllCameras[j + 1] = rightCamGO.GetComponent<Camera>();
-                }
+                m_AllCameras = FindObjectsOfType<Camera>()
+                    .Where(camera => camera.GetComponent<Blur>() != null)
+                    .ToArray();
             }
 
             return m_AllCameras;
