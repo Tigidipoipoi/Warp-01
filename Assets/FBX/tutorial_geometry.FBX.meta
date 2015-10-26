@@ -17,6 +17,25 @@ ModelImporter:
     100018: room_04_geometry
     100020: room_05_geometry
     100022: //RootNode
+    100024: Box072
+    100026: Cylinder001
+    100028: Cylinder002
+    100030: Cylinder003
+    100032: Cylinder004
+    100034: Cylinder005
+    100036: Cylinder006
+    100038: Cylinder007
+    100040: Cylinder008
+    100042: Cylinder009
+    100044: Cylinder010
+    100046: Cylinder011
+    100048: Cylinder012
+    100050: Cylinder013
+    100052: Cylinder014
+    100054: lamp002
+    100056: lamp003
+    100058: lamp004
+    100060: lamp01
     400000: Box066
     400002: Box067
     400004: Box068
@@ -29,6 +48,25 @@ ModelImporter:
     400018: room_04_geometry
     400020: room_05_geometry
     400022: //RootNode
+    400024: Box072
+    400026: Cylinder001
+    400028: Cylinder002
+    400030: Cylinder003
+    400032: Cylinder004
+    400034: Cylinder005
+    400036: Cylinder006
+    400038: Cylinder007
+    400040: Cylinder008
+    400042: Cylinder009
+    400044: Cylinder010
+    400046: Cylinder011
+    400048: Cylinder012
+    400050: Cylinder013
+    400052: Cylinder014
+    400054: lamp002
+    400056: lamp003
+    400058: lamp004
+    400060: lamp01
     2300000: Box066
     2300002: Box067
     2300004: Box068
@@ -40,6 +78,25 @@ ModelImporter:
     2300016: room_03_geometry
     2300018: room_04_geometry
     2300020: room_05_geometry
+    2300022: Box072
+    2300024: Cylinder001
+    2300026: Cylinder002
+    2300028: Cylinder003
+    2300030: Cylinder004
+    2300032: Cylinder005
+    2300034: Cylinder006
+    2300036: Cylinder007
+    2300038: Cylinder008
+    2300040: Cylinder009
+    2300042: Cylinder010
+    2300044: Cylinder011
+    2300046: Cylinder012
+    2300048: Cylinder013
+    2300050: Cylinder014
+    2300052: lamp002
+    2300054: lamp003
+    2300056: lamp004
+    2300058: lamp01
     3300000: Box066
     3300002: Box067
     3300004: Box068
@@ -51,6 +108,25 @@ ModelImporter:
     3300016: room_03_geometry
     3300018: room_04_geometry
     3300020: room_05_geometry
+    3300022: Box072
+    3300024: Cylinder001
+    3300026: Cylinder002
+    3300028: Cylinder003
+    3300030: Cylinder004
+    3300032: Cylinder005
+    3300034: Cylinder006
+    3300036: Cylinder007
+    3300038: Cylinder008
+    3300040: Cylinder009
+    3300042: Cylinder010
+    3300044: Cylinder011
+    3300046: Cylinder012
+    3300048: Cylinder013
+    3300050: Cylinder014
+    3300052: lamp002
+    3300054: lamp003
+    3300056: lamp004
+    3300058: lamp01
     4300000: room_01_geometry
     4300002: Box066
     4300004: Box067
@@ -62,8 +138,27 @@ ModelImporter:
     4300016: Box071
     4300018: room_04_geometry
     4300020: room_05_geometry
+    4300022: Cylinder001
+    4300024: Cylinder002
+    4300026: Cylinder003
+    4300028: Cylinder004
+    4300030: Cylinder005
+    4300032: Cylinder006
+    4300034: Cylinder007
+    4300036: Cylinder008
+    4300038: Cylinder009
+    4300040: Cylinder010
+    4300042: Cylinder011
+    4300044: Cylinder012
+    4300046: Cylinder013
+    4300048: Cylinder014
+    4300050: Box072
+    4300052: lamp01
+    4300054: lamp002
+    4300056: lamp003
+    4300058: lamp004
   materials:
-    importMaterials: 1
+    importMaterials: 0
     materialName: 0
     materialSearch: 1
   animations:
