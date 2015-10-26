@@ -338,7 +338,7 @@ public static class Utils
     /// Rotates a transform so <paramref name="transformAxisToAlign"/> is coplanar to the plane.
     /// </summary>
     /// <param name="transformToRotate">Transform to rotate.</param>
-    /// <param name="transformAxisToAlign">Transform's axis to align.</param>
+    /// <param name="transformAxisToAlign"><paramref name="transformToRotate"/>'s axis to align with the plane.</param>
     /// <param name="planeNormal">Plane normal.</param>
     public static void RotateToAlignWithPlaneAxis(this Transform transformToRotate,
         Vector3 transformAxisToAlign, Vector3 planeNormal)

@@ -8,8 +8,15 @@ public class CustomCameraRotation : CleanBehaviourOnDestroy
     public bool m_InvertVerticalRotation;
     public float m_HoriztontalRotationSpeed;
     public float m_VerticalRotationSpeed;
-    public float m_MaxAngleUp;
-    public float m_MaxAngleDown;
+    [Range(0.0f, 89.0f)]
+    public float m_MaxAngleUp = 45.0f;
+    [Range(-89.0f, 0.0f)]
+    public float m_MaxAngleDown = -45.0f;
+
+
+    [Range(0, 4)]
+    [Tooltip("There are 5 buttons on the Senso Light & Shadows, so choose in the range 0 to 4.")]
+    public uint m_VerticalResetCameraButton = 2;
 
     private Transform m_ShuttleTransform;
     private VRInteractionNavigationWandJoystick m_JoystickNavigation;
@@ -52,6 +59,12 @@ public class CustomCameraRotation : CleanBehaviourOnDestroy
             vAxis = -vAxis;
         }
         RotateSight(vAxis, Vector3.right, m_VerticalRotationSpeed, Space.Self);
+
+        // Reset Vertical Rotation.
+        if (MiddleVR.VRDeviceMgr.IsWandButtonToggled(m_VerticalResetCameraButton))
+        {
+            ResetVerticalRotation();
+        }
     }
 
     public void RotateSight(float direction, Vector3 rotationAxis, float rotationSpeed, Space relativeSpace)
@@ -64,6 +77,29 @@ public class CustomCameraRotation : CleanBehaviourOnDestroy
         direction = direction > Utils.c_FloatPrecision
             ? 1.0f : -1.0f;
 
+        Quaternion oldRotation = m_ShuttleTransform.rotation;
         m_ShuttleTransform.Rotate(rotationAxis, direction * rotationSpeed * Time.deltaTime, relativeSpace);
+
+        // We check if the sight is between the boundaries angles.
+        if (NeedToResetSight())
+        {
+            m_ShuttleTransform.rotation = oldRotation;
+        }
+    }
+
+    public bool NeedToResetSight()
+    {
+        Vector3 neutralForward = Vector3.ProjectOnPlane(m_ShuttleTransform.forward - m_ShuttleTransform.position, Vector3.up);
+        neutralForward -= m_ShuttleTransform.position;
+
+        float pitchAngle = Vector3.Angle(neutralForward, m_ShuttleTransform.forward);
+        Debug.Log(pitchAngle);
+
+        return pitchAngle > m_MaxAngleUp || pitchAngle < m_MaxAngleDown;
+    }
+
+    public void ResetVerticalRotation()
+    {
+        m_ShuttleTransform.RotateToAlignWithPlaneAxis(m_ShuttleTransform.forward, Vector3.up);
     }
 }
