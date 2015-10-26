@@ -43,7 +43,7 @@ public class CustomCameraRotation : CleanBehaviourOnDestroy
         {
             hAxis = -hAxis;
         }
-        RotateSight(hAxis, Vector3.up, m_HoriztontalRotationSpeed);
+        RotateSight(hAxis, Vector3.up, m_HoriztontalRotationSpeed, Space.World);
 
         // Vertical Rotation.
         float vAxis = MiddleVR.VRDeviceMgr.GetWandVerticalAxisValue();
@@ -51,10 +51,10 @@ public class CustomCameraRotation : CleanBehaviourOnDestroy
         {
             vAxis = -vAxis;
         }
-        RotateSight(vAxis, Vector3.right, m_VerticalRotationSpeed);
+        RotateSight(vAxis, Vector3.right, m_VerticalRotationSpeed, Space.Self);
     }
 
-    public void RotateSight(float direction, Vector3 rotationAxis, float rotationSpeed)
+    public void RotateSight(float direction, Vector3 rotationAxis, float rotationSpeed, Space relativeSpace)
     {
         if (direction == 0)
         {
@@ -64,7 +64,6 @@ public class CustomCameraRotation : CleanBehaviourOnDestroy
         direction = direction > Utils.c_FloatPrecision
             ? 1.0f : -1.0f;
 
-        Debug.Log(rotationAxis);
-        m_ShuttleTransform.Rotate(rotationAxis, direction * rotationSpeed * Time.deltaTime, Space.World);
+        m_ShuttleTransform.Rotate(rotationAxis, direction * rotationSpeed * Time.deltaTime, relativeSpace);
     }
 }
