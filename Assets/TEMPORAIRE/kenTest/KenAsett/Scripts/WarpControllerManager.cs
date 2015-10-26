@@ -74,8 +74,8 @@ namespace Warp01
                 x = Input.GetAxisRaw("Horizontal");
                 y = Input.GetAxisRaw("Vertical");
 #else
-                x = MiddleVR.VRDeviceMgr.GetAxis().GetValue(0);
-                y = MiddleVR.VRDeviceMgr.GetAxis().GetValue(1);
+                x = MiddleVR.VRDeviceMgr.GetWandAxis().GetValue(0);
+                y = MiddleVR.VRDeviceMgr.GetWandAxis().GetValue(1);
 #endif
                 Vector3 direction = new Vector3(x, 0, y);
 
@@ -96,7 +96,11 @@ namespace Warp01
                     yield break;
                 }
 
+#if UNITY_EDITOR
                 float angleRatio = Input.GetAxisRaw("Horizontal");
+#else
+                float angleRatio = MiddleVR.VRDeviceMgr.GetWandAxis().GetValue(0);
+#endif
                 m_AfterWarp.transform.rotation *= Quaternion.AngleAxis(angleRatio * m_RotationalSpeed, Vector3.up);
                 yield return null;
             }
@@ -112,8 +116,8 @@ namespace Warp01
 #if UNITY_EDITOR
                     Input.GetButtonUp("Fire1")
 #else
-                    MiddleVR.VRDeviceMgr.IsWandButtonToggled(0)
-# endif
+                    MiddleVR.VRDeviceMgr.IsWandButtonToggled(0, false)
+#endif
                     )
             {
                 return true;
@@ -128,8 +132,8 @@ namespace Warp01
 #if UNITY_EDITOR
                     Input.GetButtonUp("Fire2")
 #else
-                    MiddleVR.VRDeviceMgr.IsWandButtonToggled(1)
-# endif
+                    MiddleVR.VRDeviceMgr.IsWandButtonToggled(1, false)
+#endif
                     )
             {
                 return true;
