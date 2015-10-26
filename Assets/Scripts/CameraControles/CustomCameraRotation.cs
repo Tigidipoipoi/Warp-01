@@ -8,13 +8,18 @@ public class CustomCameraRotation : CleanBehaviourOnDestroy
     public bool m_InvertVerticalRotation;
     public float m_HoriztontalRotationSpeed;
     public float m_VerticalRotationSpeed;
+    public float m_MaxAngleUp;
+    public float m_MaxAngleDown;
 
+    private Transform m_ShuttleTransform;
     private VRInteractionNavigationWandJoystick m_JoystickNavigation;
     #endregion Members
 
     public override void Start()
     {
         base.Start();
+
+        m_ShuttleTransform = MVRCameraUtils.GetInstance.p_ShuttleContainer;
 
         // We disable the move by joystick but keep the rotation.
         m_JoystickNavigation = FindObjectOfType<VRInteractionNavigationWandJoystick>();
@@ -59,6 +64,7 @@ public class CustomCameraRotation : CleanBehaviourOnDestroy
         direction = direction > Utils.c_FloatPrecision
             ? 1.0f : -1.0f;
 
-        MVRCameraUtils.GetInstance.p_ShuttleContainer.Rotate(rotationAxis, direction * rotationSpeed * Time.deltaTime);
+        Debug.Log(rotationAxis);
+        m_ShuttleTransform.Rotate(rotationAxis, direction * rotationSpeed * Time.deltaTime, Space.World);
     }
 }
