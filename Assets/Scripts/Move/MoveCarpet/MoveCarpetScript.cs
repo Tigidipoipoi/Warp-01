@@ -60,7 +60,7 @@ public class MoveCarpetScript : CleanBehaviourOnDestroy
 
     public void OnTriggerExit(Collider exitingCollider)
     {
-        if (exitingCollider.tag == "Player")
+        if (exitingCollider.tag == Utils.Tags.Player)
         {
             EnableMoveCarpet(false);
         }

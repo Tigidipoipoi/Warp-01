@@ -72,7 +72,7 @@ namespace Warp01
         public void OnTriggerEnter(Collider enteringCollider)
         {
             Debug.Log("Trigger entered by " + enteringCollider.name);
-            if (enteringCollider.tag == "Player")
+            if (enteringCollider.tag == Utils.Tags.Player)
             {
                 ChangeParticleMaterial(m_TriggeredParticleMat);
                 ActivateDestinationFeedBack();
@@ -83,7 +83,7 @@ namespace Warp01
 
         public void OnTriggerStay(Collider stayingCollider)
         {
-            if (stayingCollider.tag == "Player"
+            if (stayingCollider.tag == Utils.Tags.Player
                 // Click wand's main button to warp in game.
                 && (MiddleVR.VRDeviceMgr.IsWandButtonToggled(0)
 #if UNITY_EDITOR
@@ -98,7 +98,7 @@ namespace Warp01
 
         public void OnTriggerExit(Collider exitingCollider)
         {
-            if (exitingCollider.tag == "Player")
+            if (exitingCollider.tag == Utils.Tags.Player)
             {
                 ChangeParticleMaterial(m_OriginalParticleMat);
                 ActivateDestinationFeedBack(false);

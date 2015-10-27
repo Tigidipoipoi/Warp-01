@@ -33,7 +33,7 @@ public class MoveCarpetEnableHandler : CleanBehaviourOnDestroy
 
     public void OnTriggerEnter(Collider enteringCollider)
     {
-        if (enteringCollider.tag == "Player")
+        if (enteringCollider.tag == Utils.Tags.Player)
         {
             m_PlayerCanDisplayCarpet = true;
         }
@@ -41,7 +41,7 @@ public class MoveCarpetEnableHandler : CleanBehaviourOnDestroy
 
     public void OnTriggerExit(Collider exitingCollider)
     {
-        if (exitingCollider.tag == "Player")
+        if (exitingCollider.tag == Utils.Tags.Player)
         {
             m_PlayerCanDisplayCarpet = false;
             m_MoveCarpetScript.EnableMoveCarpet(false);

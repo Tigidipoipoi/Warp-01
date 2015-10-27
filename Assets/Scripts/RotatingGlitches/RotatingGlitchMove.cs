@@ -29,7 +29,7 @@ public class RotatingGlitchMove : MonoBehaviour
     public float m_RotationSpeed;
 
     public const float c_RotationAngle = 1.0f;
-    public const string c_RotatingGlitchLayerName = "IntangibleGlitch";
+    public const string c_RotatingGlitchLayerName = Utils.LayerNames.IntangibleGlitch;
     #endregion Members
 
     public void Start()

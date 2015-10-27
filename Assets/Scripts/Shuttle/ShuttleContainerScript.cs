@@ -12,7 +12,7 @@ public class ShuttleContainerScript : MonoBehaviour
     {
         GameObject headNode = transform.FindChild(c_HeadNodeName).gameObject;
 
-        headNode.tag = "Player";
+        headNode.tag = Utils.Tags.Player;
 
         SphereCollider headCollider = headNode.AddComponent<SphereCollider>();
         headCollider.radius = c_ColliderRadius;

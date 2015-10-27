@@ -7,13 +7,36 @@ using System.Collections.Generic;
 /// </summary>
 public static class Utils
 {
+    #region Structures
+    /// <summary>
+    /// Gather all tags used in scripts to avoid magic strings.
+    /// </summary>
+    public struct Tags
+    {
+        public const string Player = "Player";
+        public const string Shuttle = "Shuttle";
+        public const string Wand = "Wand";
+        public const string Untagged = "Untagged";
+    }
+
+    /// <summary>
+    /// Gather all layers' names used in scripts to avoid magic strings.
+    /// </summary>
+    public struct LayerNames
+    {
+        public const string IntangibleGlitch = "IntangibleGlitch";
+    }
+    #endregion Structures
+
+    #region Constants
     public const float c_CentimetersToInchesCoef = 0.3937f;
 
     public const float c_FloatPrecision = 0.001f;
 
     public const int c_ImageResolution = 100;
+    #endregion Constants
 
-    #region Misc
+    #region Misc Methods
     /// <summary>
     /// </summary>
     /// <param name="points"></param>
@@ -213,7 +236,7 @@ public static class Utils
 
         return results.Count > 0;
     }
-    #endregion Misc
+    #endregion Misc Methods
 
     #region Extensions
     /// <summary>

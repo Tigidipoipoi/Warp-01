@@ -41,7 +41,7 @@ public class MVRCameraUtils : MonoBehaviour
         {
             if (m_PlayerTransform == null)
             {
-                GameObject playerGO = GameObject.FindGameObjectWithTag("Player");
+                GameObject playerGO = GameObject.FindGameObjectWithTag(Utils.Tags.Player);
                 if (playerGO == null)
                 {
                     m_PlayerTransform = null;
@@ -64,7 +64,7 @@ public class MVRCameraUtils : MonoBehaviour
         {
             if (m_ShuttleContainer == null)
             {
-                GameObject shuttleContainerGO = GameObject.FindGameObjectWithTag("Shuttle");
+                GameObject shuttleContainerGO = GameObject.FindGameObjectWithTag(Utils.Tags.Shuttle);
 
                 if (shuttleContainerGO == null)
                 {
@@ -88,7 +88,7 @@ public class MVRCameraUtils : MonoBehaviour
         {
             if (m_WandTransform == null)
             {
-                GameObject wandGO = GameObject.FindGameObjectWithTag("Wand");
+                GameObject wandGO = GameObject.FindGameObjectWithTag(Utils.Tags.Wand);
 
                 if (wandGO == null)
                 {

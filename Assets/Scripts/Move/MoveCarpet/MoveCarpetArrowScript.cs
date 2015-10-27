@@ -16,7 +16,7 @@ public class MoveCarpetArrowScript : MonoBehaviour
 
     public void OnTriggerEnter(Collider enteringCollider)
     {
-        if (enteringCollider.tag == "Player")
+        if (enteringCollider.tag == Utils.Tags.Player)
         {
             Debug.Log("Player entered carpet arrow \"" + transform.parent.name + "\".");
             m_MoveCarpetScript.StartMoveShuttleInDirection(m_Direction);
@@ -25,7 +25,7 @@ public class MoveCarpetArrowScript : MonoBehaviour
 
     public void OnTriggerExit(Collider exitingCollider)
     {
-        if (exitingCollider.tag == "Player")
+        if (exitingCollider.tag == Utils.Tags.Player)
         {
             m_MoveCarpetScript.StopMoveShuttleInDirection();
             Debug.Log("Player exited carpet arrow \"" + transform.parent.name + "\".");
