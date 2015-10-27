@@ -12,13 +12,14 @@
 #define UNITY_D3D11_FULLSCREEN_MODE
 #endif
 #endif
- 
+
 using UnityEngine;
 using UnityEditor;
 using System.Collections;
 using System.IO;
 using MiddleVR_Unity3D;
 using UnityEditor.Callbacks;
+using System.Linq;
 
 [CustomEditor(typeof(VRManagerScript))]
 public class VRCustomEditor : Editor
@@ -32,7 +33,7 @@ public class VRCustomEditor : Editor
     {
         mgr = (VRManagerScript)target;
 
-        if( !m_SettingsApplied )
+        if (!m_SettingsApplied)
         {
             ApplyVRSettings();
             m_SettingsApplied = true;
@@ -71,13 +72,13 @@ public class VRCustomEditor : Editor
         int qualityLevel = QualitySettings.GetQualityLevel();
 
         // Disable VSync on all quality levels
-        for( int i=0 ; i<names.Length ; ++i )
+        for (int i = 0; i < names.Length; ++i)
         {
-            QualitySettings.SetQualityLevel( i );
+            QualitySettings.SetQualityLevel(i);
             QualitySettings.vSyncCount = 0;
         }
 
-        QualitySettings.SetQualityLevel( qualityLevel );
+        QualitySettings.SetQualityLevel(qualityLevel);
 
         MVRTools.Log("Quality settings changed for all quality levels:");
         MVRTools.Log("- VSyncCount = 0");
@@ -92,16 +93,50 @@ public class VRCustomEditor : Editor
             ApplyVRSettings();
         }
 
+        if (mgr.RelativePathForConfigFile)
+        {
+            if ((string.IsNullOrEmpty(mgr.ConfigFile)
+                || !File.Exists(Application.dataPath + "/MiddleVRConfigFile/" + mgr.ConfigFile)))
+            {
+                mgr.ConfigFile = "CAVEConfig.vrx";
+            }
+        }
+        else
+        {
+            if ((string.IsNullOrEmpty(mgr.ConfigFile)
+                || !File.Exists(mgr.ConfigFile)))
+            {
+                mgr.ConfigFile = "C:/Program Files (x86)/MiddleVR/data/Config/Cube/Cube-5-Sides-Flatten-VirtualCluster.vrx";
+            }
+        }
+
         if (GUILayout.Button("Pick configuration file"))
         {
-            string path = EditorUtility.OpenFilePanel("Please choose MiddleVR configuration file", "C:/Program Files (x86)/MiddleVR/data/Config", "vrx");
-            MVRTools.Log("[+] Picked " + path );
-            mgr.ConfigFile = path;
+            if (mgr.RelativePathForConfigFile)
+            {
+                SelectRelativePathForConfigFile();
+            }
+            else
+            {
+                string path = EditorUtility.OpenFilePanel("Please choose MiddleVR configuration file", "C:/Program Files (x86)/MiddleVR/data/Config", "vrx");
+                MVRTools.Log("[+] Picked " + path);
+                mgr.ConfigFile = path;
+            }
             EditorUtility.SetDirty(mgr);
         }
 
         DrawDefaultInspector();
         GUILayout.EndVertical();
+    }
+
+    public void SelectRelativePathForConfigFile()
+    {
+        string path = EditorUtility.OpenFilePanel("Please choose MiddleVR configuration file", Application.dataPath + "/MiddleVRConfigFile", "vrx");
+
+        string fileName = path.Split('/').Last();
+        MVRTools.Log("[+] Picked " + fileName);
+        mgr.ConfigFile = fileName;
+        EditorUtility.SetDirty(mgr);
     }
 
     private static void CopyFolderIfExists(string iFolderName, string iSrcBasePath, string iDstBasePath)
@@ -116,7 +151,7 @@ public class VRCustomEditor : Editor
     }
 
     [PostProcessBuild]
-    public static void OnPostprocessBuild(BuildTarget target, string pathToBuiltProject) 
+    public static void OnPostprocessBuild(BuildTarget target, string pathToBuiltProject)
     {
         string pathToSourceData = Application.dataPath;
         string pathToPlayerData = Path.Combine(Path.GetDirectoryName(pathToBuiltProject), Path.GetFileNameWithoutExtension(pathToBuiltProject) + "_Data");
@@ -131,7 +166,7 @@ public class VRCustomEditor : Editor
         CopyFolderIfExists(".WebAssets", pathToSourceDataMiddleVR, pathToPlayerDataMiddleVR); // Copy web assets in hidden directory
 
         // Sign Application
-        MVRTools.SignApplication( pathToBuiltProject );
+        MVRTools.SignApplication(pathToBuiltProject);
     }
 }
 

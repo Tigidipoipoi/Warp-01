@@ -9,19 +9,22 @@ using MiddleVR_Unity3D;
 [AddComponentMenu("")]
 public class VRManagerScript : MonoBehaviour
 {
-    public enum ENavigation{
+    public enum ENavigation
+    {
         None,
         Joystick,
         Elastic,
         GrabWorld
     }
 
-    public enum EVirtualHandMapping{
+    public enum EVirtualHandMapping
+    {
         Direct,
         Gogo
     }
 
-    public enum EManipulation{
+    public enum EManipulation
+    {
         None,
         Ray,
         Homer
@@ -58,9 +61,10 @@ public class VRManagerScript : MonoBehaviour
     private vrCommand m_startParticlesCommand = null;
 
     // Exposed parameters:
+    public bool RelativePathForConfigFile;
     public string ConfigFile = "c:\\config.vrx";
     public GameObject VRSystemCenterNode = null;
-    public GameObject TemplateCamera     = null;
+    public GameObject TemplateCamera = null;
 
     public bool ShowWand = true;
 
@@ -78,8 +82,8 @@ public class VRManagerScript : MonoBehaviour
         }
     }
 
-    public ENavigation         Navigation         = ENavigation.Joystick;
-    public EManipulation       Manipulation       = EManipulation.Ray;
+    public ENavigation Navigation = ENavigation.Joystick;
+    public EManipulation Manipulation = EManipulation.Ray;
     public EVirtualHandMapping VirtualHandMapping = EVirtualHandMapping.Direct;
 
     [SerializeField]
@@ -152,37 +156,37 @@ public class VRManagerScript : MonoBehaviour
         }
     }
 
-    public bool              DisableExistingCameras      = true;
-    public bool              GrabExistingNodes           = false;
-    public bool              DebugNodes                  = false;
-    public bool              DebugScreens                = false;
-    public bool              QuitOnEsc                   = true;
-    public bool              DontChangeWindowGeometry    = false;
-    public bool              SimpleCluster               = true;
-    public bool              SimpleClusterParticles      = true;
-    public bool              ForceQuality                = false;
-    public int               ForceQualityIndex           = 3;
-    public bool              CustomLicense               = false;
-    public string            CustomLicenseName;
-    public string            CustomLicenseCode;
+    public bool DisableExistingCameras = true;
+    public bool GrabExistingNodes = false;
+    public bool DebugNodes = false;
+    public bool DebugScreens = false;
+    public bool QuitOnEsc = true;
+    public bool DontChangeWindowGeometry = false;
+    public bool SimpleCluster = true;
+    public bool SimpleClusterParticles = true;
+    public bool ForceQuality = false;
+    public int ForceQualityIndex = 3;
+    public bool CustomLicense = false;
+    public string CustomLicenseName;
+    public string CustomLicenseCode;
 
     // Private members
-    private vrKernel         m_Kernel     = null;
-    private vrDeviceManager  m_DeviceMgr  = null;
+    private vrKernel m_Kernel = null;
+    private vrDeviceManager m_DeviceMgr = null;
     private vrDisplayManager m_DisplayMgr = null;
     private vrClusterManager m_ClusterMgr = null;
 
-    private GameObject m_Wand   = null;
+    private GameObject m_Wand = null;
     private GameObject m_VRMenu = null;
 
-    private bool m_isInit        = false;
+    private bool m_isInit = false;
     private bool m_isGeometrySet = false;
-    private bool m_displayLog    = false;
+    private bool m_displayLog = false;
 
-    private int  m_AntiAliasingLevel = 0;
+    private int m_AntiAliasingLevel = 0;
 
     private bool m_NeedDelayedRenderingReset = false;
-    private int  m_RenderingResetDelay       = 1;
+    private int m_RenderingResetDelay = 1;
 
     private GUIText m_GUI = null;
 
@@ -234,7 +238,7 @@ public class VRManagerScript : MonoBehaviour
 
         MVRTools.IsEditor = Application.isEditor;
 
-        if( MiddleVR.VRKernel != null )
+        if (MiddleVR.VRKernel != null)
         {
             MVRTools.Log(3, "[ ] VRKernel already alive, reset Unity Manager.");
             MVRTools.VRReset();
@@ -246,14 +250,21 @@ public class VRManagerScript : MonoBehaviour
         }
         else
         {
-            if( CustomLicense )
+            if (CustomLicense)
             {
                 MVRTools.CustomLicense = true;
                 MVRTools.CustomLicenseName = CustomLicenseName;
                 MVRTools.CustomLicenseCode = CustomLicenseCode;
             }
 
-            m_isInit = MVRTools.VRInitialize(ConfigFile);
+            if (RelativePathForConfigFile)
+            {
+                m_isInit = MVRTools.VRInitialize(Application.dataPath + "/MiddleVRConfigFile/" + ConfigFile);
+            }
+            else
+            {
+                m_isInit = MVRTools.VRInitialize(ConfigFile);
+            }
         }
 
 
@@ -326,7 +337,7 @@ public class VRManagerScript : MonoBehaviour
         InitializeVR();
     }
 
-    protected void Start ()
+    protected void Start()
     {
         MVRTools.Log(4, "[>] VR Manager Start.");
 
@@ -438,8 +449,8 @@ public class VRManagerScript : MonoBehaviour
         Navigation = iNavigation;
 
         VRInteractionNavigationWandJoystick navigationWandJoystick = m_Wand.GetComponent<VRInteractionNavigationWandJoystick>();
-        VRInteractionNavigationElastic      navigationElastic      = m_Wand.GetComponent<VRInteractionNavigationElastic>();
-        VRInteractionNavigationGrabWorld    navigationGrabWorld    = m_Wand.GetComponent<VRInteractionNavigationGrabWorld>();
+        VRInteractionNavigationElastic navigationElastic = m_Wand.GetComponent<VRInteractionNavigationElastic>();
+        VRInteractionNavigationGrabWorld navigationGrabWorld = m_Wand.GetComponent<VRInteractionNavigationGrabWorld>();
         if (navigationWandJoystick == null || navigationElastic == null || navigationGrabWorld == null)
         {
             MVRTools.Log(2, "[~] Some navigation scripts are missing on the Wand.");
@@ -481,7 +492,7 @@ public class VRManagerScript : MonoBehaviour
     {
         Manipulation = iManpulation;
 
-        VRInteractionManipulationRay   manipulationRay   = m_Wand.GetComponent<VRInteractionManipulationRay>();
+        VRInteractionManipulationRay manipulationRay = m_Wand.GetComponent<VRInteractionManipulationRay>();
         VRInteractionManipulationHomer manipulationHomer = m_Wand.GetComponent<VRInteractionManipulationHomer>();
         if (manipulationRay == null || manipulationHomer == null)
         {
@@ -667,7 +678,7 @@ public class VRManagerScript : MonoBehaviour
         //MVRTools.Log("VRManagerUpdate");
 
         // Initialize interactions
-        if( !m_InteractionsInitialized )
+        if (!m_InteractionsInitialized)
         {
             _SetNavigation(Navigation);
             _SetManipulation(Manipulation);
@@ -684,7 +695,7 @@ public class VRManagerScript : MonoBehaviour
         {
             MVRTools.Log(4, "[>] Unity Update - Start");
 
-            if (m_Kernel.GetFrame() >= m_FirstFrameAfterReset+1 && !m_isGeometrySet && !Application.isEditor)
+            if (m_Kernel.GetFrame() >= m_FirstFrameAfterReset + 1 && !m_isGeometrySet && !Application.isEditor)
             {
                 if (!DontChangeWindowGeometry)
                 {
@@ -701,7 +712,7 @@ public class VRManagerScript : MonoBehaviour
                     (m_ClusterMgr.IsCluster() && m_ClusterMgr.IsServer()))
                 {
                     // The cast is safe because the seed is always positive.
-                    uint seed = (uint) UnityEngine.Random.seed;
+                    uint seed = (uint)UnityEngine.Random.seed;
                     m_Kernel._SetRandomSeed(seed);
                 }
             }
@@ -715,7 +726,7 @@ public class VRManagerScript : MonoBehaviour
                 {
                     // The cast is safe because the seed comes from
                     // a previous value of Unity.
-                    int seed = (int) m_Kernel.GetRandomSeed();
+                    int seed = (int)m_Kernel.GetRandomSeed();
                     UnityEngine.Random.seed = seed;
                 }
             }
@@ -784,11 +795,11 @@ public class VRManagerScript : MonoBehaviour
         }
 
         // If QualityLevel changed, we have to reset the Unity Manager
-        if( m_NeedDelayedRenderingReset )
+        if (m_NeedDelayedRenderingReset)
         {
-            if( m_RenderingResetDelay == 0 )
+            if (m_RenderingResetDelay == 0)
             {
-                MVRTools.Log(3,"[ ] Graphic quality forced, reset Unity Manager.");
+                MVRTools.Log(3, "[ ] Graphic quality forced, reset Unity Manager.");
                 MVRTools.VRReset();
 
                 MVRTools.CreateViewportsAndCameras(DontChangeWindowGeometry, true);
@@ -851,12 +862,12 @@ public class VRManagerScript : MonoBehaviour
         MVRTools.Log(3, "[ ] - Quit On Esc : " + QuitOnEsc);
         MVRTools.Log(3, "[ ] - Don't Change Window Geometry : " + DontChangeWindowGeometry);
         MVRTools.Log(3, "[ ] - Simple Cluster : " + SimpleCluster);
-        MVRTools.Log(3, "[ ] - Simple Cluster Particles : " + SimpleClusterParticles );
-        MVRTools.Log(3, "[ ] - Force Quality : " + ForceQuality );
-        MVRTools.Log(3, "[ ] - Force QualityIndex : " + ForceQualityIndex );
-        MVRTools.Log(3, "[ ] - Anti-Aliasing Level : " + m_AntiAliasingLevel );
-        MVRTools.Log(3, "[ ] - Custom License : " + CustomLicense );
-        MVRTools.Log(3, "[ ] - Custom License Name : " + CustomLicenseName );
+        MVRTools.Log(3, "[ ] - Simple Cluster Particles : " + SimpleClusterParticles);
+        MVRTools.Log(3, "[ ] - Force Quality : " + ForceQuality);
+        MVRTools.Log(3, "[ ] - Force QualityIndex : " + ForceQualityIndex);
+        MVRTools.Log(3, "[ ] - Anti-Aliasing Level : " + m_AntiAliasingLevel);
+        MVRTools.Log(3, "[ ] - Custom License : " + CustomLicense);
+        MVRTools.Log(3, "[ ] - Custom License Name : " + CustomLicenseName);
     }
 
     private vrInteraction _GetNextInteraction(string iTag)
@@ -895,7 +906,7 @@ public class VRManagerScript : MonoBehaviour
 
     public void QuitApplication()
     {
-        MVRTools.Log(3,"[ ] Execute QuitCommand.");
+        MVRTools.Log(3, "[ ] Execute QuitCommand.");
 
         // Call cluster command so that all cluster nodes quit
         m_QuitCommand.Do(new vrValue());
