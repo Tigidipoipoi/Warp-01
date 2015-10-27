@@ -7,7 +7,7 @@ public class MoveCarpetScript : CleanBehaviourOnDestroy
     public delegate void CantDisplayCarpetHandler();
     public static event CantDisplayCarpetHandler OnCantDisplayCarpet;
 
-    public float m_MoveSpeed = 0.001f;
+    public float m_MoveSpeed = 0.05f;
 
     [Range(0, 4)]
     [Tooltip("There are 5 buttons on the Senso Light & Shadows, so choose in the range 0 to 4.")]

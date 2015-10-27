@@ -8,7 +8,7 @@ public class MovePointing : MonoBehaviour
     [Tooltip("There are 5 buttons on the Senso Light & Shadows, so choose in the range 0 to 4.")]
     public uint m_MoveButton;
 
-    public float m_MoveSpeed = 0.001f;
+    public float m_MoveSpeed = 0.03f;
 
     private bool m_MoveButtonPressed;
     public bool p_MoveButtonPressed
@@ -53,6 +53,8 @@ public class MovePointing : MonoBehaviour
             {
                 moveDirection = MVRCameraUtils.GetInstance.p_WandTransform.forward;
             }
+			moveDirection.y = 0.0f;
+
             MVRCameraUtils.GetInstance.SetShuttlePosition(moveDirection * m_MoveSpeed, additive: true);
 
             yield return null;

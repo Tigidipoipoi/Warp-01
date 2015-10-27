@@ -5,7 +5,7 @@ using System.Collections;
 public class MoveCarpetEnableHandler : CleanBehaviourOnDestroy
 {
     #region Members
-    public bool m_PlayerCanDisplayCarpet;
+    public bool m_PlayerCanDisplayCarpet = true;
 
     private MoveCarpetScript m_MoveCarpetScript;
     private BoxCollider m_CarpetCallZone;
