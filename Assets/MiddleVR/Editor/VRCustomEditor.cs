@@ -98,7 +98,7 @@ public class VRCustomEditor : Editor
             if ((string.IsNullOrEmpty(mgr.ConfigFile)
                 || !File.Exists(Application.dataPath + "/MiddleVRConfigFile/" + mgr.ConfigFile)))
             {
-                mgr.ConfigFile = "CAVEConfig.vrx";
+                mgr.ConfigFile = "EmulateCave5Screens.vrx";
             }
         }
         else
