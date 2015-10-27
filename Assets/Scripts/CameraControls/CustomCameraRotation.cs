@@ -1,12 +1,14 @@
 ﻿using UnityEngine;
-using System.Collections;
 
 public class CustomCameraRotation : CleanBehaviourOnDestroy
 {
     #region Members
+    public bool m_EnableVerticalRotation;
+
     public bool m_InvertHorizontalRotation;
     public bool m_InvertVerticalRotation;
-    public float m_HoriztontalRotationSpeed;
+    [Range(0.0f, 180.0f)]
+    public float m_HoriztontalRotationSpeed = 10.0f;
     public float m_VerticalRotationSpeed;
     [Range(0.0f, 89.0f)]
     public float m_MaxAngleUp = 45.0f;
@@ -30,19 +32,25 @@ public class CustomCameraRotation : CleanBehaviourOnDestroy
 
         // We disable the move by joystick but keep the rotation.
         m_JoystickNavigation = FindObjectOfType<VRInteractionNavigationWandJoystick>();
-        m_JoystickNavigation.EnableTranslation(false);
-        m_JoystickNavigation.EnableRotation(false);
+        if (m_JoystickNavigation != null)
+        {
+            m_JoystickNavigation.EnableTranslation(false);
+            m_JoystickNavigation.EnableRotation(false);
+        }
     }
 
     public override void Die()
     {
         base.Die();
 
-        m_JoystickNavigation.EnableTranslation(true);
-        m_JoystickNavigation.EnableRotation(true);
+        if (m_JoystickNavigation != null)
+        {
+            m_JoystickNavigation.EnableTranslation(true);
+            m_JoystickNavigation.EnableRotation(true);
+        }
     }
 
-    public void Update()
+    public void FixedUpdate()
     {
         // Horizontal Rotation.
         float hAxis = MiddleVR.VRDeviceMgr.GetWandHorizontalAxisValue();
@@ -53,17 +61,20 @@ public class CustomCameraRotation : CleanBehaviourOnDestroy
         RotateSight(hAxis, Vector3.up, m_HoriztontalRotationSpeed, Space.World);
 
         // Vertical Rotation.
-        float vAxis = MiddleVR.VRDeviceMgr.GetWandVerticalAxisValue();
-        if (m_InvertVerticalRotation)
+        if (m_EnableVerticalRotation)
         {
-            vAxis = -vAxis;
-        }
-        RotateSight(vAxis, Vector3.right, m_VerticalRotationSpeed, Space.Self);
+            float vAxis = MiddleVR.VRDeviceMgr.GetWandVerticalAxisValue();
+            if (m_InvertVerticalRotation)
+            {
+                vAxis = -vAxis;
+            }
+            RotateSight(vAxis, Vector3.right, m_VerticalRotationSpeed, Space.Self);
 
-        // Reset Vertical Rotation.
-        if (MiddleVR.VRDeviceMgr.IsWandButtonToggled(m_VerticalResetCameraButton))
-        {
-            ResetVerticalRotation();
+            // Reset Vertical Rotation.
+            if (MiddleVR.VRDeviceMgr.IsWandButtonToggled(m_VerticalResetCameraButton))
+            {
+                ResetVerticalRotation();
+            }
         }
     }
 
@@ -81,7 +92,8 @@ public class CustomCameraRotation : CleanBehaviourOnDestroy
         m_ShuttleTransform.Rotate(rotationAxis, direction * rotationSpeed * Time.deltaTime, relativeSpace);
 
         // We check if the sight is between the boundaries angles.
-        if (NeedToResetSight())
+        if (m_EnableVerticalRotation
+            && NeedToResetSight())
         {
             m_ShuttleTransform.rotation = oldRotation;
         }
@@ -93,7 +105,6 @@ public class CustomCameraRotation : CleanBehaviourOnDestroy
         neutralForward -= m_ShuttleTransform.position;
 
         float pitchAngle = Vector3.Angle(neutralForward, m_ShuttleTransform.forward);
-        Debug.Log(pitchAngle);
 
         return pitchAngle > m_MaxAngleUp || pitchAngle < m_MaxAngleDown;
     }

@@ -25,6 +25,7 @@ public static class Utils
     public struct LayerNames
     {
         public const string IntangibleGlitch = "IntangibleGlitch";
+        public const string Player = "Player";
     }
     #endregion Structures
 

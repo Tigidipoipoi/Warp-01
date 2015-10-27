@@ -88,8 +88,6 @@ public class RotatingGlitchPointToStop : CleanBehaviourOnDestroy
     {
         Transform wandTrans = MVRCameraUtils.GetInstance.p_WandTransform;
         Ray ray = new Ray(wandTrans.position, wandTrans.forward);
-        Debug.Log(ray.origin);
-        Debug.DrawLine(ray.origin, ray.origin + (ray.direction * m_MaxRange), Color.red, Mathf.Infinity);
 
         return Physics.Raycast(ray, out hitInfo, m_MaxRange, m_FloatingGlitchLayer);
     }

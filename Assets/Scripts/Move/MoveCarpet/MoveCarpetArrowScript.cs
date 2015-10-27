@@ -18,7 +18,6 @@ public class MoveCarpetArrowScript : MonoBehaviour
     {
         if (enteringCollider.tag == Utils.Tags.Player)
         {
-            Debug.Log("Player entered carpet arrow \"" + transform.parent.name + "\".");
             m_MoveCarpetScript.StartMoveShuttleInDirection(m_Direction);
         }
     }
@@ -28,7 +27,6 @@ public class MoveCarpetArrowScript : MonoBehaviour
         if (exitingCollider.tag == Utils.Tags.Player)
         {
             m_MoveCarpetScript.StopMoveShuttleInDirection();
-            Debug.Log("Player exited carpet arrow \"" + transform.parent.name + "\".");
         }
     }
 }

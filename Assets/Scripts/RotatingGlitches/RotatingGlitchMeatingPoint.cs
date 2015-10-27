@@ -46,7 +46,6 @@ public class RotatingGlitchMeatingPoint : MonoBehaviour
     {
         if (m_PresentInTriggerRotatingGlitches.Count == m_RotatingGlitchCountToBreakWall)
         {
-            Debug.Log("Destroy dat wall !!!");
             if (OnDestroyWall != null)
             {
                 OnDestroyWall(this);

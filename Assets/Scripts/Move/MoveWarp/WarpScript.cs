@@ -71,7 +71,6 @@ namespace Warp01
         #region Trigger events
         public void OnTriggerEnter(Collider enteringCollider)
         {
-            Debug.Log("Trigger entered by " + enteringCollider.name);
             if (enteringCollider.tag == Utils.Tags.Player)
             {
                 ChangeParticleMaterial(m_TriggeredParticleMat);
