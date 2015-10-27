@@ -24,6 +24,7 @@ public static class Utils
     /// </summary>
     public struct LayerNames
     {
+        public const string Default = "Default";
         public const string IntangibleGlitch = "IntangibleGlitch";
         public const string Player = "Player";
     }

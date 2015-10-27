@@ -30,7 +30,6 @@ public class MovePointing : MonoBehaviour
     }
     #endregion Members
 
-
     public void Update()
     {
         p_MoveButtonPressed = MiddleVR.VRDeviceMgr.IsWandButtonPressed(m_MoveButton);
@@ -53,11 +52,12 @@ public class MovePointing : MonoBehaviour
             {
                 moveDirection = MVRCameraUtils.GetInstance.p_WandTransform.forward;
             }
-			moveDirection.y = 0.0f;
+            // We don't want to move verticaly.
+            moveDirection.y = 0.0f;
 
             MVRCameraUtils.GetInstance.SetShuttlePosition(moveDirection * m_MoveSpeed, additive: true);
 
-            yield return null;
+            yield return new WaitForFixedUpdate();
         }
     }
 }
