@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.UI;
 using System.Collections;
 
 namespace Warp01
@@ -7,13 +8,18 @@ namespace Warp01
     {
         #region Members
         public Transform m_WandTransform;
-        public string m_MoveWandButton = "Fire1";
-        public string m_RotateWandButton = "Fire2";
-        public string m_DisplayWandButton = "Jump";
+        public string m_MoveWandButton = "MoveWand";
+        public string m_RotateWandButton = "RotateWand";
+        public string m_DisplayWandButton = "DisplayWand";
         public string m_ResetWandButton = "Reset";
 
         public bool m_WandIsDisplayed;
+        public bool m_WandIsMoving;
+        public bool m_WandIsRotating;
 
+        private float m_TriggerAxisValue;
+
+        // public const float c_WandLocalDepth = 0.3f;
         public float c_MinHorizontalValue = -0.55f;
         public float c_MaxHorizontalValue = 0.35f;
         public float c_MinVerticalValue = -0.15f;
@@ -26,6 +32,9 @@ namespace Warp01
 
         public void Start()
         {
+            Cursor.lockState = CursorLockMode.Locked;
+            Cursor.visible = false;
+
             m_WandTransform = MVRCameraUtils.GetInstance.p_WandTransform;
             StartCoroutine("LaunchLevel");
             m_OriginalWandLocalPosition = m_WandTransform.localPosition;
@@ -34,6 +43,8 @@ namespace Warp01
 
         public void Update()
         {
+            m_TriggerAxisValue = Input.GetAxis("XBOXControllerTriggers");
+
             // Display Wand.
             if (Input.GetButtonDown(m_DisplayWandButton))
             {
@@ -43,12 +54,26 @@ namespace Warp01
             // Move Wand.
             if (Input.GetButtonDown(m_MoveWandButton))
             {
+                StopCoroutine("MoveWand");
+                StartCoroutine("MoveWand");
+            }
+            else if (!m_WandIsMoving
+                && m_TriggerAxisValue > 0.0f)
+            {
+                StopCoroutine("MoveWand");
                 StartCoroutine("MoveWand");
             }
 
             // Rotate Wand.
             if (Input.GetButtonDown(m_RotateWandButton))
             {
+                StopCoroutine("RotateWand");
+                StartCoroutine("RotateWand");
+            }
+            else if (!m_WandIsRotating
+                && m_TriggerAxisValue < 0.0f)
+            {
+                StopCoroutine("RotateWand");
                 StartCoroutine("RotateWand");
             }
 
@@ -61,8 +86,8 @@ namespace Warp01
 
         public IEnumerator MoveWand()
         {
-            Vector3 previousMousePosition = Input.mousePosition;
-            Vector3 currentMousePosition = Input.mousePosition;
+            m_WandIsMoving = true;
+
             float horizontalDelta;
             float verticalDelta;
             Vector3 newWandLocalPosition;
@@ -70,53 +95,68 @@ namespace Warp01
             bool oldWandIsDisplay = m_WandIsDisplayed;
             DisplayWand(true);
 
-            while (Input.GetButton(m_MoveWandButton))
+            while (Input.GetButton(m_MoveWandButton)
+                || m_TriggerAxisValue > 0.0f)
             {
-                currentMousePosition = Input.mousePosition;
-                horizontalDelta = currentMousePosition.x - previousMousePosition.x;
-                horizontalDelta /= Screen.width;
-                verticalDelta = currentMousePosition.y - previousMousePosition.y;
-                verticalDelta /= Screen.height;
+                horizontalDelta = MiddleVR.VRDeviceMgr.GetMouseAxisValue(0);
+                if (horizontalDelta.IsNearlyEqualTo(0.0f))
+                {
+                    horizontalDelta = Input.GetAxis("XBOXControllerRightStick-X");
+                }
+
+                verticalDelta = -MiddleVR.VRDeviceMgr.GetMouseAxisValue(1);
+                if (verticalDelta.IsNearlyEqualTo(0.0f))
+                {
+                    verticalDelta = -Input.GetAxis("XBOXControllerRightStick-Y");
+                }
 
                 newWandLocalPosition = m_WandTransform.localPosition;
-                newWandLocalPosition.x = Mathf.Clamp(newWandLocalPosition.x + horizontalDelta, c_MinHorizontalValue, c_MaxHorizontalValue);
-                newWandLocalPosition.y = Mathf.Clamp(newWandLocalPosition.y + verticalDelta, c_MinVerticalValue, c_MaxVerticalValue);
+                newWandLocalPosition.x = Mathf.Clamp(newWandLocalPosition.x + horizontalDelta * Time.deltaTime, c_MinHorizontalValue, c_MaxHorizontalValue);
+                newWandLocalPosition.y = Mathf.Clamp(newWandLocalPosition.y + verticalDelta * Time.deltaTime, c_MinVerticalValue, c_MaxVerticalValue);
 
                 m_WandTransform.localPosition = newWandLocalPosition;
 
                 yield return null;
-                previousMousePosition = currentMousePosition;
             }
 
             DisplayWand(oldWandIsDisplay);
+            m_WandIsMoving = false;
         }
 
         public IEnumerator RotateWand()
         {
-            Vector3 previousMousePosition = Input.mousePosition;
-            Vector3 currentMousePosition = Input.mousePosition;
+            m_WandIsRotating = true;
+
             float horizontalDelta;
             float verticalDelta;
 
             bool oldWandIsDisplay = m_WandIsDisplayed;
             DisplayWand(true);
 
-            while (Input.GetButton(m_RotateWandButton))
+            while (Input.GetButton(m_RotateWandButton)
+                || m_TriggerAxisValue < 0.0f)
             {
-                currentMousePosition = Input.mousePosition;
-                horizontalDelta = currentMousePosition.x - previousMousePosition.x;
-                horizontalDelta /= Screen.width;
-                verticalDelta = currentMousePosition.y - previousMousePosition.y;
-                verticalDelta /= Screen.height;
+                horizontalDelta = MiddleVR.VRDeviceMgr.GetMouseAxisValue(0);
+                if (horizontalDelta.IsNearlyEqualTo(0.0f))
+                {
+                    horizontalDelta = Input.GetAxis("XBOXControllerRightStick-X");
+                }
 
-                m_WandTransform.Rotate(Vector3.up, horizontalDelta * c_RotationSpeed, Space.World);
-                m_WandTransform.Rotate(Vector3.left, verticalDelta * c_RotationSpeed, Space.Self);
+                verticalDelta = -MiddleVR.VRDeviceMgr.GetMouseAxisValue(1);
+                if (verticalDelta.IsNearlyEqualTo(0.0f))
+                {
+                    verticalDelta = -Input.GetAxis("XBOXControllerRightStick-Y");
+                }
+
+                m_WandTransform.Rotate(Vector3.up, horizontalDelta * c_RotationSpeed * Time.deltaTime, Space.World);
+                m_WandTransform.Rotate(Vector3.left, verticalDelta * c_RotationSpeed * Time.deltaTime, Space.Self);
 
                 yield return null;
-                previousMousePosition = currentMousePosition;
             }
 
             DisplayWand(oldWandIsDisplay);
+
+            m_WandIsRotating = false;
         }
 
         public void DisplayWand(bool display = true)
