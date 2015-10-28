@@ -44,7 +44,6 @@ namespace Warp01
         #endregion Members
 
         #region Unity events
-        // Update is called once per frame
         void Update()
         {
             WandIndicateCheck();
@@ -53,6 +52,13 @@ namespace Warp01
 
         private void WandIndicateCheck()
         {
+            // Temporary.
+            if (FindObjectOfType<FakeWandMovement>().m_WandIsDisplayed)
+            {
+                WandIndicate();
+                return;
+            }
+
             if (null == TheSelectionManager.GetSelection())
             {
                 WandHide();

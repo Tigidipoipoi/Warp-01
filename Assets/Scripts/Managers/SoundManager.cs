@@ -35,14 +35,6 @@ public class SoundManager : MonoBehaviour
         MoveCarpetScript.OnCantDisplayCarpet += new MoveCarpetScript.CantDisplayCarpetHandler(PlayCantDisplayCarpetSound);
     }
 
-    public void Update()
-    {
-        if (Input.GetKeyUp(KeyCode.Space))
-        {
-            PlayCantDisplayCarpetSound();
-        }
-    }
-
     public void PlayCantDisplayCarpetSound()
     {
         PlaySound(m_CantDisplayCarpetSound);

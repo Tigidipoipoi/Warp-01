@@ -3,6 +3,7 @@
 public class ShuttleContainerScript : MonoBehaviour
 {
     #region Members
+    // BodyOffset/HeadOffset/
     public string c_HeadNodeName = "HeadNode";
     public float c_ColliderRadius = 0.25f;
     public static readonly Vector3 c_CaveSizeIRL = new Vector3(6.0f, 3.0f, 3.0f);
