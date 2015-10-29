@@ -238,6 +238,17 @@ public static class Utils
 
         return results.Count > 0;
     }
+
+    public static Color RandomColor()
+    {
+        float rngR = Random.Range(0.0f, 1.0f);
+        float rngG = Random.Range(0.0f, 1.0f);
+        float rngB = Random.Range(0.0f, 1.0f);
+
+        Color rngColor = new Color(rngR, rngG, rngB);
+
+        return rngColor;
+    }
     #endregion Misc Methods
 
     #region Extensions

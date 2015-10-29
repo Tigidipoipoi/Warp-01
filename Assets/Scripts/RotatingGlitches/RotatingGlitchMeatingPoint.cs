@@ -34,7 +34,12 @@ public class RotatingGlitchMeatingPoint : MonoBehaviour
 
         if (m_ObjectToDestroy != null)
         {
-            RotatingGlitchDestroyTarget destroyTarget = m_ObjectToDestroy.AddComponent<RotatingGlitchDestroyTarget>();
+            RotatingGlitchDestroyTarget destroyTarget = m_ObjectToDestroy.GetComponent<RotatingGlitchDestroyTarget>();
+            if (destroyTarget == null)
+            {
+                destroyTarget = m_ObjectToDestroy.AddComponent<RotatingGlitchDestroyTarget>();
+            }
+
             OnDestroyWall += destroyTarget.OnDestroyByGlitch;
             OnGlitchDetected += destroyTarget.OnGlitchDetected;
         }
