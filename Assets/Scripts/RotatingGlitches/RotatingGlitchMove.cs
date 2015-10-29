@@ -55,7 +55,7 @@ public class RotatingGlitchMove : MonoBehaviour
         Quaternion rotation = new Quaternion();
         while (p_FreeToRotate)
         {
-            rotation = Quaternion.AngleAxis(c_RotationAngle * m_RotationSpeed * Time.deltaTime, m_Pivot.up);
+            rotation = Quaternion.AngleAxis(c_RotationAngle * m_RotationSpeed * (float)MiddleVR.VRKernel.GetDeltaTime(), m_Pivot.up);
             transform.position = Utils.RotatePointAroundPivot(transform.position, m_Pivot.position, rotation);
 
             yield return null;

@@ -7,6 +7,8 @@ namespace Warp01
     public class FakeWandMovement : MonoBehaviour
     {
         #region Members
+        public bool m_AutoLoadNextLevel;
+
         public Transform m_WandTransform;
         public string m_MoveWandButton = "MoveWand";
         public string m_RotateWandButton = "RotateWand";
@@ -36,7 +38,12 @@ namespace Warp01
             Cursor.visible = false;
 
             m_WandTransform = MVRCameraUtils.GetInstance.p_WandTransform;
-            StartCoroutine("LaunchLevel");
+
+            if (m_AutoLoadNextLevel)
+            {
+                StartCoroutine("LaunchLevel");
+            }
+
             m_OriginalWandLocalPosition = m_WandTransform.localPosition;
             m_OriginalWandLocalRotation = m_WandTransform.localRotation;
         }
@@ -111,8 +118,8 @@ namespace Warp01
                 }
 
                 newWandLocalPosition = m_WandTransform.localPosition;
-                newWandLocalPosition.x = Mathf.Clamp(newWandLocalPosition.x + horizontalDelta * Time.deltaTime, c_MinHorizontalValue, c_MaxHorizontalValue);
-                newWandLocalPosition.y = Mathf.Clamp(newWandLocalPosition.y + verticalDelta * Time.deltaTime, c_MinVerticalValue, c_MaxVerticalValue);
+                newWandLocalPosition.x = Mathf.Clamp(newWandLocalPosition.x + horizontalDelta * (float)MiddleVR.VRKernel.GetDeltaTime(), c_MinHorizontalValue, c_MaxHorizontalValue);
+                newWandLocalPosition.y = Mathf.Clamp(newWandLocalPosition.y + verticalDelta * (float)MiddleVR.VRKernel.GetDeltaTime(), c_MinVerticalValue, c_MaxVerticalValue);
 
                 m_WandTransform.localPosition = newWandLocalPosition;
 
@@ -148,8 +155,8 @@ namespace Warp01
                     verticalDelta = -Input.GetAxis("XBOXControllerRightStick-Y");
                 }
 
-                m_WandTransform.Rotate(Vector3.up, horizontalDelta * c_RotationSpeed * Time.deltaTime, Space.World);
-                m_WandTransform.Rotate(Vector3.left, verticalDelta * c_RotationSpeed * Time.deltaTime, Space.Self);
+                m_WandTransform.Rotate(Vector3.up, horizontalDelta * c_RotationSpeed * (float)MiddleVR.VRKernel.GetDeltaTime(), Space.World);
+                m_WandTransform.Rotate(Vector3.left, verticalDelta * c_RotationSpeed * (float)MiddleVR.VRKernel.GetDeltaTime(), Space.Self);
 
                 yield return null;
             }

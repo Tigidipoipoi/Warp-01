@@ -89,7 +89,7 @@ public class CustomCameraRotation : CleanBehaviourOnDestroy
             ? 1.0f : -1.0f;
 
         Quaternion oldRotation = m_ShuttleTransform.rotation;
-        m_ShuttleTransform.Rotate(rotationAxis, direction * rotationSpeed * Time.deltaTime, relativeSpace);
+        m_ShuttleTransform.Rotate(rotationAxis, direction * rotationSpeed * (float)MiddleVR.VRKernel.GetDeltaTime(), relativeSpace);
 
         // We check if the sight is between the boundaries angles.
         if (m_EnableVerticalRotation

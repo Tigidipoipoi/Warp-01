@@ -1,15 +1,27 @@
 ﻿using UnityEngine;
-//using System.Collections;
+using System.Collections;
 
 public class PlayerPresenceGlitchScript : PlayerPresenceReactingScript
 {
+    public float c_RotationSpeed = 20.0f;
+
     public override void OnPlayerPresenceDetected(PlayerPresenceDetector sender)
     {
-        Debug.Log("Player detected.");
+        StartCoroutine("PlayerPresenceReaction");
     }
 
     public override void OnPlayerPresenceLost(PlayerPresenceDetector sender)
     {
-        Debug.Log("Player lost.");
+        StopCoroutine("PlayerPresenceReaction");
+    }
+
+    public IEnumerator PlayerPresenceReaction()
+    {
+        while (true)
+        {
+            transform.Rotate(Vector3.up, c_RotationSpeed * (float)MiddleVR.VRKernel.GetDeltaTime(), Space.World);
+
+            yield return null;
+        }
     }
 }
