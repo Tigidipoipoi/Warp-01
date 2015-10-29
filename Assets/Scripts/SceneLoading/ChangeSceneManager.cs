@@ -23,8 +23,10 @@ public class ChangeSceneManager : MonoBehaviour
     }
     #endregion
 
+    #region Events
     public delegate void DestroyLastLevelLoadedHandler();
     public event DestroyLastLevelLoadedHandler OnDestroyLastLevelLoaded;
+    #endregion Events
 
     #region Members
     public bool m_LoadAsync;

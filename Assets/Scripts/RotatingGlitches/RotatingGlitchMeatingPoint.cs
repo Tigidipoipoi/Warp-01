@@ -3,10 +3,23 @@ using System.Collections.Generic;
 
 public class RotatingGlitchMeatingPoint : MonoBehaviour
 {
-    #region Members
-    public delegate void DestroyWallHandler(RotatingGlitchMeatingPoint sender);
-    public static event DestroyWallHandler OnDestroyWall;
+    public enum e_GlitchDetectionStatus
+    {
+        ENTERING = 0,
+        EXITNG,
 
+        COUNT
+    }
+
+    #region Events
+    public delegate void DestroyWallHandler(RotatingGlitchMeatingPoint sender);
+    public event DestroyWallHandler OnDestroyWall;
+
+    public delegate void GlitchDetectedHandler(RotatingGlitchMeatingPoint sender, e_GlitchDetectionStatus glitchDetectionStatus);
+    public event GlitchDetectedHandler OnGlitchDetected;
+    #endregion Events
+
+    #region Members
     public int m_RotatingGlitchCountToBreakWall;
     public GameObject m_ObjectToDestroy;
 
@@ -18,6 +31,13 @@ public class RotatingGlitchMeatingPoint : MonoBehaviour
     public void Start()
     {
         m_RotatingGlitchCountToBreakWall = transform.parent.GetComponentsInChildren<RotatingGlitchRendererHandler>().Length;
+
+        if (m_ObjectToDestroy != null)
+        {
+            RotatingGlitchDestroyTarget destroyTarget = m_ObjectToDestroy.AddComponent<RotatingGlitchDestroyTarget>();
+            OnDestroyWall += destroyTarget.OnDestroyByGlitch;
+            OnGlitchDetected += destroyTarget.OnGlitchDetected;
+        }
     }
 
     public void OnTriggerEnter(Collider enteringCollider)
@@ -26,6 +46,13 @@ public class RotatingGlitchMeatingPoint : MonoBehaviour
         if (enteringRotatingGlitch != null
             && !m_PresentInTriggerRotatingGlitches.Contains(enteringRotatingGlitch.gameObject))
         {
+            // We send the event only if it's the first detected glitch.
+            if (OnGlitchDetected != null
+                && m_PresentInTriggerRotatingGlitches.Count == 0)
+            {
+                OnGlitchDetected(this, e_GlitchDetectionStatus.ENTERING);
+            }
+
             m_PresentInTriggerRotatingGlitches.Add(enteringRotatingGlitch.gameObject);
             enteringRotatingGlitch.ActivateGlitchedMaterial();
         }
@@ -39,6 +66,13 @@ public class RotatingGlitchMeatingPoint : MonoBehaviour
         {
             m_PresentInTriggerRotatingGlitches.Remove(exitingRotatingGlitch.gameObject);
             exitingRotatingGlitch.ActivateOrdinaryMaterial();
+
+            // We send the event only if it's the last detected glitch.
+            if (OnGlitchDetected != null
+                && m_PresentInTriggerRotatingGlitches.Count == 0)
+            {
+                OnGlitchDetected(this, e_GlitchDetectionStatus.EXITNG);
+            }
         }
     }
 
@@ -50,18 +84,7 @@ public class RotatingGlitchMeatingPoint : MonoBehaviour
             {
                 OnDestroyWall(this);
             }
-            DestroyObjectToDestroy();
         }
     }
     #endregion Unity Events
-
-    private void DestroyObjectToDestroy()
-    {
-        if (m_ObjectToDestroy == null)
-        {
-            return;
-        }
-
-        Destroy(m_ObjectToDestroy);
-    }
 }

@@ -3,10 +3,12 @@ using System.Collections;
 
 public class MoveCarpetScript : CleanBehaviourOnDestroy
 {
-    #region Members
+    #region Events
     public delegate void CantDisplayCarpetHandler();
     public static event CantDisplayCarpetHandler OnCantDisplayCarpet;
+    #endregion Events
 
+    #region Members
     public float m_MoveSpeed = 0.05f;
 
     [Range(0, 4)]
