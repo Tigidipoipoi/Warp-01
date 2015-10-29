@@ -53,7 +53,9 @@ namespace Warp01
         private void WandIndicateCheck()
         {
             // Temporary.
-            if (FindObjectOfType<FakeWandMovement>().m_WandIsDisplayed)
+            FakeWandMovement temp = FindObjectOfType<FakeWandMovement>();
+            if (temp != null
+                && temp.m_WandIsDisplayed)
             {
                 WandIndicate();
                 return;

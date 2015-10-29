@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class CleanBehaviourOnDestroy : MonoBehaviour
+public abstract class CleanBehaviourOnDestroy : MonoBehaviour
 {
     protected ChangeSceneManager.DestroyLastLevelLoadedHandler m_DestroyHandler;
 
