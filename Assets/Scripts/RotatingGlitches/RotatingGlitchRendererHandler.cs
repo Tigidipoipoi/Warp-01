@@ -26,4 +26,27 @@ public class RotatingGlitchRendererHandler : MonoBehaviour
     {
         m_Renderer.material = m_OrdinaryMaterial;
     }
+
+    public void OnImmobile(RotatingGlitchMove sender)
+    {
+        StartCoroutine("ImmobileReaction", sender);
+    }
+
+    private IEnumerator ImmobileReaction(RotatingGlitchMove sender)
+    {
+        Material previousMat = m_Renderer.material;
+        m_Renderer.material = m_GlitchedMaterial;
+
+        while (!sender.p_FreeToRotate)
+        {
+            float hideValue = Mathf.Sin((float)MiddleVR.VRKernel.GetDeltaTime());
+            hideValue = Mathf.Clamp(hideValue, 0.2f, 0.5f);
+
+            m_Renderer.material.SetFloat("_HIDE", hideValue);
+
+            yield return null;
+        }
+
+        m_Renderer.material = previousMat;
+    }
 }
