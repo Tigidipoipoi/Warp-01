@@ -11,23 +11,37 @@ using MiddleVR_Unity3D;
 using System;
 
 [AddComponentMenu("")]
-public class VRInteractionManipulationRay : VRInteraction {
+public class VRInteractionManipulationRay : VRInteraction
+{
+    #region Events
+    public enum e_GrabStatus
+    {
+        GRABBED = 0,
+        UNGRABBED,
 
-    public string Name               = "InteractionManipulationRay";
-    public string HandNode           = "HandNode";
-    public uint   WandGrabButton     = 0;
+        COUNT
+    }
 
-    private vrInteractionManipulationRay m_it     = null;
+    public delegate void GrabHandler(VRInteractionManipulationRay sender, e_GrabStatus grabStatus);
+    public event GrabHandler OnGrab;
+    #endregion Events
 
-    private vrNode3D       m_HandNode  = null;
-    private VRWand         m_Wand      = null;
 
-    private GameObject m_CurrentSelectedObject    = null;
+    public string Name = "InteractionManipulationRay";
+    public string HandNode = "HandNode";
+    public uint WandGrabButton = 0;
+
+    private vrInteractionManipulationRay m_it = null;
+
+    private vrNode3D m_HandNode = null;
+    private VRWand m_Wand = null;
+
+    private GameObject m_CurrentSelectedObject = null;
     private GameObject m_CurrentManipulatedObject = null;
 
-    private Vector3    m_ManipulatedObjectInitialLocalPosition;
+    private Vector3 m_ManipulatedObjectInitialLocalPosition;
     private Quaternion m_ManipulatedObjectInitialLocalRotation;
-    private bool       m_ManipulatedObjectInitialIsKinematic;
+    private bool m_ManipulatedObjectInitialIsKinematic;
 
     private MVRNodesMapper.ENodesSyncDirection m_ObjectPreviousSyncDir = MVRNodesMapper.ENodesSyncDirection.NoSynchronization;
 
@@ -45,16 +59,16 @@ public class VRInteractionManipulationRay : VRInteraction {
         MiddleVR.VRInteractionMgr.AddInteraction(m_it);
         MiddleVR.VRInteractionMgr.Activate(m_it);
 
-        m_HandNode = MiddleVR.VRDisplayMgr.GetNode( HandNode );
+        m_HandNode = MiddleVR.VRDisplayMgr.GetNode(HandNode);
 
-        if ( m_HandNode != null )
+        if (m_HandNode != null)
         {
-            m_it.SetGrabWandButton( WandGrabButton );
+            m_it.SetGrabWandButton(WandGrabButton);
             m_it.SetManipulatorNode(m_HandNode);
         }
         else
         {
-            MiddleVR.VRLog( 2, "[X] VRInteractionManipulationRay: One or several nodes are missing." );
+            MiddleVR.VRLog(2, "[X] VRInteractionManipulationRay: One or several nodes are missing.");
         }
 
         m_Wand = this.GetComponent<VRWand>();
@@ -67,7 +81,7 @@ public class VRInteractionManipulationRay : VRInteraction {
             // Retrieve selection result
             VRSelection selection = m_Wand.GetSelection();
 
-            if( selection == null || !selection.SelectedObject.GetComponent<VRActor>().Grabable)
+            if (selection == null || !selection.SelectedObject.GetComponent<VRActor>().Grabable)
             {
                 return;
             }
@@ -93,35 +107,40 @@ public class VRInteractionManipulationRay : VRInteraction {
 
     protected void OnEnable()
     {
-        MiddleVR.VRLog( 3, "[ ] VRInteractionManipulationRay: enabled" );
-        if( m_it != null )
+        MiddleVR.VRLog(3, "[ ] VRInteractionManipulationRay: enabled");
+        if (m_it != null)
         {
-            MiddleVR.VRInteractionMgr.Activate( m_it );
+            MiddleVR.VRInteractionMgr.Activate(m_it);
         }
     }
 
     protected void OnDisable()
     {
-        MiddleVR.VRLog( 3, "[ ] VRInteractionManipulationRay: disabled" );
+        MiddleVR.VRLog(3, "[ ] VRInteractionManipulationRay: disabled");
 
-        if( m_it != null && MiddleVR.VRInteractionMgr != null )
+        if (m_it != null && MiddleVR.VRInteractionMgr != null)
         {
-            MiddleVR.VRInteractionMgr.Deactivate( m_it );
+            MiddleVR.VRInteractionMgr.Deactivate(m_it);
         }
     }
 
-    private void Grab( GameObject iGrabbedObject )
+    private void Grab(GameObject iGrabbedObject)
     {
-        if( iGrabbedObject == null )
+        if (iGrabbedObject == null)
         {
             return;
+        }
+
+        if (OnGrab != null)
+        {
+            OnGrab(this, e_GrabStatus.GRABBED);
         }
 
         // Initialize manipulated node
         m_CurrentManipulatedObject = iGrabbedObject;
         VRActor vrActorScript = m_CurrentManipulatedObject.GetComponent<VRActor>();
         m_ObjectPreviousSyncDir = vrActorScript.SyncDirection;
-        vrActorScript.SyncDirection = MVRNodesMapper.ENodesSyncDirection.MiddleVRToUnity;
+        vrActorScript.SyncDirection = MVRNodesMapper.ENodesSyncDirection.BothDirections;
         vrNode3D middleVRNode = vrActorScript.GetMiddleVRNode();
         m_it.SetManipulatedNode(middleVRNode);
 
@@ -148,14 +167,19 @@ public class VRInteractionManipulationRay : VRInteraction {
 
     private void Ungrab()
     {
-        if( m_CurrentManipulatedObject == null )
+        if (m_CurrentManipulatedObject == null)
         {
             return;
         }
 
+        if (OnGrab != null)
+        {
+            OnGrab(this, e_GrabStatus.UNGRABBED);
+        }
+
         // Give to return objects script
         VRInteractionManipulationReturnObjects returningObjectScript = this.GetComponent<VRInteractionManipulationReturnObjects>();
-        if( returningObjectScript != null )
+        if (returningObjectScript != null)
         {
             if (returningObjectScript.enabled)
             {

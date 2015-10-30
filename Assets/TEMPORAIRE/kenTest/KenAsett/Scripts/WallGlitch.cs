@@ -81,9 +81,9 @@ namespace Warp01
             if (theSwitch != null)
             {
                 Vector3 thePosition = theSwitch.localPosition;
-                thePosition.z = beforeSwitchPosition.z;
+                //thePosition.z = beforeSwitchPosition.z;
                 theSwitch.localPosition = thePosition;
-                theSwitch.localRotation = Quaternion.EulerRotation(Vector3.zero);
+                theSwitch.localRotation = Quaternion.Euler(Vector3.zero);
 
                 SwitchBeat();
 

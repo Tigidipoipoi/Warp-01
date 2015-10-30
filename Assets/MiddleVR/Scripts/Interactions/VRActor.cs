@@ -12,7 +12,7 @@ using MiddleVR_Unity3D;
 public class VRActor : MonoBehaviour
 {
     [SerializeField]
-    private MVRNodesMapper.ENodesSyncDirection m_SyncDirection = MVRNodesMapper.ENodesSyncDirection.NoSynchronization;
+    protected MVRNodesMapper.ENodesSyncDirection m_SyncDirection = MVRNodesMapper.ENodesSyncDirection.NoSynchronization;
 
     public MVRNodesMapper.ENodesSyncDirection SyncDirection
     {
@@ -29,15 +29,15 @@ public class VRActor : MonoBehaviour
     public string MiddleVRNodeName = "";
     public bool Grabable = true;
 
-    private bool m_SyncDirIsSet = false;
-    private vrNode3D m_MiddleVRNode = null;
+    protected bool m_SyncDirIsSet = false;
+    protected vrNode3D m_MiddleVRNode = null;
 
     [HideInInspector]
     public VRTouch.ETouchParameter TouchEvents = VRTouch.ETouchParameter.ReceiveTouchEvents;
 
-    private List<VRTouch> m_Touches = new List<VRTouch>();
+    protected List<VRTouch> m_Touches = new List<VRTouch>();
 
-    protected void Start()
+    protected virtual void Start()
     {
         if (!m_SyncDirIsSet)
         {
@@ -56,7 +56,7 @@ public class VRActor : MonoBehaviour
         }
     }
 
-    private void _SetSyncDirection(MVRNodesMapper.ENodesSyncDirection iSyncDirection)
+    protected virtual void _SetSyncDirection(MVRNodesMapper.ENodesSyncDirection iSyncDirection)
     {
         m_SyncDirIsSet = true;
         m_SyncDirection = iSyncDirection;
@@ -68,7 +68,7 @@ public class VRActor : MonoBehaviour
             // Set new MiddleVR - Unity nodes mapping if needed
             m_MiddleVRNode = nodesMapper.AddMapping(this.gameObject, MiddleVRNodeName, iSyncDirection);
         }
-        else if(m_MiddleVRNode != null)
+        else if (m_MiddleVRNode != null)
         {
             // No synchronization and existing mvrNode: stop node synchronization
             nodesMapper.RemoveMapping(m_MiddleVRNode.GetName());
@@ -77,7 +77,7 @@ public class VRActor : MonoBehaviour
         }
     }
 
-    public vrNode3D GetMiddleVRNode()
+    public virtual vrNode3D GetMiddleVRNode()
     {
         // GetMiddleVRNode() can be called before Start(). In this case,
         // we need to call '_SetSyncDirection()'.
@@ -92,11 +92,11 @@ public class VRActor : MonoBehaviour
         }
     }
 
-    protected void OnDestroy()
+    protected virtual void OnDestroy()
     {
         foreach (VRTouch touch in m_Touches)
         {
-            _SendVRTouchEnd(touch,true);
+            _SendVRTouchEnd(touch, true);
         }
 
         // Stop node synchronization
@@ -106,23 +106,23 @@ public class VRActor : MonoBehaviour
         }
     }
 
-    public List<VRTouch> GetTouches()
+    public virtual List<VRTouch> GetTouches()
     {
         return new List<VRTouch>(m_Touches);
     }
 
     // ***** RECEIVE TOUCH
-    protected void _OnMVRTouchBegin(VRTouch iTouch)
+    protected virtual void _OnMVRTouchBegin(VRTouch iTouch)
     {
         if (TouchEvents == VRTouch.ETouchParameter.ReceiveTouchEvents)
         {
             m_Touches.Add(iTouch);
             //MiddleVRTools.Log(2, "Touch begin: " + iSrc.name + ". NbTouch: " + m_Touches.Count );
-            SendMessage("OnMVRTouchBegin", iTouch,SendMessageOptions.DontRequireReceiver);
+            SendMessage("OnMVRTouchBegin", iTouch, SendMessageOptions.DontRequireReceiver);
         }
     }
 
-    protected void _OnMVRTouchMoved(VRTouch iTouch)
+    protected virtual void _OnMVRTouchMoved(VRTouch iTouch)
     {
         if (TouchEvents == VRTouch.ETouchParameter.ReceiveTouchEvents)
         {
@@ -131,7 +131,7 @@ public class VRActor : MonoBehaviour
         }
     }
 
-    protected void _OnMVRTouchEnd(VRTouch iTouch)
+    protected virtual void _OnMVRTouchEnd(VRTouch iTouch)
     {
         if (TouchEvents == VRTouch.ETouchParameter.ReceiveTouchEvents)
         {
@@ -142,7 +142,7 @@ public class VRActor : MonoBehaviour
     }
 
     // ***** SEND TOUCH
-    protected void OnTriggerEnter(Collider collider)
+    protected virtual void OnTriggerEnter(Collider collider)
     {
         if (TouchEvents == VRTouch.ETouchParameter.SendTouchEvents)
         {
@@ -167,7 +167,7 @@ public class VRActor : MonoBehaviour
         }
     }
 
-    protected VRTouch _FindVRTouch(GameObject iTouchedObject)
+    protected virtual VRTouch _FindVRTouch(GameObject iTouchedObject)
     {
         VRTouch touch = null;
 
@@ -183,7 +183,7 @@ public class VRActor : MonoBehaviour
         return touch;
     }
 
-    protected void OnTriggerStay(Collider collider)
+    protected virtual void OnTriggerStay(Collider collider)
     {
         if (TouchEvents == VRTouch.ETouchParameter.SendTouchEvents)
         {
@@ -206,7 +206,7 @@ public class VRActor : MonoBehaviour
         }
     }
 
-    protected void OnTriggerExit(Collider collider)
+    protected virtual void OnTriggerExit(Collider collider)
     {
         if (TouchEvents == VRTouch.ETouchParameter.SendTouchEvents)
         {
@@ -222,7 +222,7 @@ public class VRActor : MonoBehaviour
         }
     }
 
-    protected void _SendVRTouchEnd(VRTouch iTouch,bool iOnDestroy)
+    protected virtual void _SendVRTouchEnd(VRTouch iTouch, bool iOnDestroy)
     {
         // Other actor
         VRActor actor = iTouch.TouchedObject.GetComponent<VRActor>();
