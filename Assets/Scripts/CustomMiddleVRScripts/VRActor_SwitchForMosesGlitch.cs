@@ -49,7 +49,6 @@ public class VRActor_SwitchForMosesGlitch : VRActor
                 StartCoroutine("SyncPositionToWandTransform");
                 break;
             case VRInteractionManipulationRay.e_GrabStatus.UNGRABBED:
-                Debug.Log("Ungrabbed !");
                 StopCoroutine("SyncPositionToWandTransform");
                 break;
             default:
@@ -59,7 +58,6 @@ public class VRActor_SwitchForMosesGlitch : VRActor
 
     public IEnumerator SyncPositionToWandTransform()
     {
-        Utils.ClearLog();
         Ray ray = new Ray(m_WandTransform.position, m_WandTransform.forward);
         float rayLength = m_WandTransform.GetComponent<VRWand>().DefaultRayLength;
         RaycastHit hitInfo;
@@ -69,7 +67,6 @@ public class VRActor_SwitchForMosesGlitch : VRActor
         {
             ray.origin = m_WandTransform.position;
             ray.direction = m_WandTransform.forward;
-            Debug.DrawLine(ray.origin, ray.origin + ray.direction * rayLength, Color.red, 20.0f);
             if (Physics.Raycast(ray, out hitInfo, rayLength, m_CollisionMask))
             {
                 newPosition.y = hitInfo.point.y;
