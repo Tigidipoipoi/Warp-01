@@ -21,6 +21,8 @@ namespace Warp01
 
         public float switchResetTime = 2f;
 
+        public Renderer switchRenderer;
+
         private Vector3 beforeSwitchPosition;
         private Vector3 beforeSwitchScale;
         private bool isReset = false;
@@ -68,6 +70,11 @@ namespace Warp01
             {
                 Debug.LogError("WallGlitch::Start => No shuttle attached to the light \"" + name + "\".");
             }
+
+            if(switchRenderer == null)
+            {
+                Debug.LogError("WallGlitch::Start => No shuttle attached to the switch renderer \"" + name + "\".");
+            }
             #endregion Check null members
 
             beforeSwitchPosition = theSwitch.localPosition;
@@ -77,7 +84,6 @@ namespace Warp01
 
         // Update is called once per frame
         void Update() {
-
             if (theSwitch != null)
             {
                 Vector3 thePosition = theSwitch.localPosition;
@@ -210,6 +216,15 @@ namespace Warp01
             theScale.z += (switchBeatScale * theRatio);
             theSwitch.localScale = theScale;
 
+            //Color
+            Vector3 theColor = new Vector3(
+                 (Mathf.Sin((Mathf.PI * 2) / switchBeatTime * (float)theBeat.seconds()) + 1) / 6,
+                 (Mathf.Sin((Mathf.PI * 2) / switchBeatTime * ((float)theBeat.seconds()) + (switchBeatTime * 0.66f)) + 1) / 6,
+                 (Mathf.Sin((Mathf.PI * 2) / switchBeatTime * ((float)theBeat.seconds()) + (switchBeatTime * 1.22f)) + 1) / 6
+                 );
+
+            switchRenderer.material.EnableKeyword("_EMISSION");
+            switchRenderer.material.SetColor("_EmissionColor", new Color(theColor.x, theColor.y ,theColor.z));
         }
     }
 }

@@ -6,6 +6,8 @@ namespace Warp01
     public class WandIndicateManager : MonoBehaviour
     {
         #region Members
+        public Color changeColorButtonPush = Color.red;
+
         private static VRWand theWand;
         private static VRSelectionManager theSelectionManager;
 
@@ -68,6 +70,16 @@ namespace Warp01
             else
             {
                 WandIndicate();
+                if (
+#if UNITY_EDITOR
+                    Input.GetButton("Fire1")
+#else
+                    MiddleVR.VRDeviceMgr.IsWandButtonPressed(0)
+#endif
+                    )
+                {
+                    theWand.SetRayColor(changeColorButtonPush);
+                }
             }
         }
 
