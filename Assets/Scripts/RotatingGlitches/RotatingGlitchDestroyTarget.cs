@@ -6,7 +6,7 @@ public class RotatingGlitchDestroyTarget : MonoBehaviour
     #region Members
     public Renderer m_Renderer;
     public Color m_OriginalColor;
-    public Color m_ReactionColor = Color.magenta;
+    public Color m_ReactionColor = Color.green;
     #endregion Members
 
     public void Start()

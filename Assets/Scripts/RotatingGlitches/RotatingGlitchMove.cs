@@ -22,6 +22,12 @@ public class RotatingGlitchMove : MonoBehaviour
             }
 
             m_FreeToRotate = value;
+
+            if (!value
+                && m_RotatingGlitchRendererHandler != null)
+            {
+                m_RotatingGlitchRendererHandler.OnImmobile(this);
+            }
         }
     }
 
@@ -30,6 +36,8 @@ public class RotatingGlitchMove : MonoBehaviour
 
     public const float c_RotationAngle = 1.0f;
     public const string c_RotatingGlitchLayerName = Utils.LayerNames.IntangibleGlitch;
+
+    private RotatingGlitchRendererHandler m_RotatingGlitchRendererHandler;
     #endregion Members
 
     public void Start()
@@ -39,11 +47,15 @@ public class RotatingGlitchMove : MonoBehaviour
             m_Pivot = transform.parent;
         }
 
+        m_RotatingGlitchRendererHandler = GetComponent<RotatingGlitchRendererHandler>();
+
         StartRotateAroundPivot();
     }
 
     public void StartRotateAroundPivot()
     {
+        m_RotatingGlitchRendererHandler.ActivateOrdinaryMaterial();
+
         StopCoroutine("RotateAroundPivot");
         StartCoroutine("RotateAroundPivot");
     }

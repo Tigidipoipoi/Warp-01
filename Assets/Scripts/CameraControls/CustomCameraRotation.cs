@@ -7,7 +7,7 @@ public class CustomCameraRotation : CleanBehaviourOnDestroy
 
     public bool m_InvertHorizontalRotation;
     public bool m_InvertVerticalRotation;
-    [Range(0.0f, 180.0f)]
+    //[Range(0.0f, 180.0f)]
     public float m_HoriztontalRotationSpeed = 10.0f;
     public float m_VerticalRotationSpeed;
     [Range(0.0f, 89.0f)]

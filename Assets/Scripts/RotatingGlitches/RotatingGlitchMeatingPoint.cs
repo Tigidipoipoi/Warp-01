@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
 
+[RequireComponent(typeof(CapsuleCollider))]
 public class RotatingGlitchMeatingPoint : MonoBehaviour
 {
     public enum e_GlitchDetectionStatus
@@ -25,6 +26,8 @@ public class RotatingGlitchMeatingPoint : MonoBehaviour
 
     [HideInInspector]
     public List<GameObject> m_PresentInTriggerRotatingGlitches = new List<GameObject>();
+
+    public CapsuleCollider m_CapsuleCollider;
     #endregion Members
 
     #region Unity Events
@@ -43,6 +46,8 @@ public class RotatingGlitchMeatingPoint : MonoBehaviour
             OnDestroyWall += destroyTarget.OnDestroyByGlitch;
             OnGlitchDetected += destroyTarget.OnGlitchDetected;
         }
+
+        m_CapsuleCollider = GetComponent<CapsuleCollider>();
     }
 
     public void OnTriggerEnter(Collider enteringCollider)
@@ -83,13 +88,41 @@ public class RotatingGlitchMeatingPoint : MonoBehaviour
 
     public void Update()
     {
-        if (m_PresentInTriggerRotatingGlitches.Count == m_RotatingGlitchCountToBreakWall)
+        if (m_PresentInTriggerRotatingGlitches.Count == m_RotatingGlitchCountToBreakWall
+            && m_ObjectToDestroy != null)
         {
             if (OnDestroyWall != null)
             {
                 OnDestroyWall(this);
             }
+            OnDestroyWallLocal();
         }
     }
     #endregion Unity Events
+
+    public void OnDestroyWallLocal()
+    {
+        DisableRenderer();
+
+        // We expand the collider so all the glitch are in glitch state.
+        float newRadius = transform.localPosition.GetXZ().magnitude;
+        m_CapsuleCollider.radius = newRadius;
+
+        // We recenter the collider.
+        Vector3 newLocalPos = transform.localPosition;
+        newLocalPos.x = 0.0f;
+        newLocalPos.z = 0.0f;
+        transform.localPosition = newLocalPos;
+    }
+
+    public void DisableRenderer()
+    {
+        MeshRenderer meshRenderer = GetComponent<MeshRenderer>();
+        if (meshRenderer == null)
+        {
+            return;
+        }
+
+        meshRenderer.enabled = false;
+    }
 }
